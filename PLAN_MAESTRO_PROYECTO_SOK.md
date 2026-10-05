@@ -3,9 +3,9 @@
 ## System Optimization Key — Trabajo de Aplicación Profesional
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
-> Generado el: 29 de septiembre de 2026 — Actualizado: 4 de octubre de 2026
-> Versión: 1.3 (datos corregidos + diseño de BD y casos de uso con sub-diagramas)
-> Estado: En desarrollo (Bloque A completo salvo Introducción; Bloque B en curso)
+> Generado el: 29 de septiembre de 2026 — Actualizado: 5 de octubre de 2026
+> Versión: 1.4 (… + repositorio GitHub y solución con las 4 capas)
+> Estado: En desarrollo (Bloque A completo salvo Introducción; Bloque B en curso: B.1, B.2, B.3 y B.5 completados)
 
 ---
 
@@ -639,8 +639,8 @@ SOK/ ← solución Visual Studio
 
 | Paso | Acción | Documento que alimenta | Estado |
 | --- | --- | --- | --- |
-| B.1 | Crear repo GitHub `edgarflores/sok` + estructura de carpetas | — (código) | ⏳ Pendiente |
-| B.2 | Crear solución VS 2022 con 4 capas (Domain, Application, Infrastructure, UI) | — (código) | ⏳ Pendiente |
+| B.1 | Crear repo GitHub `EdgarAdrian2004/sok` + estructura de carpetas | — (código) | ✅ Hecho (público) |
+| B.2 | Crear solución VS 2022 con 4 capas (Domain, Application, Infrastructure, UI) | — (código) | ✅ Hecho (compila sin errores) |
 | B.3 | Diseñar BD SQLite (tablas: Profiles, Backups, Logs, Settings) | Sección V.17 | ✅ Hecho (DDL verificado) |
 | B.4 | Elaborar diagrama UML de clases | Sección V.11 | ⏳ Pendiente |
 | B.5 | Elaborar diagrama UML de casos de uso | Sección V.11 | ✅ Hecho (general + 8 sub-diagramas, 18/18 HU) |
@@ -800,8 +800,8 @@ SOK/ ← solución Visual Studio
 
 | Artefacto | Bloque | Estado |
 | --- | --- | --- |
-| Repositorio GitHub `edgarflores/sok` | B | ⏳ Pendiente |
-| Solución VS 2022 con 4 capas | B | ⏳ Pendiente |
+| Repositorio GitHub `EdgarAdrian2004/sok` (público) | B | ✅ Hecho |
+| Solución VS 2022 con 4 capas — `sok/SOK.sln` | B | ✅ Hecho (compila) |
 | Esquema SQLite (DDL) — `docs/db/SOK_DDL.sql` | B | ✅ Hecho (verificado) |
 | Diseño de BD (conceptual/lógico/físico) — `docs/db/diseno-base-datos.md` | B | ✅ Hecho |
 | Diagrama ER — `docs/db/ER_SOK.png` (+ espejo `.dbml`) | B | ✅ Hecho |
@@ -1060,6 +1060,7 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.1 | 30/09/2026 | Corrección de datos según archivo de respuestas real: fechas de diagnóstico (5-8 sep 2026), frecuencia "se traba" corregida a 7/9 (77,8 %), padrón completo de los 9 docentes, testimonios ampliados, encuesta (modalidad mixta, 10 preguntas) y fuente oficial de la I.E. confirmadas, validaciones de la sección 15.3 actualizadas. **Nuevo entregable:** borrador del Referente Teórico (Sección IV) en Markdown. |
 | 1.2 | 04/10/2026 | **Bloque B (diseño):** diagrama de casos de uso en PlantUML (19 casos concretos + 1 abstracto, trazabilidad 18/18 HU) con descripciones; diseño de base de datos conceptual, lógico y físico (5 tablas, 5 índices, 3FN) con DDL verificado contra SQLite 3.50.4; diagrama entidad-relación (PNG + DBML para dbdiagram.io). Nueva carpeta `docs/` con `uml/` y `db/`. Pasos B.3 y B.5 completados. |
 | 1.3 | 04/10/2026 | **Sub-diagramas de casos de uso:** el diagrama unificado se complementa con 8 sub-diagramas por módulo (Acceso, Panel de control, Telemetría, Servicios, Memoria, Respaldos, Perfiles y Casos transversales), conservando sin cambios el diagrama general. Se aplica la estrategia de **Opción A** para relaciones entre módulos: los casos externos se representan con fondo gris y una nota que indica el módulo de procedencia. Cada sub-diagrama cubre sus HU y se genera en PNG. `docs/uml/descripcion-casos-uso.md` se actualiza con el índice de los 9 diagramas y la regla de representación (v1.1 del documento). |
+| 1.4 | 05/10/2026 | **Bloque B — infraestructura (B.1 + B.2).** Se crea el repositorio público **`EdgarAdrian2004/sok`** (el nombre previsto en el plan, `edgarflores/sok`, se ajustó porque las credenciales de GitHub disponibles corresponden a `EdgarAdrian2004`); la carpeta de trabajo se reorganiza en la subcarpeta `sok/`, dejando fuera del repositorio los sílabos, el diagnóstico del I.E. y los ejemplos de referencia. Se inicializa la solución `SOK.sln` con las cuatro capas (`SOK.Domain` → `SOK.Application` → `SOK.Infrastructure` → `SOK.UI`), dependencias unidireccionales, `.gitignore` y `README.md`. Paquetes NuGet alineados con el stack .NET 8: `Microsoft.Data.Sqlite` 8.0.31, `System.Management` 8.0.0 y `CommunityToolkit.Mvvm` 8.4.2. Compilación verificada: 0 errores y 0 advertencias. Nota técnica: en `App.xaml.cs` se califica `System.Windows.Application`, pues dentro del espacio de nombres `SOK.*` el identificador `Application` resuelve a la capa `SOK.Application`. |
 
 ---
 
