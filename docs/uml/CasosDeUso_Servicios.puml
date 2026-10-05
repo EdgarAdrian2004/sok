@@ -1,0 +1,91 @@
+@startuml CasosDeUso_Servicios
+' ============================================================
+'  SOK - Sub-diagrama 4/8: GESTION DE SERVICIOS
+'  TAP Seccion V.11.4 - Edgar Adrian Flores Herrera
+'  Historias: HU-08, HU-09, HU-10
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 4/8: Gestion de servicios\nSOK - Seccion V.11.4 del informe TAP
+
+actor "Docente" as D
+actor "Sistema Windows" as W
+
+rectangle "4. Gestion de servicios" {
+  usecase "Ver servicios\ny su estado" as UC09
+  usecase "Detener o\ndeshabilitar\nun servicio" as UC10
+  usecase "Aplicar perfil de\nservicios (Gamer /\nOfimatico)" as UC11
+}
+
+rectangle "Modulos externos" {
+  usecase "Crear respaldo\nantes de optimizar" as UC15 <<externo>>
+  usecase "Ejecutar accion\nde optimizacion" as UCABS <<externo>> <<abstract>>
+}
+
+D -- UC09
+D -- UC10
+D -- UC11
+
+W -- UC09 : administra\nservicios (SCM)
+
+UC10 .> UC15 : <<include>>
+UC11 .> UC15 : <<include>>
+
+UC10 --|> UCABS
+UC11 --|> UCABS
+
+note right of UC09
+  HU-08: listado de mas de 20 servicios
+  no esenciales mediante Win32_Service
+  con su tipo de inicio actual
+endnote
+
+note right of UC15
+  UC-15 pertenece al modulo **Respaldos**
+  Ver sub-diagrama 6/8
+  Se respalda el tipo de inicio original
+  antes de detener o deshabilitar
+endnote
+
+note bottom of UCABS
+  UC-ABS pertenece al modulo
+  **Casos transversales** (sub-diagrama 8/8)
+endnote
+
+legend bottom
+  **Sub-diagrama 4 de 8** — Gestion de servicios
+  Cobertura: HU-08, HU-09, HU-10
+  Los casos en gris pertenecen a otros modulos.
+endlegend
+
+@enduml

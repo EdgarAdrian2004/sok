@@ -1,0 +1,79 @@
+@startuml CasosDeUso_Respaldos
+' ============================================================
+'  SOK - Sub-diagrama 6/8: RESPALDOS
+'  TAP Seccion V.11.6 - Edgar Adrian Flores Herrera
+'  Historias: HU-16, HU-17
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 6/8: Respaldos\nSOK - Seccion V.11.6 del informe TAP
+
+actor "Docente" as D
+actor "Sistema Windows" as W
+
+rectangle "6. Respaldos" {
+  usecase "Crear respaldo\nantes de optimizar" as UC15
+  usecase "Restaurar sistema\ndesde un respaldo" as UC16
+}
+
+D -- UC16
+
+W -- UC15 : claves de registro\ny servicios
+
+note right of UC15
+  **HU-16:** RegistryBackupService y
+  ServicesBackupService exportan el valor
+  previo (.reg / JSON), calculan hash
+  SHA-256 y registran todo en la tabla Backups.
+  Se invoca automaticamente desde:
+  UC-07, UC-08 (Telemetria)
+  UC-10, UC-11 (Servicios)
+endnote
+
+note right of UC16
+  **HU-17:** verifica el hash SHA-256,
+  aplica la restauracion y registra el
+  resultado en la bitacora (UC-19).
+endnote
+
+legend bottom
+  **Sub-diagrama 6 de 8** — Respaldos
+  Cobertura: HU-16, HU-17
+  Este modulo es **previo obligatorio** de toda
+  accion que modifique la configuracion
+  persistente del sistema (regla de oro de SOK).
+  UC-15 se invoca como <<include>> desde los
+  sub-diagramas 3 (Telemetria) y 4 (Servicios).
+endlegend
+
+@enduml

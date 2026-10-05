@@ -1,0 +1,95 @@
+@startuml CasosDeUso_Transversales
+' ============================================================
+'  SOK - Sub-diagrama 8/8: CASOS TRANSVERSALES
+'  TAP Seccion V.11.8 - Edgar Adrian Flores Herrera
+'  Historias: HU-04 (registro), comportamiento base
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 8/8: Casos transversales\nSOK - Seccion V.11.8 del informe TAP
+
+rectangle "8. Casos transversales" {
+  usecase "Registrar accion\nen la bitacora" as UC19
+  usecase "Ejecutar accion\nde optimizacion" as UCABS <<abstract>>
+}
+
+rectangle "Modulos que reutilizan este comportamiento" {
+  usecase "Deshabilitar\ntelemetria" as UC07 <<externo>>
+  usecase "Aplicar privacidad\nmaxima" as UC08 <<externo>>
+  usecase "Detener o\ndeshabilitar\nservicio" as UC10 <<externo>>
+  usecase "Aplicar perfil de\nservicios" as UC11 <<externo>>
+  usecase "Liberar memoria" as UC13 <<externo>>
+}
+
+UCABS .> UC19 : <<include>>
+
+UC07 --|> UCABS
+UC08 --|> UCABS
+UC10 --|> UCABS
+UC11 --|> UCABS
+UC13 --|> UCABS
+
+note right of UC19
+  **HU-04:** LogRepository + LogService
+  insertan la fila en la tabla Logs
+  (modulo, accion, elemento, resultado,
+  detalle y respaldo asociado).
+  Se ejecuta en TODA accion del sistema.
+endnote
+
+note left of UCABS
+  Caso de uso **abstracto**: agrupa las
+  acciones que modifican la configuracion
+  persistente de Windows. Hereda el
+  comportamiento base:
+  1) crear respaldo (UC-15)
+  2) registrar en bitacora (UC-19)
+endnote
+
+note bottom of UC13
+  Los casos en gris pertenecen a otros
+  modulos: 3 Telemetria, 4 Servicios,
+  5 Memoria. Se muestran para indicar
+  que reutilizan este comportamiento.
+endnote
+
+legend bottom
+  **Sub-diagrama 8 de 8** — Casos transversales
+  Sin actor principal: se ejecutan de forma
+  automatica como parte de otras acciones.
+  Regla de oro de SOK: **todo queda registrado**,
+  y **toda modificacion persistente genera
+  respaldo previo**.
+endlegend
+
+@enduml

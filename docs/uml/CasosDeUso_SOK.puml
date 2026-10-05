@@ -1,0 +1,141 @@
+@startuml CasosDeUso_SOK
+' ============================================================
+'  SOK (System Optimization Key)
+'  Diagrama de Casos de Uso
+'  TAP - Edgar Adrian Flores Herrera - IESTP Trujillo
+'  Seccion V.11 (Analisis y Diseno) del informe
+'  Fuente: Product Backlog (18 HU) - PLAN_MAESTRO v1.1
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Diagrama de Casos de Uso - SOK\nSeccion V.11 del informe TAP
+
+actor "Docente" as D
+actor "Sistema Windows" as W
+
+rectangle "SOK (System Optimization Key)" {
+
+  rectangle "1. Acceso" {
+    usecase "Iniciar SOK con\nelevacion de\nadministrador (UAC)" as UC01
+    usecase "Seleccionar perfil\nde optimizacion\nal iniciar" as UC02
+  }
+
+  rectangle "2. Panel de control" {
+    usecase "Ver estado del\nsistema (CPU, RAM,\ndisco, servicios)" as UC03
+    usecase "Consultar historial\nde acciones" as UC04
+    usecase "Consultar tutorial\nintegrado" as UC05
+  }
+
+  rectangle "3. Telemetria y privacidad" {
+    usecase "Ver telemetriasy\nsu estado" as UC06
+    usecase "Deshabilitar\ntelemetria\nindividualmente" as UC07
+    usecase "Aplicar privacidad\nmaxima" as UC08
+  }
+
+  rectangle "4. Gestion de servicios" {
+    usecase "Ver servicios\ny su estado" as UC09
+    usecase "Detener o\ndeshabilitar\nun servicio" as UC10
+    usecase "Aplicar perfil de\nservicios (Gamer /\nOfimatico)" as UC11
+  }
+
+  rectangle "5. Memoria RAM" {
+    usecase "Ver medidor de\nmemoria en\ntiempo real" as UC12
+    usecase "Liberar memoria\ncon un clic" as UC13
+    usecase "Configurar liberacion\nautomatica por\numbral (70%-95%)" as UC14
+  }
+
+  rectangle "6. Respaldos" {
+    usecase "Crear respaldo\nantes de optimizar" as UC15
+    usecase "Restaurar sistema\ndesde un respaldo" as UC16
+  }
+
+  rectangle "7. Perfiles" {
+    usecase "Ver perfiles\ndisponibles y\nactivar uno" as UC17
+    usecase "Exportar o importar\nperfil (JSON)" as UC18
+  }
+
+  rectangle "8. Casos transversales" {
+    usecase "Registrar accion\nen la bitacora" as UC19
+    usecase "Ejecutar accion\nde optimizacion" as UCABS <<abstract>>
+  }
+}
+
+' ---------- Relaciones actor -> caso de uso ----------
+D -- UC01
+D -- UC03
+D -- UC04
+D -- UC05
+D -- UC06
+D -- UC07
+D -- UC08
+D -- UC09
+D -- UC10
+D -- UC11
+D -- UC12
+D -- UC13
+D -- UC14
+D -- UC16
+D -- UC17
+D -- UC18
+
+W -- UC03 : provee datos (WMI)
+W -- UC15 : claves de registro\ny servicios
+
+' ---------- Inclusiones ----------
+UC01 .> UC02 : <<include>>
+UCABS .> UC19 : <<include>>
+UC07 .> UC15 : <<include>>
+UC08 .> UC15 : <<include>>
+UC10 .> UC15 : <<include>>
+UC11 .> UC15 : <<include>>
+
+' ---------- Generalizacion de casos de uso ----------
+UC07 --|> UCABS
+UC08 --|> UCABS
+UC10 --|> UCABS
+UC11 --|> UCABS
+UC13 --|> UCABS
+
+legend right
+  Trazabilidad: los 19 casos de uso
+  concretos (UC-01 a UC-19) cubren la
+  totalidad de las 18 historias de usuario
+  del Product Backlog (HU-01 a HU-18).
+  Regla de oro: toda accion que modifica
+  la configuracion persistente de Windows
+  incluye <<include>> Crear respaldo.
+  La liberacion de memoria NO modifica
+  configuracion persistente, por lo que
+  solo se registra en la bitacora.
+  La creacion de perfiles nuevos se hace
+  por importacion (HU-15); los perfiles
+  base se siembran en la base de datos.
+endlegend
+
+@enduml

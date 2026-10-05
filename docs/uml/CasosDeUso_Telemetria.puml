@@ -1,0 +1,83 @@
+@startuml CasosDeUso_Telemetria
+' ============================================================
+'  SOK - Sub-diagrama 3/8: TELEMETRIA Y PRIVACIDAD
+'  TAP Seccion V.11.3 - Edgar Adrian Flores Herrera
+'  Historias: HU-05, HU-06, HU-07
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 3/8: Telemetria y privacidad\nSOK - Seccion V.11.3 del informe TAP
+
+actor "Docente" as D
+
+rectangle "3. Telemetria y privacidad" {
+  usecase "Ver telemetriasy\nsu estado" as UC06
+  usecase "Deshabilitar\ntelemetria\nindividualmente" as UC07
+  usecase "Aplicar privacidad\nmaxima" as UC08
+}
+
+rectangle "Modulos externos" {
+  usecase "Crear respaldo\nantes de optimizar" as UC15 <<externo>>
+  usecase "Ejecutar accion\nde optimizacion" as UCABS <<externo>> <<abstract>>
+}
+
+D -- UC06
+D -- UC07
+D -- UC08
+
+UC07 .> UC15 : <<include>>
+UC08 .> UC15 : <<include>>
+
+UC07 --|> UCABS
+UC08 --|> UCABS
+
+note right of UC15
+  UC-15 pertenece al modulo **Respaldos**
+  Ver sub-diagrama 6/8
+  Regla de oro: toda modificacion de la
+  configuracion persistente genera respaldo
+endnote
+
+note bottom of UCABS
+  UC-ABS pertenece al modulo
+  **Casos transversales** (sub-diagrama 8/8)
+endnote
+
+legend bottom
+  **Sub-diagrama 3 de 8** — Telemetria y privacidad
+  Cobertura: HU-05, HU-06, HU-07
+  Los casos en gris pertenecen a otros modulos
+  y se muestran para explicar las relaciones.
+endlegend
+
+@enduml

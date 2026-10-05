@@ -1,0 +1,74 @@
+@startuml CasosDeUso_Dashboard
+' ============================================================
+'  SOK - Sub-diagrama 2/8: PANEL DE CONTROL (DASHBOARD)
+'  TAP Seccion V.11.2 - Edgar Adrian Flores Herrera
+'  Historias: HU-01, HU-03, HU-04, HU-18
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 2/8: Panel de control\nSOK - Seccion V.11.2 del informe TAP
+
+actor "Docente" as D
+actor "Sistema Windows" as W
+
+rectangle "2. Panel de control" {
+  usecase "Ver estado del\nsistema (CPU, RAM,\ndisco, servicios)" as UC03
+  usecase "Consultar historial\nde acciones" as UC04
+  usecase "Consultar tutorial\nintegrado" as UC05
+}
+
+D -- UC03
+D -- UC04
+D -- UC05
+
+W -- UC03 : provee datos\n(WMI)
+
+note right of UC03
+  HU-01: SystemInfoProvider consulta
+  Win32_OperatingSystem, Win32_Processor
+  y datos de memoria por WMI
+endnote
+
+note right of UC04
+  HU-04: lectura de la tabla Logs
+  (SQLite) ordenada por Timestamp
+endnote
+
+legend bottom
+  **Sub-diagrama 2 de 8** — Panel de control
+  Cobertura: HU-01, HU-03 (navegacion), HU-04, HU-18
+  El actor Sistema Windows provee los datos
+  de hardware que SOK presenta al docente.
+endlegend
+
+@enduml

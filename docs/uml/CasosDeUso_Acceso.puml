@@ -1,0 +1,67 @@
+@startuml CasosDeUso_Acceso
+' ============================================================
+'  SOK - Sub-diagrama 1/8: ACCESO
+'  TAP Seccion V.11.1 - Edgar Adrian Flores Herrera
+'  Historias: HU-02, HU-03, HU-14
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 1/8: Acceso\nSOK - Seccion V.11.1 del informe TAP
+
+actor "Docente" as D
+
+rectangle "1. Acceso" {
+  usecase "Iniciar SOK con\nelevacion de\nadministrador (UAC)" as UC01
+  usecase "Seleccionar perfil\nde optimizacion\nal iniciar" as UC02
+}
+
+D -- UC01
+D -- UC02
+
+UC01 .> UC02 : <<include>>
+
+note right of UC02
+  HU-02: la aplicacion declara
+  requireAdministrator en app.manifest
+  HU-14: al iniciar se resuelve el
+  perfil activo (Gamer/Ofimatico)
+endnote
+
+legend bottom
+  **Sub-diagrama 1 de 8** — Casos de uso de acceso
+  Cobertura: HU-02, HU-03 (shell), HU-14
+  El <<include>> indica que iniciar SOK
+  siempre resuelve el perfil activo.
+endlegend
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml ER_SOK
+' ============================================================
+'  SOK (System Optimization Key)
+'  Diagrama Entidad-Relacion (espejo de ER_SOK.dbml)
+'  TAP - Seccion V.17.1 (diseno conceptual)
+'  Fuente autoritativa del modelo: SOK_DDL.sql
+' ============================================================
+
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam linetype ortho
+skinparam entity {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  FontSize 11
+  FontStyle plain
+}
+skinparam linetype ortho
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+
+title Diagrama Entidad-Relacion - SOK\nSeccion V.17.1 del informe TAP
+
+entity "Profiles" as P {
+  * id : INTEGER <<PK>>
+  --
+  name : TEXT <<UNIQUE>>
+  type : TEXT <<CHECK>>
+  description : TEXT
+  is_default : INTEGER <<0/1>>
+  created_at : TEXT
+  updated_at : TEXT
+}
+
+entity "ProfileSettings" as PS {
+  * id : INTEGER <<PK>>
+  --
+  profile_id : INTEGER <<FK>>
+  module : TEXT <<CHECK>>
+  target_key : TEXT
+  action : TEXT <<CHECK>>
+  value : TEXT
+}
+
+entity "Backups" as B {
+  * id : INTEGER <<PK>>
+  --
+  name : TEXT
+  backup_type : TEXT <<CHECK>>
+  file_path : TEXT
+  hash_sha256 : TEXT
+  description : TEXT
+  created_at : TEXT
+}
+
+entity "Logs" as L {
+  * id : INTEGER <<PK>>
+  --
+  timestamp : TEXT
+  module : TEXT <<CHECK>>
+  action : TEXT
+  target_key : TEXT
+  result : TEXT <<CHECK>>
+  detail : TEXT
+  backup_id : INTEGER <<FK>>
+}
+
+entity "Settings" as S {
+  * setting_key : TEXT <<PK>>
+  --
+  setting_value : TEXT
+  updated_at : TEXT
+}
+
+P ||--o{ PS : "1:N tiene"
+B ||--o{ L : "1:N documenta"
+
+note bottom of S
+  Tabla clave-valor de la configuracion
+  de la aplicacion (perfil activo,
+  umbral de memoria, etc.)
+endnote
+
+note right of L
+  Respaldos en el sistema de archivos;
+  aqui solo se guardan RUTA y HASH
+  SHA-256 del archivo .reg / .json
+endnote
+
+@enduml

@@ -1,0 +1,102 @@
+// ============================================================
+//  SOK (System Optimization Key)
+//  Modelo Entidad-Relación en DBML
+//  Pegar en https://dbdiagram.io/d para ver y exportar el ER
+//  TAP - Seccion V.17.1 (diseno conceptual) y V.17.2 (logico)
+//  Fuente autoritativa del modelo: SOK_DDL.sql
+//  Nota: este archivo es el espejo editable; si hay diferencias,
+//  manda el DDL.
+// ============================================================
+
+Enum profile_type {
+  Gamer
+  Ofimatico
+  Personalizado
+}
+
+Enum profile_module {
+  Telemetria
+  Servicios
+  Memoria
+}
+
+Enum profile_action {
+  Deshabilitar
+  Habilitar
+  Valor
+  Umbral
+}
+
+Enum backup_type {
+  Registro
+  Servicios
+  Completo
+}
+
+Enum log_module {
+  Acceso
+  Dashboard
+  Telemetria
+  Servicios
+  Memoria
+  Respaldos
+  Perfiles
+}
+
+Enum action_result {
+  Exitoso
+  Fallido
+  Revertido
+}
+
+Table Profiles [note: 'Perfiles de optimizacion (HU-14)'] {
+  id integer [pk, increment]
+  name varchar(80) [not null, unique, note: 'Nombre visible del perfil']
+  type profile_type [not null]
+  description text [note: 'Descripcion opcional']
+  is_default boolean [not null, default: 0, note: '0/1: SQLite no tiene booleano nativo']
+  created_at datetime [not null, default: `datetime('now','localtime')`]
+  updated_at datetime [not null, default: `datetime('now','localtime')`]
+}
+
+Table ProfileSettings [note: 'Ajustes que componen cada perfil'] {
+  id integer [pk, increment]
+  profile_id integer [not null, note: 'FK a Profiles']
+  module profile_module [not null]
+  target_key varchar(120) [not null, note: 'Clave de registry, servicio o parametro']
+  action profile_action [not null]
+  value varchar(120) [note: 'Valor a aplicar / umbral']
+}
+
+Table Backups [note: 'Metadatos de respaldos (HU-16)'] {
+  id integer [pk, increment]
+  name varchar(100) [not null]
+  backup_type backup_type [not null]
+  file_path varchar(300) [not null, note: 'Ruta del archivo .reg / .json en disco']
+  hash_sha256 varchar(64) [not null, note: 'Integridad SHA-256 del respaldo']
+  description text
+  created_at datetime [not null, default: `datetime('now','localtime')`]
+}
+
+Table Logs [note: 'Bitacora de acciones (HU-04)'] {
+  id integer [pk, increment]
+  timestamp datetime [not null, default: `datetime('now','localtime')`]
+  module log_module [not null]
+  action varchar(120) [not null, note: 'Accion ejecutada']
+  target_key varchar(120) [note: 'Elemento afectado (clave/servicio)']
+  result action_result [not null]
+  detail text [note: 'Mensaje o error devuelto']
+  backup_id integer [note: 'Respaldo asociado a la accion']
+}
+
+Table Settings [note: 'Configuracion de la aplicacion'] {
+  setting_key varchar(80) [pk, note: 'Ej.: MemoryReleaseThreshold']
+  setting_value varchar(200) [not null]
+  updated_at datetime [not null, default: `datetime('now','localtime')`]
+}
+
+// Relaciones (cardinalidades)
+Ref: ProfileSettings.profile_id > Profiles.id [delete: cascade]
+Ref: Logs.backup_id > Backups.id [delete: set null, note: 'Opcional: accion sin respaldo']
+
+Note: 'Cardinalidades: Profiles 1..N ProfileSettings | Backups 1..N Logs | SQLite: PRAGMA foreign_keys = ON en cada sesion'

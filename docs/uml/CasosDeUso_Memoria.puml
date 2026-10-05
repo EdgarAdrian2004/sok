@@ -1,0 +1,87 @@
+@startuml CasosDeUso_Memoria
+' ============================================================
+'  SOK - Sub-diagrama 5/8: MEMORIA RAM
+'  TAP Seccion V.11.5 - Edgar Adrian Flores Herrera
+'  Historias: HU-11, HU-12, HU-13
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 5/8: Memoria RAM\nSOK - Seccion V.11.5 del informe TAP
+
+actor "Docente" as D
+actor "Sistema Windows" as W
+
+rectangle "5. Memoria RAM" {
+  usecase "Ver medidor de\nmemoria en\ntiempo real" as UC12
+  usecase "Liberar memoria\ncon un clic" as UC13
+  usecase "Configurar liberacion\nautomatica por\numbral (70%-95%)" as UC14
+}
+
+rectangle "Modulo externo" {
+  usecase "Ejecutar accion\nde optimizacion" as UCABS <<externo>> <<abstract>>
+}
+
+D -- UC12
+D -- UC13
+D -- UC14
+
+W -- UC12 : reporta\nestado de memoria
+
+UC13 --|> UCABS
+
+note right of UC12
+  HU-11: GlobalMemoryStatusEx en
+  intervalo configurable
+  HU-12: EnumProcesses + EmptyWorkingSet
+  HU-13: umbral persistido en Settings
+endnote
+
+note bottom of UCABS
+  UC-ABS pertenece al modulo
+  **Casos transversales** (sub-diagrama 8/8)
+  NOTA: a diferencia de los demas casos
+  de optimizacion, UC-13 NO incluye crear
+  respaldo, porque EmptyWorkingSet solo
+  libera el working set en ejecucion y no
+  modifica configuracion persistente.
+endnote
+
+legend bottom
+  **Sub-diagrama 5 de 8** — Memoria RAM
+  Cobertura: HU-11, HU-12, HU-13
+  Excepcion documentada a la regla de oro:
+  la liberacion de memoria no altera el
+  sistema, por eso solo se registra en bitacora.
+endlegend
+
+@enduml

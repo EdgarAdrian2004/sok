@@ -1,0 +1,85 @@
+@startuml CasosDeUso_Perfiles
+' ============================================================
+'  SOK - Sub-diagrama 7/8: PERFILES DE OPTIMIZACION
+'  TAP Seccion V.11.7 - Edgar Adrian Flores Herrera
+'  Historias: HU-14, HU-15
+' ============================================================
+
+left to right direction
+skinparam actorStyle awesome
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 8
+skinparam defaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EAF2F8
+  BorderColor #2E4053
+  FontSize 11
+  ArrowColor #2E4053
+}
+skinparam usecase<<externo>> {
+  BackgroundColor #ECEFF1
+  BorderColor #90A4AE
+  FontColor #546E7A
+}
+skinparam rectangle {
+  BorderColor #2E4053
+  FontSize 12
+  FontStyle bold
+  BackgroundColor #FFFFFF
+}
+skinparam arrow {
+  FontSize 10
+  Color #2E4053
+}
+skinparam actor {
+  FontSize 12
+}
+
+title Sub-diagrama 7/8: Perfiles de optimizacion\nSOK - Seccion V.11.7 del informe TAP
+
+actor "Docente" as D
+
+rectangle "7. Perfiles" {
+  usecase "Ver perfiles\ndisponibles y\nactivar uno" as UC17
+  usecase "Exportar o importar\nperfil (JSON)" as UC18
+}
+
+rectangle "Modulo externo" {
+  usecase "Seleccionar perfil\nde optimizacion\nal iniciar" as UC02 <<externo>>
+}
+
+D -- UC17
+D -- UC18
+
+UC02 .> UC17 : <<include>>
+
+note right of UC02
+  UC-02 pertenece al modulo **Acceso**
+  Ver sub-diagrama 1/8
+  Se ejecuta automaticamente al iniciar SOK
+endnote
+
+note right of UC17
+  **HU-14:** perfiles Gamer, Ofimatico y
+  Personalizado. Los perfiles base se
+  siembran en la base de datos; los nuevos
+  se incorporan por importacion (HU-15).
+  Tablas: Profiles y ProfileSettings.
+endnote
+
+note right of UC18
+  **HU-15:** serializacion a JSON y
+  validacion del archivo de entrada.
+  Permite replicar un perfil entre
+  las laptops de la institucion.
+endnote
+
+legend bottom
+  **Sub-diagrama 7 de 8** — Perfiles de optimizacion
+  Cobertura: HU-14, HU-15
+  El caso en gris pertenece al modulo Acceso
+  y se muestra para explicar la relacion.
+endlegend
+
+@enduml
