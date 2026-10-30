@@ -1,0 +1,12 @@
+<UserControl x:Class="SOK.UI.Views.TutorialView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Style="{StaticResource CardBorder}">
+        <StackPanel>
+            <TextBlock Text="Tutorial" Style="{StaticResource SectionTitle}" />
+            <TextBlock Text="Este módulo se implementará en el Sprint 5: guía paso a paso para usuarios sin conocimientos técnicos."
+                       Style="{StaticResource BodyText}"
+                       Margin="0,10,0,0" />
+        </StackPanel>
+    </Border>
+</UserControl>
