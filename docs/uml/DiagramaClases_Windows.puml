@@ -1,0 +1,98 @@
+@startuml DiagramaClases_Windows
+' ============================================================
+'  SOK - Diagrama de clases 4/5: SERVICIOS DE WINDOWS (B.4)
+'  TAP Seccion V.12.4 - Edgar Adrian Flores Herrera
+'  Basado en el codigo real del Sprint 1 (commit 693eda1)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam nodesep 25
+skinparam ranksep 35
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  ArrowColor #2E4053
+  FontSize 10
+}
+skinparam interface {
+  BackgroundColor #EAF2F8
+  BorderColor #1F618D
+  FontSize 10
+}
+skinparam package {
+  BackgroundColor #F8F9F9
+  BorderColor #566573
+  FontSize 12
+  FontStyle bold
+}
+
+title SOK - V.12.4 Diagrama de clases de los servicios de Windows\nWMI, registro y rutas de la aplicacion
+
+package "SOK.Infrastructure" as Infra {
+
+  package "Common" as Common {
+    class AppPathProvider {
+      + AppDataDirectory : string
+      + DatabasePath : string
+      + BackupDirectory : string
+    }
+  }
+
+  package "Windows" as Windows {
+    class SystemInfoProvider {
+      + GetSnapshotAsync() : Task<SystemSnapshot>
+      - ReadSnapshot() : SystemSnapshot
+    }
+
+    class RegistryBackupService {
+      - RegistryKeys : string[]
+      + CreateBackupAsync(destinationDirectory) : Task<string>
+      - ExportKeyAsync(key, filePath) : Task<(bool, string?)>
+    }
+
+    class ServicesBackupService {
+      + CreateBackupAsync(destinationDirectory) : Task<string>
+    }
+  }
+}
+
+package "SOK.Application (contratos)" as AppContracts {
+  interface IAppPathProvider
+  interface ISystemInfoProvider
+  interface IRegistryBackupService
+  interface IServicesBackupService
+
+  class SystemSnapshot
+  class SokPaths
+  class Sha256Helper
+}
+
+AppPathProvider ..|> IAppPathProvider
+AppPathProvider ..> SokPaths : usa rutas por defecto
+
+SystemInfoProvider ..|> ISystemInfoProvider
+SystemInfoProvider ..> SystemSnapshot : construye
+
+RegistryBackupService ..|> IRegistryBackupService
+RegistryBackupService ..> Sha256Helper : calcula hash
+
+ServicesBackupService ..|> IServicesBackupService
+
+legend bottom
+  **B.4 - V.12.4 Servicios de Windows de SOK**
+  Fuente: src/SOK.Infrastructure (Common y Windows).
+  Trazabilidad: HU-01 y HU-16.
+  SystemInfoProvider consulta Win32_OperatingSystem, Win32_Processor
+  y Win32_LogicalDisk (unidad C:). RegistryBackupService exporta 5 claves
+  con reg.exe /y, calcula el SHA-256 de cada .reg y escribe el manifiesto.
+  ServicesBackupService consulta Win32_Service y escribe el JSON con
+  nombre, modo de inicio y estado. Las clases se marcan con
+  [SupportedOSPlatform("windows")].
+endlegend
+
+@enduml

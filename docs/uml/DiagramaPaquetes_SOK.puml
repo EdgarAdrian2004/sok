@@ -1,0 +1,90 @@
+@startuml DiagramaPaquetes_SOK
+' ============================================================
+'  SOK - Vista de paquetes y dependencias entre capas (B.4)
+'  TAP Seccion V.12.0 - Edgar Adrian Flores Herrera
+'  Basado en el codigo real del Sprint 1 (commit 693eda1)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam nodesep 30
+skinparam ranksep 45
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  FontSize 10
+}
+skinparam package {
+  BackgroundColor #F8F9F9
+  BorderColor #566573
+  FontSize 13
+  FontStyle bold
+}
+skinparam arrow {
+  Color #2E4053
+  FontSize 10
+}
+
+title SOK - V.12.0 Vista de paquetes y dependencias entre capas\nRegla de dependencia unidireccional
+
+package "SOK.UI (presentacion)" as UI {
+  [App\n(arranque e Ioc.Default)] as App
+  [MainWindow] as MW
+  [ViewModels] as VM
+  [Views] as Views
+  [NavigationService] as Nav
+}
+
+package "SOK.Infrastructure" as Infra {
+  [SokDbContext] as Db
+  [Repositorios ADO.NET] as Repos
+  [SystemInfoProvider\n(WMI)] as SIP
+  [RegistryBackupService\n(reg.exe)] as RBS
+  [ServicesBackupService\n(WMI)] as SBS
+  [AppPathProvider] as APP
+}
+
+package "SOK.Application" as AppLayer {
+  [LogService] as Log
+  [BackupManager] as Backup
+  [Contratos de servicio] as Contracts
+  [SystemSnapshot] as Snapshot
+}
+
+package "SOK.Domain" as Domain {
+  [Entidades\nProfile, ProfileSetting,\nBackup, LogEntry, Setting] as Entities
+  [Enums] as Enums
+  [Contratos de repositorio] as RepoContracts
+}
+
+UI ..> AppLayer : invoca casos de uso
+UI ..> Infra : composicion (DI)
+Infra ..> AppLayer : implementa contratos
+Infra ..> Domain : persiste entidades
+AppLayer ..> Domain : usa entidades y contratos
+
+note bottom of UI
+  La UI no accede a SQLite ni al registro
+  directamente: solo conoce los contratos de
+  SOK.Application. La composicion se resuelve
+  en App.OnStartup con Ioc.Default.
+endnote
+
+note bottom of Domain
+  SOK.Domain no tiene dependencias externas.
+  Es la base de la regla unidireccional.
+endnote
+
+legend bottom
+  **B.4 - V.12.0 Paquetes de SOK**
+  Fuente: SOK.sln (commit 693eda1).
+  Dependencias verificadas en los archivos .csproj:
+  Domain -> (ninguna); Application -> Domain;
+  Infrastructure -> Application + Domain;
+  UI -> Infrastructure (y, por transitividad, Application + Domain).
+endlegend
+
+@enduml

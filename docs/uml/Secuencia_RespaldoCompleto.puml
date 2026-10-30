@@ -1,0 +1,117 @@
+@startuml Secuencia_RespaldoCompleto
+' ============================================================
+'  SOK - Diagrama de secuencia: crear respaldo completo (B.6)
+'  TAP Seccion V.13 - Edgar Adrian Flores Herrera
+'  Trazabilidad: HU-16 (regla de oro de SOK)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam sequence {
+  ArrowColor #2E4053
+  ActorBorderColor #2E4053
+  LifeLineBorderColor #85929E
+  LifeLineBackgroundColor #F8F9F9
+  ParticipantBorderColor #2E4053
+  ParticipantBackgroundColor #EAF2F8
+  ParticipantFontSize 10
+  ActorFontSize 11
+}
+skinparam note {
+  BackgroundColor #FEF5E7
+  BorderColor #B7950B
+  FontSize 9
+}
+
+title Secuencia: crear un respaldo completo antes de optimizar\nSOK - Seccion V.13 del informe TAP
+
+actor "Usuario" as U
+participant "DashboardView\n(WPF)" as V
+participant "DashboardViewModel" as VM
+participant "BackupManager" as BM
+participant "RegistryBackupService" as RBS
+participant "ServicesBackupService" as SBS
+participant "Sha256Helper" as SHA
+participant "BackupRepository" as BR
+database "SQLite\nsok.db" as SQL
+participant "LogService" as LS
+participant "LogRepository" as LR
+
+U -> V : clic en "Crear respaldo completo"
+V -> VM : CreateBackupCommand
+activate VM
+VM -> VM : IsBusy = true\nStatusMessage = "Creando respaldo completo..."
+
+VM -> BM : CreateFullBackupAsync("Respaldo manual...")
+activate BM
+BM -> BM : timestamp = yyyyMMdd_HHmmss\nDirectory.CreateDirectory(backupDirectory)
+
+BM -> RBS : CreateBackupAsync(backupDirectory)
+activate RBS
+loop 5 claves del registro
+  RBS -> RBS : reg.exe export <clave> /y
+  RBS -> SHA : ComputeFileHashAsync(archivo .reg)
+  SHA --> RBS : SHA-256
+end
+RBS -> RBS : escribe registry-manifest.json
+RBS --> BM : ruta del manifiesto de registro
+deactivate RBS
+
+BM -> SBS : CreateBackupAsync(backupDirectory)
+activate SBS
+SBS -> SBS : consulta Win32_Service
+SBS -> SBS : escribe services-backup.json
+SBS --> BM : ruta del respaldo de servicios
+deactivate SBS
+
+BM -> BM : escribe backup-manifest.json\n(registro + servicios + descripcion)
+BM -> SHA : ComputeFileHashAsync(backup-manifest.json)
+SHA --> BM : SHA-256 del manifiesto
+
+BM -> BR : AddAsync(backup)
+activate BR
+BR -> SQL : INSERT INTO Backups (...)
+SQL --> BR : last_insert_rowid()
+BR --> BM : id del respaldo
+deactivate BR
+
+BM -> LS : LogAsync(Respaldos,\n"Crear respaldo completo", ..., Exitoso, backupId)
+activate LS
+LS -> LR : AddAsync(entrada)
+activate LR
+LR -> SQL : INSERT INTO Logs (...)
+SQL --> LR : last_insert_rowid()
+LR --> LS : id de la entrada
+deactivate LR
+LS --> BM : 
+deactivate LS
+
+BM --> VM : Backup (ruta, hash e id)
+deactivate BM
+
+VM -> VM : LastBackupPath = ruta\nStatusMessage = "Respaldo creado correctamente..."
+VM --> V : notificacion de propiedades (binding)
+deactivate VM
+V --> U : mensaje de exito en el panel
+
+note over BM
+  **Ruta de error:** si falla cualquier paso,
+  BackupManager registra ActionResult.Fallido
+  con el mensaje de la excepcion y relanza el
+  error. El ViewModel muestra el mensaje en
+  StatusMessage y restablece IsBusy.
+endnote
+
+legend bottom
+  **B.6 - Secuencia de respaldo completo**
+  La exportacion del registro y de los servicios
+  ocurre **siempre antes** de cualquier cambio en
+  el sistema (regla de oro de SOK).
+  SokDbContext abre una conexion por operacion y
+  aplica PRAGMA foreign_keys = ON antes de cada
+  INSERT (detalle en V.12.3).
+endlegend
+
+@enduml

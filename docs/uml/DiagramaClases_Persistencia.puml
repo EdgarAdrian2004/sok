@@ -1,0 +1,133 @@
+@startuml DiagramaClases_Persistencia
+' ============================================================
+'  SOK - Diagrama de clases 3/5: PERSISTENCIA (B.4)
+'  TAP Seccion V.12.3 - Edgar Adrian Flores Herrera
+'  Basado en el codigo real del Sprint 1 (commit 693eda1)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam nodesep 20
+skinparam ranksep 30
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  ArrowColor #2E4053
+  FontSize 10
+}
+skinparam interface {
+  BackgroundColor #EAF2F8
+  BorderColor #1F618D
+  FontSize 10
+}
+skinparam package {
+  BackgroundColor #F8F9F9
+  BorderColor #566573
+  FontSize 12
+  FontStyle bold
+}
+
+title SOK - V.12.3 Diagrama de clases de la persistencia\nRepositorios ADO.NET sobre SQLite
+
+package "SOK.Infrastructure.Persistence" as Persistence {
+
+  class SokDbContext {
+    + DatabasePath : string
+    + CreateConnection() : SqliteConnection
+    + InitializeAsync() : Task
+    - ReadDdl() : string
+  }
+
+  class SqliteMapping <<static>> {
+    + ToDb(value) : string
+    + FromDb(value) : DateTime
+    + NullableString(value) : string?
+  }
+
+  class ProfileRepository {
+    - context : SokDbContext
+    + GetAllAsync() : Task<IReadOnlyList<Profile>>
+    + GetByIdAsync(id) : Task<Profile?>
+    + GetByNameAsync(name) : Task<Profile?>
+    + AddAsync(profile) : Task<int>
+    + UpdateAsync(profile) : Task
+    + DeleteAsync(id) : Task
+  }
+
+  class ProfileSettingRepository {
+    - context : SokDbContext
+    + GetByProfileIdAsync(profileId) : Task<IReadOnlyList<ProfileSetting>>
+    + AddAsync(setting) : Task<int>
+    + DeleteByProfileIdAsync(profileId) : Task
+  }
+
+  class BackupRepository {
+    - context : SokDbContext
+    + GetAllAsync() : Task<IReadOnlyList<Backup>>
+    + GetByIdAsync(id) : Task<Backup?>
+    + AddAsync(backup) : Task<int>
+    + DeleteAsync(id) : Task
+  }
+
+  class LogRepository {
+    - context : SokDbContext
+    + AddAsync(entry) : Task<int>
+    + GetRecentAsync(limit) : Task<IReadOnlyList<LogEntry>>
+    + GetByModuleAsync(module, limit) : Task<IReadOnlyList<LogEntry>>
+  }
+
+  class SettingsRepository {
+    - context : SokDbContext
+    + GetAsync(key) : Task<Setting?>
+    + GetAllAsync() : Task<IReadOnlyList<Setting>>
+    + SetAsync(key, value) : Task
+    + DeleteAsync(key) : Task
+  }
+}
+
+package "SOK.Domain (contratos)" as DomainContracts {
+  interface IProfileRepository
+  interface IProfileSettingRepository
+  interface IBackupRepository
+  interface ILogRepository
+  interface ISettingsRepository
+}
+
+ProfileRepository ..|> IProfileRepository
+ProfileSettingRepository ..|> IProfileSettingRepository
+BackupRepository ..|> IBackupRepository
+LogRepository ..|> ILogRepository
+SettingsRepository ..|> ISettingsRepository
+
+ProfileRepository --> SokDbContext
+ProfileSettingRepository --> SokDbContext
+BackupRepository --> SokDbContext
+LogRepository --> SokDbContext
+SettingsRepository --> SokDbContext
+SokDbContext ..> SqliteMapping : convierte tipos
+
+' Columna vertical de repositorios
+ProfileRepository -[hidden]down- ProfileSettingRepository
+ProfileSettingRepository -[hidden]down- BackupRepository
+BackupRepository -[hidden]down- LogRepository
+LogRepository -[hidden]down- SettingsRepository
+
+note bottom of SokDbContext
+  Abre una conexion por operacion, ejecuta
+  PRAGMA foreign_keys = ON y aplica el DDL
+  verificado de docs/db/SOK_DDL.sql, embebido
+  como recurso del ensamblado.
+endnote
+
+legend bottom
+  **B.4 - V.12.3 Persistencia de SOK**
+  Fuente: src/SOK.Infrastructure/Persistence.
+  Trazabilidad: HU-04 y HU-16.
+  Las entidades y los contratos se detallan en V.12.1.
+endlegend
+
+@enduml

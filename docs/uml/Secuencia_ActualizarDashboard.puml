@@ -1,0 +1,107 @@
+@startuml Secuencia_ActualizarDashboard
+' ============================================================
+'  SOK - Diagrama de secuencia: actualizar el panel (B.6)
+'  TAP Seccion V.13 - Edgar Adrian Flores Herrera
+'  Trazabilidad: HU-01 y HU-04
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam sequence {
+  ArrowColor #2E4053
+  ActorBorderColor #2E4053
+  LifeLineBorderColor #85929E
+  LifeLineBackgroundColor #F8F9F9
+  ParticipantBorderColor #2E4053
+  ParticipantBackgroundColor #EAF2F8
+  ParticipantFontSize 10
+  ActorFontSize 11
+}
+skinparam note {
+  BackgroundColor #FEF5E7
+  BorderColor #B7950B
+  FontSize 9
+}
+
+title Secuencia: actualizacion del panel de control\nSOK - Seccion V.13 del informe TAP
+
+actor "Usuario" as U
+participant "DashboardView\n(WPF)" as V
+participant "DashboardViewModel" as VM
+participant "DispatcherTimer\n(3 s)" as T
+participant "SystemInfoProvider" as SIP
+participant "WMI" as WMI
+participant "LogService" as LS
+participant "LogRepository" as LR
+database "SQLite\nsok.db" as SQL
+
+== Actualizacion automatica (cada 3 segundos) ==
+
+T -> VM : Tick
+activate VM
+VM -> VM : _isRefreshing = true
+
+VM -> SIP : GetSnapshotAsync()
+activate SIP
+SIP -> SIP : Task.Run(ReadSnapshot)
+SIP -> WMI : SELECT Caption, TotalVisibleMemorySize,\nFreePhysicalMemory, LastBootUpTime
+WMI --> SIP : datos del sistema operativo
+SIP -> WMI : SELECT Name, LoadPercentage\nFROM Win32_Processor
+WMI --> SIP : datos del procesador
+SIP -> WMI : SELECT DeviceID, Size, FreeSpace\nFROM Win32_LogicalDisk WHERE DriveType = 3
+WMI --> SIP : datos del disco C:
+SIP --> VM : SystemSnapshot
+deactivate SIP
+
+VM -> VM : actualiza CpuUsage, RamUsagePercent,\nDiskUsagePercent y los textos
+VM --> V : notificacion de propiedades (binding)
+deactivate VM
+V --> U : tarjetas y barras actualizadas
+
+== Actualizacion manual (boton "Actualizar panel") ==
+
+U -> V : clic en "Actualizar panel"
+V -> VM : RefreshNowCommand
+activate VM
+VM -> SIP : GetSnapshotAsync()
+activate SIP
+SIP -> WMI : consultas WMI
+WMI --> SIP : datos del sistema
+SIP --> VM : SystemSnapshot
+deactivate SIP
+
+VM -> VM : actualiza las propiedades\nLastUpdatedText = "Actualizado: HH:mm:ss"
+
+VM -> LS : LogAsync(Dashboard, "Actualizar panel",\nnull, Exitoso)
+activate LS
+LS -> LR : AddAsync(entrada)
+activate LR
+LR -> SQL : INSERT INTO Logs (...)
+SQL --> LR : last_insert_rowid()
+LR --> LS : id de la entrada
+deactivate LR
+LS --> VM : 
+deactivate LS
+
+VM --> V : notificacion de propiedades
+deactivate VM
+V --> U : panel y mensaje de estado actualizados
+
+note over VM
+  Si la consulta WMI falla, el ViewModel muestra
+  el error en StatusMessage y, en la actualizacion
+  manual, registra ActionResult.Fallido en la
+  bitacora. El temporizador no registra cada tick
+  para no saturar la tabla Logs.
+endnote
+
+legend bottom
+  **B.6 - Secuencia de actualizacion del panel**
+  El temporizador se detiene en Dispose().
+  Evidencia: DashboardViewModel y SystemInfoProvider
+  del Sprint 1.
+endlegend
+
+@enduml

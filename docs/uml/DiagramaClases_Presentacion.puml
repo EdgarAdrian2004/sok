@@ -1,0 +1,156 @@
+@startuml DiagramaClases_Presentacion
+' ============================================================
+'  SOK - Diagrama de clases 5/5: PRESENTACION (B.4)
+'  TAP Seccion V.12.5 - Edgar Adrian Flores Herrera
+'  Basado en el codigo real del Sprint 1 (commit 693eda1)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam nodesep 20
+skinparam ranksep 30
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  ArrowColor #2E4053
+  FontSize 10
+}
+skinparam interface {
+  BackgroundColor #EAF2F8
+  BorderColor #1F618D
+  FontSize 10
+}
+skinparam package {
+  BackgroundColor #F8F9F9
+  BorderColor #566573
+  FontSize 12
+  FontStyle bold
+}
+
+title SOK - V.12.5 Diagrama de clases de la presentacion\nVentana principal, navegacion y ViewModels (MVVM)
+
+package "SOK.UI" as UI {
+
+  class App {
+    # OnStartup(e) : void
+  }
+
+  class MainWindow
+
+  package "Navigation" as Navigation {
+    class NavigationItem <<record>> {
+      + Key : string
+      + Label : string
+      + Description : string
+    }
+
+    interface INavigationService {
+      + MenuItems : IReadOnlyList<NavigationItem>
+      + GetView(key) : FrameworkElement
+    }
+
+    class NavigationService {
+      - views : Dictionary<string, FrameworkElement>
+      + MenuItems : IReadOnlyList<NavigationItem>
+      + GetView(key) : FrameworkElement
+    }
+  }
+
+  package "ViewModels" as ViewModels {
+    class MainViewModel {
+      - navigationService : INavigationService
+      + MenuItems : IReadOnlyList<NavigationItem>
+      + SelectedNavigationItem : NavigationItem?
+      + CurrentView : object?
+      + CurrentTitle : string
+      + CurrentSubtitle : string
+      - Navigate(item) : void
+    }
+
+    class DashboardViewModel {
+      - systemInfoProvider : ISystemInfoProvider
+      - backupManager : IBackupManager
+      - logService : ILogService
+      - timer : DispatcherTimer
+      + CpuUsage : double
+      + RamUsagePercent : double
+      + DiskUsagePercent : double
+      + StatusMessage : string
+      + CreateBackupCommand : IAsyncRelayCommand
+      + RefreshNowCommand : IAsyncRelayCommand
+      - RefreshAsync(isManual) : Task
+    }
+  }
+
+  package "Views" as Views {
+    class DashboardView
+    class TelemetryView
+    class ServicesView
+    class MemoryView
+    class BackupsView
+    class ProfilesView
+    class TutorialView
+  }
+}
+
+package "SOK.Application (contratos)" as AppContracts {
+  interface ISystemInfoProvider
+  interface IBackupManager
+  interface ILogService
+  class SystemSnapshot
+}
+
+package "SOK.Infrastructure" as Infra {
+  class SokDbContext
+}
+
+' ------------------------------------------------------------
+' Arranque y composicion (Ioc.Default)
+' ------------------------------------------------------------
+App --> SokDbContext : inicializa
+App --> INavigationService : registra
+App --> MainViewModel : crea
+App --> DashboardViewModel : registra
+MainWindow --> MainViewModel : DataContext
+
+' ------------------------------------------------------------
+' Navegacion
+' ------------------------------------------------------------
+MainViewModel --> INavigationService : navega
+MainViewModel ..> NavigationItem : selecciona
+NavigationService ..|> INavigationService
+NavigationService ..> NavigationItem : describe
+NavigationService ..> DashboardView : crea
+NavigationService ..> TelemetryView : crea
+NavigationService ..> ServicesView : crea
+NavigationService ..> MemoryView : crea
+NavigationService ..> BackupsView : crea
+NavigationService ..> ProfilesView : crea
+NavigationService ..> TutorialView : crea
+
+' ------------------------------------------------------------
+' Enlace de datos del panel
+' ------------------------------------------------------------
+DashboardView --> DashboardViewModel : DataContext
+DashboardViewModel --> ISystemInfoProvider : consulta
+DashboardViewModel --> IBackupManager : respalda
+DashboardViewModel --> ILogService : registra
+DashboardViewModel ..> SystemSnapshot : recibe
+
+' Columna vertical del arranque
+App -[hidden]down- MainWindow
+MainWindow -[hidden]down- MainViewModel
+
+legend bottom
+  **B.4 - V.12.5 Presentacion de SOK**
+  Fuente: src/SOK.UI (commit 693eda1).
+  Trazabilidad: HU-01, HU-02 y HU-03.
+  Las vistas restantes son marcadores de posicion
+  que se completan en los Sprints 2 a 5.
+endlegend
+
+@enduml

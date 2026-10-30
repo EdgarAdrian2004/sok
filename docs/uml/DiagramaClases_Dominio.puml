@@ -1,0 +1,204 @@
+@startuml DiagramaClases_Dominio
+' ============================================================
+'  SOK - Diagrama de clases 1/4: DOMINIO (B.4)
+'  TAP Seccion V.12.1 - Edgar Adrian Flores Herrera
+'  Basado en el codigo real del Sprint 1 (commit 693eda1)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam nodesep 30
+skinparam ranksep 40
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  ArrowColor #2E4053
+  FontSize 11
+}
+skinparam interface {
+  BackgroundColor #EAF2F8
+  BorderColor #1F618D
+  FontSize 11
+}
+skinparam enum {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
+  FontSize 11
+}
+skinparam package {
+  BackgroundColor #F8F9F9
+  BorderColor #566573
+  FontSize 13
+  FontStyle bold
+}
+skinparam note {
+  BackgroundColor #FEF5E7
+  BorderColor #B7950B
+  FontSize 10
+}
+
+title SOK - V.12.1 Diagrama de clases del dominio\nEntidades, enums y contratos de persistencia
+
+package "SOK.Domain" as Domain {
+
+  package "Entities" as Entities {
+    class Profile {
+      + Id : int
+      + Name : string
+      + Type : ProfileType
+      + Description : string?
+      + IsDefault : bool
+      + CreatedAt : DateTime
+      + UpdatedAt : DateTime
+      + Settings : List<ProfileSetting>
+    }
+
+    class ProfileSetting {
+      + Id : int
+      + ProfileId : int
+      + Module : ProfileModule
+      + TargetKey : string
+      + Action : ProfileAction
+      + Value : string?
+    }
+
+    class Backup {
+      + Id : int
+      + Name : string
+      + BackupType : BackupType
+      + FilePath : string
+      + HashSha256 : string
+      + Description : string?
+      + CreatedAt : DateTime
+    }
+
+    class LogEntry {
+      + Id : int
+      + Timestamp : DateTime
+      + Module : LogModule
+      + Action : string
+      + TargetKey : string?
+      + Result : ActionResult
+      + Detail : string?
+      + BackupId : int?
+    }
+
+    class Setting {
+      + Key : string
+      + Value : string
+      + UpdatedAt : DateTime
+    }
+  }
+
+  package "Enums" as Enums {
+    enum ProfileType {
+      Gamer
+      Ofimatico
+      Personalizado
+    }
+
+    enum ProfileModule {
+      Telemetria
+      Servicios
+      Memoria
+    }
+
+    enum ProfileAction {
+      Deshabilitar
+      Habilitar
+      Valor
+      Umbral
+    }
+
+    enum BackupType {
+      Registro
+      Servicios
+      Completo
+    }
+
+    enum LogModule {
+      Acceso
+      Dashboard
+      Telemetria
+      Servicios
+      Memoria
+      Respaldos
+      Perfiles
+    }
+
+    enum ActionResult {
+      Exitoso
+      Fallido
+      Revertido
+    }
+  }
+
+  package "Abstractions" as Abstractions {
+    interface IProfileRepository {
+      + GetAllAsync() : Task<IReadOnlyList<Profile>>
+      + GetByIdAsync(id) : Task<Profile?>
+      + GetByNameAsync(name) : Task<Profile?>
+      + AddAsync(profile) : Task<int>
+      + UpdateAsync(profile) : Task
+      + DeleteAsync(id) : Task
+    }
+
+    interface IProfileSettingRepository {
+      + GetByProfileIdAsync(profileId) : Task<IReadOnlyList<ProfileSetting>>
+      + AddAsync(setting) : Task<int>
+      + DeleteByProfileIdAsync(profileId) : Task
+    }
+
+    interface IBackupRepository {
+      + GetAllAsync() : Task<IReadOnlyList<Backup>>
+      + GetByIdAsync(id) : Task<Backup?>
+      + AddAsync(backup) : Task<int>
+      + DeleteAsync(id) : Task
+    }
+
+    interface ILogRepository {
+      + AddAsync(entry) : Task<int>
+      + GetRecentAsync(limit) : Task<IReadOnlyList<LogEntry>>
+      + GetByModuleAsync(module, limit) : Task<IReadOnlyList<LogEntry>>
+    }
+
+    interface ISettingsRepository {
+      + GetAsync(key) : Task<Setting?>
+      + GetAllAsync() : Task<IReadOnlyList<Setting>>
+      + SetAsync(key, value) : Task
+      + DeleteAsync(key) : Task
+    }
+  }
+}
+
+' ------------------------------------------------------------
+' Relaciones
+' ------------------------------------------------------------
+Profile "1" *-- "0..*" ProfileSetting : settings
+Profile ..> ProfileType
+ProfileSetting ..> ProfileModule
+ProfileSetting ..> ProfileAction
+Backup ..> BackupType
+LogEntry ..> LogModule
+LogEntry ..> ActionResult
+LogEntry --> Backup : backupId
+
+IProfileRepository ..> Profile : persiste
+IProfileSettingRepository ..> ProfileSetting : persiste
+IBackupRepository ..> Backup : persiste
+ILogRepository ..> LogEntry : persiste
+ISettingsRepository ..> Setting : persiste
+
+legend bottom
+  **B.4 - V.12.1 Dominio de SOK**
+  Fuente: src/SOK.Domain (commit 693eda1).
+  Trazabilidad: HU-04 y HU-16.
+  SOK.Domain no depende de ninguna otra capa; los enums
+  coinciden con los CHECK del DDL SQLite.
+endlegend
+
+@enduml

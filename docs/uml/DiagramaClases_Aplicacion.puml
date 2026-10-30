@@ -1,0 +1,172 @@
+@startuml DiagramaClases_Aplicacion
+' ============================================================
+'  SOK - Diagrama de clases 2/4: APLICACION (B.4)
+'  TAP Seccion V.12.2 - Edgar Adrian Flores Herrera
+'  Basado en el codigo real del Sprint 1 (commit 693eda1)
+' ============================================================
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam nodesep 25
+skinparam ranksep 35
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2E4053
+  ArrowColor #2E4053
+  FontSize 10
+}
+skinparam interface {
+  BackgroundColor #EAF2F8
+  BorderColor #1F618D
+  FontSize 10
+}
+skinparam enum {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
+  FontSize 10
+}
+skinparam package {
+  BackgroundColor #F8F9F9
+  BorderColor #566573
+  FontSize 12
+  FontStyle bold
+}
+
+title SOK - V.12.2 Diagrama de clases de la aplicacion\nCasos de uso, contratos de servicio y orquestacion
+
+package "SOK.Application" as App {
+
+  class SystemSnapshot <<record>> {
+    + OsName : string
+    + ProcessorName : string
+    + MachineName : string
+    + CpuUsagePercent : double
+    + RamTotalBytes : long
+    + RamUsedBytes : long
+    + DiskTotalBytes : long
+    + DiskFreeBytes : long
+    + Uptime : TimeSpan
+    + RamUsagePercent : double
+    + DiskUsagePercent : double
+  }
+
+  class SokPaths <<static>> {
+    + AppDataDirectory : string
+    + DatabasePath : string
+    + BackupDirectory : string
+  }
+
+  class Sha256Helper <<static>> {
+    + ComputeFileHashAsync(path) : Task<string>
+  }
+
+  package "Contratos" as Contratos {
+    interface IAppPathProvider {
+      + AppDataDirectory : string
+      + DatabasePath : string
+      + BackupDirectory : string
+    }
+
+    interface ISystemInfoProvider {
+      + GetSnapshotAsync() : Task<SystemSnapshot>
+    }
+
+    interface IRegistryBackupService {
+      + CreateBackupAsync(destinationDirectory) : Task<string>
+    }
+
+    interface IServicesBackupService {
+      + CreateBackupAsync(destinationDirectory) : Task<string>
+    }
+
+    interface IBackupManager {
+      + CreateFullBackupAsync(description) : Task<Backup>
+    }
+
+    interface ILogService {
+      + LogAsync(module, action, targetKey, result, detail, backupId) : Task
+    }
+  }
+
+  package "Servicios" as Servicios {
+    class LogService {
+      - repository : ILogRepository
+      + LogAsync(module, action, targetKey, result, detail, backupId) : Task
+    }
+
+    class BackupManager {
+      - registryBackupService : IRegistryBackupService
+      - servicesBackupService : IServicesBackupService
+      - backupRepository : IBackupRepository
+      - logService : ILogService
+      - pathProvider : IAppPathProvider
+      + CreateFullBackupAsync(description) : Task<Backup>
+    }
+  }
+}
+
+package "SOK.Domain (tipos referenciados)" as Domain {
+  class Backup
+  interface IBackupRepository
+  interface ILogRepository
+
+  enum LogModule {
+    Respaldos
+    Dashboard
+  }
+
+  enum ActionResult {
+    Exitoso
+    Fallido
+  }
+}
+
+' Fuerza una columna vertical para los contratos y reduce el ancho del diagrama
+IAppPathProvider -[hidden]down- ISystemInfoProvider
+ISystemInfoProvider -[hidden]down- IRegistryBackupService
+IRegistryBackupService -[hidden]down- IServicesBackupService
+IServicesBackupService -[hidden]down- IBackupManager
+IBackupManager -[hidden]down- ILogService
+
+' ------------------------------------------------------------
+' Implementaciones de los contratos
+' ------------------------------------------------------------
+LogService ..|> ILogService
+LogService --> ILogRepository : consulta y registra
+BackupManager ..|> IBackupManager
+BackupManager --> IRegistryBackupService : exporta registro
+BackupManager --> IServicesBackupService : exporta servicios
+BackupManager --> IBackupRepository : guarda metadatos
+BackupManager --> ILogService : registra resultado
+BackupManager --> IAppPathProvider : resuelve rutas
+
+' ------------------------------------------------------------
+' Dependencias de tipos
+' ------------------------------------------------------------
+BackupManager ..> Sha256Helper : calcula SHA-256
+BackupManager ..> Backup : crea
+BackupManager ..> LogModule : clasifica
+BackupManager ..> ActionResult : reporta
+ISystemInfoProvider ..> SystemSnapshot : devuelve
+
+note right of BackupManager
+  Orquesta el respaldo completo en este orden:
+  1) exporta el registro, 2) exporta los servicios,
+  3) escribe el manifiesto, 4) calcula el SHA-256,
+  5) guarda los metadatos y 6) registra en la bitacora.
+  Si un paso falla, registra ActionResult.Fallido.
+endnote
+
+legend bottom
+  **B.4 - V.12.2 Aplicacion de SOK**
+  Fuente: src/SOK.Application (commit 693eda1).
+  Trazabilidad: HU-01, HU-04 y HU-16.
+  Las implementaciones concretas de estos contratos
+  se muestran en V.12.3 (infraestructura).
+endlegend
+
+@enduml
