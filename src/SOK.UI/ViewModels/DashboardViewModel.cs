@@ -130,7 +130,7 @@ public partial class DashboardViewModel : ObservableObject, IDisposable
 
             CpuUsageText = $"{snapshot.CpuUsagePercent:0} %";
             RamUsageText = $"{ToGb(snapshot.RamUsedBytes):0.0} / {ToGb(snapshot.RamTotalBytes):0.0} GB";
-            DiskUsageText = $"{ToGb(snapshot.DiskFreeBytes):0.0} / {ToGb(snapshot.DiskTotalBytes):0.0} GB";
+            DiskUsageText = $"{ToGb(snapshot.DiskFreeBytes):0.0} / {ToGb(snapshot.DiskTotalBytes):0.0}";
 
             OsName = snapshot.OsName;
             ProcessorName = snapshot.ProcessorName;

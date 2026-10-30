@@ -43,7 +43,7 @@
                     <StackPanel>
                         <TextBlock Text="Disco del sistema" Style="{StaticResource BodyText}" />
                         <TextBlock Text="{Binding DiskUsageText}" Style="{StaticResource MetricValue}" Margin="0,6,0,0" />
-                        <TextBlock Text="libres / totales" Style="{StaticResource SmallText}" Margin="0,2,0,0" />
+                        <TextBlock Text="GB libres / totales" Style="{StaticResource SmallText}" Margin="0,2,0,0" />
                         <ProgressBar Value="{Binding DiskUsagePercent}"
                                      Maximum="100"
                                      Style="{StaticResource SokProgressBar}"
