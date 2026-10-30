@@ -35,9 +35,13 @@
 - `dotnet test SOK.sln`: 34 pruebas correctas (30 unitarias + 4 de integración con Windows).
 - Base de datos creada en `%LOCALAPPDATA%\SOK\sok.db`.
 - Respaldos en `%LOCALAPPDATA%\SOK\Backups`.
+- Aplicación ejecutada en Windows 10 22H2 (10.0.19045): ventana «SOK — System Optimization Key» con elevación UAC.
+- Captura del panel de control: `docs/capturas/sprint-1-dashboard.png`.
 
-## Pendiente para el cierre del sprint
+## Cierre del sprint
 
-- [ ] Validar la aplicación en una laptop con Windows 10 (o documentar la validación en Windows 11 y trasladar la validación de campo al Bloque D).
-- [ ] Revisar visualmente la interfaz y ajustar estilos si es necesario.
-- [ ] Actualizar el `PLAN_MAESTRO` al cierre del sprint.
+- [x] Validar la aplicación en Windows 10 22H2.
+- [x] Revisar visualmente la interfaz y ajustar estilos (texto de disco sin recortes).
+- [x] Actualizar el `PLAN_MAESTRO` a la versión 1.6 con el Sprint 1 completado.
+
+**Estado:** Sprint 1 cerrado el 30/10/2026. Siguiente iteración: B.4/B.6 (diagramas UML) y B.8 (integración continua) antes del Sprint 2.
