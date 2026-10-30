@@ -1,0 +1,87 @@
+# ============================================================
+#  SOK - Integracion continua (paso B.8)
+#  Compila la solucion y ejecuta las pruebas en cada push
+#  y en cada pull request dirigido a main.
+# ============================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compilar-y-probar:
+    name: Compilar y probar (Windows)
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+          cache: true
+          cache-dependency-path: "**/*.csproj"
+
+      - name: Restaurar paquetes
+        run: dotnet restore SOK.sln --nologo
+
+      - name: Compilar en Release
+        run: dotnet build SOK.sln -c Release --no-restore --nologo
+
+      - name: Ejecutar las pruebas
+        run: >
+          dotnet test SOK.sln -c Release --no-build --nologo
+          --results-directory artifacts/test-results
+          --logger "trx;LogFileName=resultados.trx"
+
+      - name: Resumir los resultados
+        if: always()
+        shell: pwsh
+        run: |
+          $summary = $env:GITHUB_STEP_SUMMARY
+          $trx = Get-ChildItem "artifacts/test-results" -Filter *.trx -Recurse -ErrorAction SilentlyContinue |
+                 Select-Object -First 1
+          if (-not $trx) {
+              "## Resultados de las pruebas`n`nNo se encontraron resultados." |
+                  Out-File $summary -Append -Encoding utf8
+              exit 0
+          }
+          [xml]$doc = Get-Content $trx.FullName
+          $counters = $doc.TestRun.ResultSummary.Counters
+          if (-not $counters) {
+              "## Resultados de las pruebas`n`nEl archivo TRX no contiene conteos." |
+                  Out-File $summary -Append -Encoding utf8
+              exit 0
+          }
+          "## Resultados de las pruebas" | Out-File $summary -Append -Encoding utf8
+          "" | Out-File $summary -Append -Encoding utf8
+          "| Metrica | Valor |" | Out-File $summary -Append -Encoding utf8
+          "| --- | --- |" | Out-File $summary -Append -Encoding utf8
+          "| Total | $($counters.total) |" | Out-File $summary -Append -Encoding utf8
+          "| Correctas | $($counters.passed) |" | Out-File $summary -Append -Encoding utf8
+          "| Fallidas | $($counters.failed) |" | Out-File $summary -Append -Encoding utf8
+          "| Omitidas | $($counters.notExecuted) |" | Out-File $summary -Append -Encoding utf8
+
+      - name: Publicar los resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-pruebas
+          path: artifacts/test-results
+          if-no-files-found: warn
+          retention-days: 14

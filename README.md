@@ -1,5 +1,7 @@
 # SOK — System Optimization Key
 
+[![CI](https://github.com/EdgarAdrian2004/sok/actions/workflows/ci.yml/badge.svg)](https://github.com/EdgarAdrian2004/sok/actions/workflows/ci.yml)
+
 Aplicación de escritorio Windows (C# .NET 8 + WPF + MVVM) que unifica las herramientas de optimización del sistema operativo en una sola interfaz, pensada para equipos con recursos limitados.
 
 Proyecto de titulación (TAP) — **Edgar Adrian Flores Herrera**
@@ -56,8 +58,19 @@ docs/       diagramas UML y diseño de base de datos
 *.md        documentación del proyecto
 ```
 
+## Integración continua
+
+El workflow `.github/workflows/ci.yml` se ejecuta en cada push y en cada pull request dirigido a `main`:
+
+1. Instala el SDK de .NET 8.
+2. Restaura los paquetes de la solución.
+3. Compila `SOK.sln` en configuración `Release`.
+4. Ejecuta las 34 pruebas (30 unitarias + 4 de integración) y publica el resumen y el archivo TRX como artefacto.
+
 ## Documentación
 
 - `PLAN_MAESTRO_PROYECTO_SOK.md` — fuente única de verdad del proyecto
-- `docs/uml/` — diagramas de casos de uso (general + 8 sub-diagramas) y descripciones
+- `docs/uml/` — diagramas de casos de uso (general + 8 sub-diagramas), diagramas de clases (paquetes + 5 capas) y diagramas de secuencia (respaldo completo y actualización del panel)
+- `docs/uml/mapa-conceptual-graphify.md` — mapa de entidades y dependencias reales del código (438 nodos y 991 aristas)
 - `docs/db/` — diseño de base de datos: DDL verificado, modelo entidad-relación y documento de diseño
+- `docs/capturas/` — evidencia visual de la aplicación en ejecución
