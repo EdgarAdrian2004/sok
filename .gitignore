@@ -4,6 +4,9 @@ obj/
 [Dd]ebug/
 [Rr]elease/
 artifacts/
+
+# Graphify (artefacto regenerable del analisis de codigo)
+graphify-out/
 *.user
 *.suo
 *.userosscache
