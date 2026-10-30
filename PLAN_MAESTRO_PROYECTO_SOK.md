@@ -4,8 +4,8 @@
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
 > Generado el: 29 de septiembre de 2026 — Actualizado: 30 de octubre de 2026
-> Versión: 1.6 (Sprint 1 completado y validado en Windows 10)
-> Estado: En desarrollo (Bloque A 5/6; Bloque B 5/8; Bloque C — Sprint 1 completado, Sprint 2 siguiente)
+> Versión: 1.7 (diagramas UML de clases y de secuencia sobre el código real)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 6/8; Bloque C — Sprint 1 completado, Sprint 2 siguiente)
 
 ---
 
@@ -661,13 +661,37 @@ SOK/ ← solución Visual Studio
 | B.1 | Crear repo GitHub `EdgarAdrian2004/sok` + estructura de carpetas | — (código) | ✅ Hecho (público) |
 | B.2 | Crear solución VS 2022 con 4 capas (Domain, Application, Infrastructure, UI) | — (código) | ✅ Hecho (compila sin errores) |
 | B.3 | Diseñar BD SQLite (tablas: Profiles, Backups, Logs, Settings) | Sección V.17 | ✅ Hecho (DDL verificado) |
-| B.4 | Elaborar diagrama UML de clases | Sección V.11 | ⏳ Pendiente |
+| B.4 | Elaborar diagrama UML de clases | Sección V.12 | ✅ Hecho (6 diagramas: paquetes + 5 capas) |
 | B.5 | Elaborar diagrama UML de casos de uso | Sección V.11 | ✅ Hecho (general + 8 sub-diagramas, 18/18 HU) |
-| B.6 | Elaborar diagrama UML de secuencia (flujo optimizar) | Sección V.11 | ⏳ Pendiente |
+| B.6 | Elaborar diagrama UML de secuencia (flujo optimizar) | Sección V.13 | ✅ Hecho (respaldo completo + actualización del panel) |
 | B.7 | Refinar Requerimientos RF y RNF | Sección V.18 | ✅ Ya hecho |
 | B.8 | Configurar CI en GitHub Actions (que compile en cada push) | — (código) | ⏳ Pendiente |
 
 > **Nota de secuencia:** B.4 y B.6 se elaboran después del Sprint 1, cuando existan clases, repositorios, servicios y ViewModels reales. B.8 se configura después de B.4/B.6.
+
+#### Detalle de B.4 — Diagrama UML de clases (V.12)
+
+El diagrama se dividió en seis archivos para que cada uno sea legible al insertarse en el informe. Un diagrama único de toda la solución resultó de 4096 px de ancho, imposible de leer en una página A4.
+
+| Archivo | Sección | Contenido | Dimensiones |
+| --- | --- | --- | --- |
+| `DiagramaPaquetes_SOK.puml` | V.12.0 | Paquetes y regla de dependencia entre capas | 1791 × 941 |
+| `DiagramaClases_Dominio.puml` | V.12.1 | Entidades, enums y contratos de repositorio | 2052 × 1179 |
+| `DiagramaClases_Aplicacion.puml` | V.12.2 | Contratos de servicio, `BackupManager` y `LogService` | 1703 × 1364 |
+| `DiagramaClases_Persistencia.puml` | V.12.3 | `SokDbContext` y los cinco repositorios ADO.NET | 1285 × 1273 |
+| `DiagramaClases_Windows.puml` | V.12.4 | WMI, respaldo de registro y de servicios | 1437 × 603 |
+| `DiagramaClases_Presentacion.puml` | V.12.5 | `App`, navegación, ViewModels y vistas | 1915 × 940 |
+
+Los diagramas se derivaron del grafo de Graphify (438 nodos, 991 aristas) y se contrastaron con los archivos `.csproj`. El análisis completo está en `docs/uml/mapa-conceptual-graphify.md`.
+
+#### Detalle de B.6 — Diagrama UML de secuencia (V.13)
+
+| Archivo | Sección | Flujo modelado | Trazabilidad |
+| --- | --- | --- | --- |
+| `Secuencia_RespaldoCompleto.puml` | V.13.1 | Creación del respaldo completo antes de optimizar | HU-16 |
+| `Secuencia_ActualizarDashboard.puml` | V.13.2 | Actualización automática (cada 3 s) y manual del panel | HU-01, HU-04 |
+
+Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El detalle de bajo nivel del registro y de los servicios se dejó en V.12.4 para no saturar la secuencia; así el diagrama de respaldo conserva 2050 × 1581 px y sigue siendo imprimible.
 
 ### BLOQUE C — IMPLEMENTACIÓN POR SPRINTS
 
@@ -957,15 +981,15 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 ### Paso inmediato 3: Bloque B — Diseño + Setup técnico
 
-**Hecho:** repo GitHub (B.1), solución Visual Studio (B.2), diseño de BD (B.3) y casos de uso (B.5).
+**Hecho:** repo GitHub (B.1), solución Visual Studio (B.2), diseño de BD (B.3), diagramas de clases (B.4) y de secuencia (B.6) sobre el código real, y casos de uso (B.5).
 
-**Pendiente:** B.4 (clases UML) y B.6 (secuencia UML) después del Sprint 1; B.8 (CI) después de los diagramas.
+**Pendiente:** B.8 (integración continua en GitHub Actions), antes de iniciar el Sprint 2.
 
 ### Paso inmediato 4: Bloque C — Implementación
 
 **Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos) completado y validado en Windows 10 22H2.
 
-**Siguiente:** B.4 y B.6 (diagramas UML de clases y de secuencia) sobre el código real; después B.8 (CI) y el Sprint 2.
+**Siguiente:** B.8 (integración continua) y el Sprint 2 (Telemetría y Privacidad).
 
 ### Paso inmediato 5: Bloque D — Validación y cierre
 
@@ -1101,6 +1125,7 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.3 | 04/10/2026 | **Sub-diagramas de casos de uso:** el diagrama unificado se complementa con 8 sub-diagramas por módulo (Acceso, Panel de control, Telemetría, Servicios, Memoria, Respaldos, Perfiles y Casos transversales), conservando sin cambios el diagrama general. Se aplica la estrategia de **Opción A** para relaciones entre módulos: los casos externos se representan con fondo gris y una nota que indica el módulo de procedencia. Cada sub-diagrama cubre sus HU y se genera en PNG. `docs/uml/descripcion-casos-uso.md` se actualiza con el índice de los 9 diagramas y la regla de representación (v1.1 del documento). |
 | 1.4 | 05/10/2026 | **Bloque B — infraestructura (B.1 + B.2).** Se crea el repositorio público **`EdgarAdrian2004/sok`** (el nombre previsto en el plan, `edgarflores/sok`, se ajustó porque las credenciales de GitHub disponibles corresponden a `EdgarAdrian2004`); la carpeta de trabajo se reorganiza en la subcarpeta `sok/`, dejando fuera del repositorio los sílabos, el diagnóstico del I.E. y los ejemplos de referencia. Se inicializa la solución `SOK.sln` con las cuatro capas (`SOK.Domain` → `SOK.Application` → `SOK.Infrastructure` → `SOK.UI`), dependencias unidireccionales, `.gitignore` y `README.md`. Paquetes NuGet alineados con el stack .NET 8: `Microsoft.Data.Sqlite` 8.0.31, `System.Management` 8.0.0 y `CommunityToolkit.Mvvm` 8.4.2. Compilación verificada: 0 errores y 0 advertencias. Nota técnica: en `App.xaml.cs` se califica `System.Windows.Application`, pues dentro del espacio de nombres `SOK.*` el identificador `Application` resuelve a la capa `SOK.Application`. |
 | 1.5 | 30/10/2026 | **Decisiones técnicas del Sprint 1.** Se cierran: persistencia con **ADO.NET puro** (`Microsoft.Data.Sqlite` 8.0.31, sin Dapper), pruebas **xUnit + Moq**, inyección de dependencias con **`Ioc.Default`** de CommunityToolkit, **`NavigationService` propio**, `SokDbContext` con el DDL verificado de `docs/db/SOK_DDL.sql`, base de datos en **`%LOCALAPPDATA%\SOK\sok.db`**, proyecto de pruebas en `src/SOK.UI.Tests/` y estrategia de ramas `main` + `feature/sprint-N-*`. Se actualiza la arquitectura (entidades `ProfileSetting`, `Log`, `Setting`; enums `ProfileModule`, `ProfileAction`, `BackupType`, `LogModule`, `ActionResult`) y se confirma el orden: Sprint 1 → B.4/B.6 → B.8 → Sprints 2–5 → Bloque D → A.6 + V.12–V.16. |
+| 1.7 | 30/10/2026 | **Diagramas UML sobre el código real (B.4 y B.6).** Se ejecuta `graphify extract . --code-only` sobre el commit `693eda1` (438 nodos, 991 aristas y 17 comunidades; 86 % extraído del AST). Con ese insumo se elaboran seis diagramas de clases (V.12.0 paquetes, V.12.1 dominio, V.12.2 aplicación, V.12.3 persistencia, V.12.4 servicios de Windows y V.12.5 presentación) y dos de secuencia (V.13.1 respaldo completo y V.13.2 actualización del panel). Se agrega `docs/uml/mapa-conceptual-graphify.md` con el análisis del grafo. Se documenta que un diagrama único de la solución resultaba ilegible (4096 px de ancho), por lo que la sección V.12 se divide en seis archivos. |
 | 1.6 | 30/10/2026 | **Sprint 1 completado.** Se implementan las cuatro capas: dominio (entidades, enums y contratos), aplicación (`SystemSnapshot`, `LogService`, `BackupManager`, rutas y SHA-256), infraestructura (`SokDbContext`, cinco repositorios ADO.NET, `SystemInfoProvider` con WMI, respaldos de registro y servicios) y UI WPF (manifiesto UAC, tema, `MainWindow` de dos columnas, `NavigationService` propio, siete vistas, `DashboardViewModel` y arranque con `Ioc.Default`). Se agrega el proyecto de pruebas `src/SOK.UI.Tests` (xUnit + Moq) con 34 pruebas y los scripts `build.ps1`, `test.ps1` y `package.ps1`. Verificación: `dotnet build` con 0 errores y 0 advertencias, 34/34 pruebas correctas y arranque validado en Windows 10 22H2. Evidencia visual en `docs/capturas/sprint-1-dashboard.png`. |
 
 ---
@@ -1109,6 +1134,6 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 
 Este documento es la fuente única de verdad del proyecto SOK. Cualquier cambio en el alcance, stack, arquitectura o plan debe quedar reflejado aquí en una nueva versión.
 
-**Próxima actualización sugerida:** al cerrar B.4/B.6 (diagramas UML de clases y de secuencia) y B.8 (integración continua), antes de iniciar el Sprint 2.
+**Próxima actualización sugerida:** al cerrar B.8 (integración continua), antes de iniciar el Sprint 2.
 
 **Contacto del autor:** Edgar Adrian Flores Herrera (egresado IESTP Trujillo).
