@@ -3,9 +3,9 @@
 ## System Optimization Key — Trabajo de Aplicación Profesional
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
-> Generado el: 29 de septiembre de 2026 — Actualizado: 5 de octubre de 2026
-> Versión: 1.4 (… + repositorio GitHub y solución con las 4 capas)
-> Estado: En desarrollo (Bloque A completo salvo Introducción; Bloque B en curso: B.1, B.2, B.3 y B.5 completados)
+> Generado el: 29 de septiembre de 2026 — Actualizado: 30 de octubre de 2026
+> Versión: 1.6 (Sprint 1 completado y validado en Windows 10)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 5/8; Bloque C — Sprint 1 completado, Sprint 2 siguiente)
 
 ---
 
@@ -338,7 +338,7 @@ Dado el perfil del egresado, el stack más coherente es **C# .NET 8 + WPF + Powe
 | **Lógica / Aplicación** | C# / .NET 8 (class library) | .NET 8 |
 | **Orquestación** | PowerShell 7 + SDK embebido | 7.x |
 | **Bajo nivel** | P/Invoke Win32 API (kernel32, psapi, advapi32) | — |
-| **Datos** | SQLite + Dapper | SQLite 3.x |
+| **Datos** | SQLite + ADO.NET puro (`Microsoft.Data.Sqlite`) | SQLite 3.x |
 | **Sistema** | Registry, WMI, SCM, ETW, Task Scheduler | Win10/11 |
 | **Pruebas** | xUnit + Moq | — |
 | **Empaquetado** | Inno Setup | — |
@@ -394,9 +394,11 @@ text
 
 │ SOK.Domain │
 
-│ ├── Entities: Profile, Backup, OptimizationAction │
+│ ├── Entities: Profile, ProfileSetting, Backup, Log, Setting │
 
-│ ├── Enums: ProfileType, ModuleType, OptimizationResult │
+│ ├── Enums: ProfileType, ProfileModule, ProfileAction, │
+
+│ │ BackupType, LogModule, ActionResult │
 
 │ └── Rules: lógica de negocio pura (sin dependencias) │
 
@@ -410,7 +412,7 @@ text
 
 │ │ MemoryOptimizer, SystemInfoProvider │
 
-│ ├── Persistence: SQLiteDatabase (SQLite + Dapper) │
+│ ├── Persistence: SokDbContext + repositorios (ADO.NET puro) │
 
 │ ├── PowerShell: PowerShellRunner │
 
@@ -462,6 +464,23 @@ IOptimizationService.ExecuteAsync(action)
 | **Singleton** | Para el BackupService |
 | **Command** | Acciones deshacer/rehacer |
 | **Observer** | Notificaciones entre módulos |
+
+### 7.4 Decisiones técnicas del Sprint 1 (cerradas)
+
+| Tema | Decisión | Justificación |
+| --- | --- | --- |
+| Persistencia | **ADO.NET puro** con `Microsoft.Data.Sqlite` 8.0.31 | Evita una dependencia adicional y hace explícito el acceso a datos para el TAP |
+| Pruebas | **xUnit + Moq** | xUnit es el estándar de .NET y Moq permite aislar servicios sin tocar SQLite ni Windows |
+| Inyección de dependencias | **`Ioc.Default`** de CommunityToolkit.Mvvm | Ya incluido en el paquete; suficiente para el tamaño de SOK |
+| Navegación | **`NavigationService` propio** con diccionario de vistas | CommunityToolkit no incluye navegación; evita añadir Prism u otra librería |
+| Base de datos | `SokDbContext` con el **DDL verificado** de `docs/db/SOK_DDL.sql` | El diseño físico ya fue probado contra SQLite 3.50.4 |
+| Ubicación de la BD | `%LOCALAPPDATA%\SOK\sok.db` | `Program Files` requiere elevación para escritura; `LocalAppData` es el lugar correcto |
+| Proyecto de pruebas | `src/SOK.UI.Tests/` con subcarpetas `Domain/`, `Application/`, `Infrastructure/` | Un solo proyecto xUnit que referencia las cuatro capas |
+| Estrategia de ramas | `main` + `feature/sprint-N-*` por sprint; PR al cierre | Commits atómicos y revisión por sprint |
+
+**Orden de ejecución confirmado:** Sprint 1 → B.4 (clases UML) + B.6 (secuencia UML) → B.8 (CI) → Sprints 2–5 → Bloque D → A.6 (Introducción) + V.12–V.16.
+
+**Nota:** B.4 y B.6 se elaboran después del Sprint 1 para que los diagramas reflejen las clases y dependencias reales, evitando retrabajo.
 
 ---
 
@@ -648,6 +667,8 @@ SOK/ ← solución Visual Studio
 | B.7 | Refinar Requerimientos RF y RNF | Sección V.18 | ✅ Ya hecho |
 | B.8 | Configurar CI en GitHub Actions (que compile en cada push) | — (código) | ⏳ Pendiente |
 
+> **Nota de secuencia:** B.4 y B.6 se elaboran después del Sprint 1, cuando existan clases, repositorios, servicios y ViewModels reales. B.8 se configura después de B.4/B.6.
+
 ### BLOQUE C — IMPLEMENTACIÓN POR SPRINTS
 
 **Objetivo:** Construir el programa SOK funcional mediante 5 sprints.
@@ -656,11 +677,13 @@ SOK/ ← solución Visual Studio
 
 | Sprint | Módulo | Historias | Semanas | Story points | Documento |
 | --- | --- | --- | --- | --- | --- |
-| **Sprint 1** | Núcleo + Dashboard + Backup | HU-01, 02, 03, 04, 16 | 2 | 23 | V.19 Sprint 1 |
+| **Sprint 1** | Núcleo + Dashboard + Backup | HU-01, 02, 03, 04, 16 | 2 | 23 | V.19 Sprint 1 — ✅ Completado |
 | **Sprint 2** | Telemetría y Privacidad | HU-05, 06, 07 | 2 | 16 | V.19 Sprint 2 |
 | **Sprint 3** | Gestión de Servicios | HU-08, 09, 10 | 2 | 13 | V.19 Sprint 3 |
 | **Sprint 4** | Liberación de Memoria | HU-11, 12, 13 | 2 | 18 | V.19 Sprint 4 |
 | **Sprint 5** | Perfiles + Restore + Tutorial | HU-14, 15, 17, 18 | 2 | 21 | V.19 Sprint 5 |
+
+**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30). El Sprint 2 (Telemetría y Privacidad) queda como siguiente iteración.
 
 #### Detalle Sprint 1 — Núcleo y Dashboard (23 SP)
 
@@ -674,11 +697,23 @@ SOK/ ← solución Visual Studio
 
 **Definición de Hecho (DoD) del Sprint 1:**
 
-- Código versionado en Git con commits atómicos
-- Pruebas unitarias pasan (xUnit)
-- Código revisado
-- Funcionalidad validada en Windows 10
-- Bitácora del sprint actualizada
+- ✅ Código versionado en Git con commits atómicos
+- ✅ Pruebas unitarias pasan (xUnit): 34/34 (30 unitarias + 4 de integración)
+- ✅ Código revisado
+- ✅ Funcionalidad validada en Windows 10 22H2 (10.0.19045)
+- ✅ Bitácora del sprint actualizada
+
+**Evidencia de verificación (30/10/2026):**
+
+| Criterio | Resultado |
+| --- | --- |
+| `dotnet build SOK.sln` | 0 errores, 0 advertencias |
+| `dotnet test SOK.sln` | 34 pruebas correctas, 0 fallidas |
+| Arranque de la aplicación | Ventana «SOK — System Optimization Key» visible y elevada |
+| Panel de control | CPU, RAM, disco y datos del equipo actualizados cada 3 s |
+| Base de datos | `%LOCALAPPDATA%\SOK\sok.db` creada con el DDL verificado |
+| Respaldos | `%LOCALAPPDATA%\SOK\Backups` con registro, servicios, manifiesto y SHA-256 |
+| Captura de pantalla | `docs/capturas/sprint-1-dashboard.png` |
 
 #### Detalle Sprint 2 — Telemetría y Privacidad (16 SP)
 
@@ -810,7 +845,7 @@ SOK/ ← solución Visual Studio
 | Diagrama UML de clases | B | ⏳ Pendiente |
 | Diagrama UML de secuencia | B | ⏳ Pendiente |
 | Configurar CI en GitHub Actions | B | ⏳ Pendiente |
-| Implementación Sprint 1 (núcleo + dashboard + backup) | C | ⏳ Pendiente |
+| Implementación Sprint 1 (núcleo + dashboard + backup) | C | ✅ Hecho |
 | Implementación Sprint 2 (telemetría) | C | ⏳ Pendiente |
 | Implementación Sprint 3 (servicios) | C | ⏳ Pendiente |
 | Implementación Sprint 4 (memoria) | C | ⏳ Pendiente |
@@ -922,11 +957,15 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 ### Paso inmediato 3: Bloque B — Diseño + Setup técnico
 
-Crear el repo GitHub + solución Visual Studio + diagramas UML + diseño BD.
+**Hecho:** repo GitHub (B.1), solución Visual Studio (B.2), diseño de BD (B.3) y casos de uso (B.5).
+
+**Pendiente:** B.4 (clases UML) y B.6 (secuencia UML) después del Sprint 1; B.8 (CI) después de los diagramas.
 
 ### Paso inmediato 4: Bloque C — Implementación
 
-5 sprints de 2 semanas cada uno.
+**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos) completado y validado en Windows 10 22H2.
+
+**Siguiente:** B.4 y B.6 (diagramas UML de clases y de secuencia) sobre el código real; después B.8 (CI) y el Sprint 2.
 
 ### Paso inmediato 5: Bloque D — Validación y cierre
 
@@ -1061,6 +1100,8 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.2 | 04/10/2026 | **Bloque B (diseño):** diagrama de casos de uso en PlantUML (19 casos concretos + 1 abstracto, trazabilidad 18/18 HU) con descripciones; diseño de base de datos conceptual, lógico y físico (5 tablas, 5 índices, 3FN) con DDL verificado contra SQLite 3.50.4; diagrama entidad-relación (PNG + DBML para dbdiagram.io). Nueva carpeta `docs/` con `uml/` y `db/`. Pasos B.3 y B.5 completados. |
 | 1.3 | 04/10/2026 | **Sub-diagramas de casos de uso:** el diagrama unificado se complementa con 8 sub-diagramas por módulo (Acceso, Panel de control, Telemetría, Servicios, Memoria, Respaldos, Perfiles y Casos transversales), conservando sin cambios el diagrama general. Se aplica la estrategia de **Opción A** para relaciones entre módulos: los casos externos se representan con fondo gris y una nota que indica el módulo de procedencia. Cada sub-diagrama cubre sus HU y se genera en PNG. `docs/uml/descripcion-casos-uso.md` se actualiza con el índice de los 9 diagramas y la regla de representación (v1.1 del documento). |
 | 1.4 | 05/10/2026 | **Bloque B — infraestructura (B.1 + B.2).** Se crea el repositorio público **`EdgarAdrian2004/sok`** (el nombre previsto en el plan, `edgarflores/sok`, se ajustó porque las credenciales de GitHub disponibles corresponden a `EdgarAdrian2004`); la carpeta de trabajo se reorganiza en la subcarpeta `sok/`, dejando fuera del repositorio los sílabos, el diagnóstico del I.E. y los ejemplos de referencia. Se inicializa la solución `SOK.sln` con las cuatro capas (`SOK.Domain` → `SOK.Application` → `SOK.Infrastructure` → `SOK.UI`), dependencias unidireccionales, `.gitignore` y `README.md`. Paquetes NuGet alineados con el stack .NET 8: `Microsoft.Data.Sqlite` 8.0.31, `System.Management` 8.0.0 y `CommunityToolkit.Mvvm` 8.4.2. Compilación verificada: 0 errores y 0 advertencias. Nota técnica: en `App.xaml.cs` se califica `System.Windows.Application`, pues dentro del espacio de nombres `SOK.*` el identificador `Application` resuelve a la capa `SOK.Application`. |
+| 1.5 | 30/10/2026 | **Decisiones técnicas del Sprint 1.** Se cierran: persistencia con **ADO.NET puro** (`Microsoft.Data.Sqlite` 8.0.31, sin Dapper), pruebas **xUnit + Moq**, inyección de dependencias con **`Ioc.Default`** de CommunityToolkit, **`NavigationService` propio**, `SokDbContext` con el DDL verificado de `docs/db/SOK_DDL.sql`, base de datos en **`%LOCALAPPDATA%\SOK\sok.db`**, proyecto de pruebas en `src/SOK.UI.Tests/` y estrategia de ramas `main` + `feature/sprint-N-*`. Se actualiza la arquitectura (entidades `ProfileSetting`, `Log`, `Setting`; enums `ProfileModule`, `ProfileAction`, `BackupType`, `LogModule`, `ActionResult`) y se confirma el orden: Sprint 1 → B.4/B.6 → B.8 → Sprints 2–5 → Bloque D → A.6 + V.12–V.16. |
+| 1.6 | 30/10/2026 | **Sprint 1 completado.** Se implementan las cuatro capas: dominio (entidades, enums y contratos), aplicación (`SystemSnapshot`, `LogService`, `BackupManager`, rutas y SHA-256), infraestructura (`SokDbContext`, cinco repositorios ADO.NET, `SystemInfoProvider` con WMI, respaldos de registro y servicios) y UI WPF (manifiesto UAC, tema, `MainWindow` de dos columnas, `NavigationService` propio, siete vistas, `DashboardViewModel` y arranque con `Ioc.Default`). Se agrega el proyecto de pruebas `src/SOK.UI.Tests` (xUnit + Moq) con 34 pruebas y los scripts `build.ps1`, `test.ps1` y `package.ps1`. Verificación: `dotnet build` con 0 errores y 0 advertencias, 34/34 pruebas correctas y arranque validado en Windows 10 22H2. Evidencia visual en `docs/capturas/sprint-1-dashboard.png`. |
 
 ---
 
@@ -1068,6 +1109,6 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 
 Este documento es la fuente única de verdad del proyecto SOK. Cualquier cambio en el alcance, stack, arquitectura o plan debe quedar reflejado aquí en una nueva versión.
 
-**Próxima actualización sugerida:** al cierre del Bloque A completo (después de Referente Teórico e Introducción).
+**Próxima actualización sugerida:** al cerrar B.4/B.6 (diagramas UML de clases y de secuencia) y B.8 (integración continua), antes de iniciar el Sprint 2.
 
 **Contacto del autor:** Edgar Adrian Flores Herrera (egresado IESTP Trujillo).
