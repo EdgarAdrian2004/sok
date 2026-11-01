@@ -3,9 +3,9 @@
 ## System Optimization Key — Trabajo de Aplicación Profesional
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
-> Generado el: 29 de septiembre de 2026 — Actualizado: 30 de octubre de 2026
-> Versión: 1.8 (Bloque B completo: diagramas UML e integración continua)
-> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprint 1 completado, Sprint 2 siguiente)
+> Generado el: 29 de septiembre de 2026 — Actualizado: 1 de noviembre de 2026
+> Versión: 1.9 (Sprint 2 completo: telemetría y privacidad)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprint 1 y Sprint 2 completados, Sprint 3 siguiente)
 
 ---
 
@@ -715,12 +715,12 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | Sprint | Módulo | Historias | Semanas | Story points | Documento |
 | --- | --- | --- | --- | --- | --- |
 | **Sprint 1** | Núcleo + Dashboard + Backup | HU-01, 02, 03, 04, 16 | 2 | 23 | V.19 Sprint 1 — ✅ Completado |
-| **Sprint 2** | Telemetría y Privacidad | HU-05, 06, 07 | 2 | 16 | V.19 Sprint 2 |
+| **Sprint 2** | Telemetría y Privacidad | HU-05, 06, 07 | 2 | 16 | V.19 Sprint 2 — ✅ Completado |
 | **Sprint 3** | Gestión de Servicios | HU-08, 09, 10 | 2 | 13 | V.19 Sprint 3 |
 | **Sprint 4** | Liberación de Memoria | HU-11, 12, 13 | 2 | 18 | V.19 Sprint 4 |
 | **Sprint 5** | Perfiles + Restore + Tutorial | HU-14, 15, 17, 18 | 2 | 21 | V.19 Sprint 5 |
 
-**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30). El Sprint 2 (Telemetría y Privacidad) queda como siguiente iteración.
+**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30) y Sprint 2 completado (rama `feature/sprint-2-telemetria-privacidad`, 2026-11-01). El Sprint 3 (Gestión de Servicios) queda como siguiente iteración.
 
 #### Detalle Sprint 1 — Núcleo y Dashboard (23 SP)
 
@@ -771,6 +771,38 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 - Telemetría de Edge
 - Windows Error Reporting
 - Telemetría de OneDrive
+
+**Implementación final (2026-11-01):** el catálogo se amplió a **46 claves en 11 categorías** (Sistema, Cortana, Defender, Publicidad, Privacidad, Edge, Reporte de errores, OneDrive, Sugerencias, Actividad y Comentarios). Las claves se declaran en `SOK.Application/Common/TelemetryCatalog.cs` con su ruta de registro, nombre del valor, tipo (`DWORD` o `String`), valor habilitado, valor deshabilitado y banderas `RequiresAdmin` y `RequiresRestart`. El estado no se almacena: se lee del registro en cada consulta y se clasifica como `Habilitado`, `Deshabilitado`, `NoAplicable` (la clave no existe en el equipo) o `Desconocido`.
+
+**Decisión de diseño (desviación justificada del plan original de 23 SP):** el plan inicial proponía las tablas `TelemetryKeys` y `TelemetryActionLogs`. Se descartaron porque el catálogo es estático y el estado real vive en el registro de Windows: duplicarlo en SQLite introduciría una fuente de verdad paralela que se desincroniza con el sistema. Las acciones se auditan en la tabla `Logs` existente con el módulo `LogModule.Telemetria` (ya previsto en el DDL), y los respaldos en la tabla `Backups`. No se agregaron tablas ni repositorios nuevos.
+
+**Definición de Hecho (DoD) del Sprint 2:**
+
+- ✅ Código versionado en Git con commits atómicos
+- ✅ Pruebas unitarias y de integración pasan (xUnit): 55/55 (34 del Sprint 1 + 21 nuevas)
+- ✅ Código revisado
+- ✅ Funcionalidad validada en Windows 10 22H2 (10.0.19045)
+- ✅ Bitácora del sprint actualizada
+
+**Evidencia de verificación (01/11/2026):**
+
+| Criterio | Resultado |
+| --- | --- |
+| `dotnet build SOK.sln` | 0 errores, 0 advertencias (Debug y Release) |
+| `dotnet test SOK.sln` | 55 pruebas correctas, 0 fallidas |
+| Catálogo | 46 claves en 11 categorías; identificadores únicos y valores coherentes |
+| Estado leído del equipo | «38 de 46 claves deshabilitadas» en la máquina de validación |
+| Respaldo previo | Un `.reg` por clave afectada + `registry-manifest.json` con SHA-256; las claves inexistentes se registran como «no requiere respaldo» |
+| Privacidad máxima | Un único respaldo para todas las claves pendientes y un registro en la bitácora |
+| Fallo de exportación | Aborta la operación antes de escribir (regla de oro) |
+| Bitácora | Acciones registradas en `Logs` con `LogModule.Telemetria`, resultado y `BackupId` |
+| Captura de pantalla | `docs/capturas/sprint-2-telemetria.png` |
+
+**Limitaciones conocidas:**
+
+- La restauración de un respaldo de telemetría desde la interfaz corresponde al Sprint 5 (HU-17); por ahora el manifiesto y los `.reg` quedan disponibles para restaurar manualmente.
+- Los cambios marcados con «Requiere reinicio» (servicios `DiagTrack` y `dmwappushservice`, Cortana, SmartScreen) surten efecto tras reiniciar el equipo o el Explorador.
+- La validación visual requirió un script de PowerShell elevado porque la aplicación se ejecuta con `requireAdministrator` y la interfaz no puede inspeccionarse desde un proceso sin elevar (UIPI).
 
 #### Detalle Sprint 3 — Gestión de Servicios (13 SP)
 
@@ -884,7 +916,7 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | Mapa conceptual del código (Graphify) — `docs/uml/mapa-conceptual-graphify.md` | B | ✅ Hecho (438 nodos) |
 | Configurar CI en GitHub Actions — `.github/workflows/ci.yml` | B | ✅ Hecho (compila y prueba en cada push) |
 | Implementación Sprint 1 (núcleo + dashboard + backup) | C | ✅ Hecho |
-| Implementación Sprint 2 (telemetría) | C | ⏳ Pendiente |
+| Implementación Sprint 2 (telemetría) | C | ✅ Hecho |
 | Implementación Sprint 3 (servicios) | C | ⏳ Pendiente |
 | Implementación Sprint 4 (memoria) | C | ⏳ Pendiente |
 | Implementación Sprint 5 (perfiles + tutorial) | C | ⏳ Pendiente |
@@ -999,9 +1031,9 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 ### Paso inmediato 4: Bloque C — Implementación
 
-**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos) completado y validado en Windows 10 22H2.
+**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos) y Sprint 2 (telemetría y privacidad) completados y validados en Windows 10 22H2.
 
-**Siguiente:** Sprint 2 (Telemetría y Privacidad) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
+**Siguiente:** Sprint 3 (Gestión de Servicios) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
 
 ### Paso inmediato 5: Bloque D — Validación y cierre
 
@@ -1140,6 +1172,7 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.6 | 30/10/2026 | **Sprint 1 completado.** Se implementan las cuatro capas: dominio (entidades, enums y contratos), aplicación (`SystemSnapshot`, `LogService`, `BackupManager`, rutas y SHA-256), infraestructura (`SokDbContext`, cinco repositorios ADO.NET, `SystemInfoProvider` con WMI, respaldos de registro y servicios) y UI WPF (manifiesto UAC, tema, `MainWindow` de dos columnas, `NavigationService` propio, siete vistas, `DashboardViewModel` y arranque con `Ioc.Default`). Se agrega el proyecto de pruebas `src/SOK.UI.Tests` (xUnit + Moq) con 34 pruebas y los scripts `build.ps1`, `test.ps1` y `package.ps1`. Verificación: `dotnet build` con 0 errores y 0 advertencias, 34/34 pruebas correctas y arranque validado en Windows 10 22H2. Evidencia visual en `docs/capturas/sprint-1-dashboard.png`. |
 | 1.7 | 30/10/2026 | **Diagramas UML sobre el código real (B.4 y B.6).** Se ejecuta `graphify extract . --code-only` sobre el commit `693eda1` (438 nodos, 991 aristas y 17 comunidades; 86 % extraído del AST). Con ese insumo se elaboran seis diagramas de clases (V.12.0 paquetes, V.12.1 dominio, V.12.2 aplicación, V.12.3 persistencia, V.12.4 servicios de Windows y V.12.5 presentación) y dos de secuencia (V.13.1 respaldo completo y V.13.2 actualización del panel). Se agrega `docs/uml/mapa-conceptual-graphify.md` con el análisis del grafo. Se documenta que un diagrama único de la solución resultaba ilegible (4096 px de ancho), por lo que la sección V.12 se divide en seis archivos. |
 | 1.8 | 30/10/2026 | **Bloque B completo (B.8: integración continua).** Se agrega `.github/workflows/ci.yml`: en cada push y pull request hacia `main` instala el SDK de .NET 8 con caché NuGet, restaura, compila `SOK.sln` en `Release`, ejecuta las 34 pruebas con salida TRX, escribe el resumen en el job summary y publica el archivo de resultados como artefacto (14 días). El runner es `windows-latest` porque `SOK.UI` apunta a `net8.0-windows` y las pruebas de integración usan WMI y `reg.exe`. Primera ejecución ([run #1](https://github.com/EdgarAdrian2004/sok/actions/runs/41125212927)) exitosa en 129 segundos. El README incorpora la insignia de estado y la sección del flujo. Con esto, el Bloque B queda en 8/8 y el siguiente paso es el Sprint 2 (Telemetría y Privacidad). |
+| 1.9 | 01/11/2026 | **Sprint 2 completado (Telemetría y Privacidad, 16 SP).** Se implementan las tres historias: catálogo estático de **46 claves en 11 categorías** con estado leído en vivo del registro (`TelemetryCatalog`, `ITelemetryRegistryService`, `TelemetryRegistryService` con `Microsoft.Win32.Registry` 5.0.0), cambio individual con interruptor (`TelemetryManager.SetDisabledAsync`) y privacidad máxima con un único respaldo (`ApplyMaxPrivacyAsync`). `IRegistryBackupService` se amplía con `CreateBackupForKeysAsync`, que exporta solo las claves afectadas, calcula el SHA-256 del manifiesto, registra las claves inexistentes como «no requiere respaldo» y aborta la operación si una clave existente no se puede exportar. La UI incorpora `TelemetryViewModel`, `TelemetryItemViewModel`, `TelemetryCategoryGroup`, la vista con tarjetas por categoría, filtro, resumen, badges de reinicio y los estilos `SokToggleSwitch`, `WarningBadge` y `BadgeText`. **Decisión de diseño:** se descartan las tablas `TelemetryKeys` y `TelemetryActionLogs` del plan inicial; el estado se lee del registro y la auditoría reutiliza la tabla `Logs` con `LogModule.Telemetria`. Verificación: 0 errores y 0 advertencias en Debug y Release, **55/55 pruebas correctas** (21 nuevas) y validación visual en Windows 10 22H2 con captura en `docs/capturas/sprint-2-telemetria.png`. |
 
 ---
 
@@ -1147,6 +1180,6 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 
 Este documento es la fuente única de verdad del proyecto SOK. Cualquier cambio en el alcance, stack, arquitectura o plan debe quedar reflejado aquí en una nueva versión.
 
-**Próxima actualización sugerida:** al cerrar el Sprint 2 (Telemetría y Privacidad).
+**Próxima actualización sugerida:** al cerrar el Sprint 3 (Gestión de Servicios).
 
 **Contacto del autor:** Edgar Adrian Flores Herrera (egresado IESTP Trujillo).
