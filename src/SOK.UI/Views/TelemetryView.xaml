@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer x:Name="ContentScroll" VerticalScrollBarVisibility="Auto">
         <StackPanel>
 
             <!-- Encabezado y acciones -->
@@ -24,10 +24,8 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel>
-                        <TextBlock Text="Telemetría y privacidad" Style="{StaticResource PageTitle}" />
                         <TextBlock Text="SOK revisa las claves de telemetría y privacidad de Windows. Antes de aplicar cualquier cambio se crea un respaldo del registro con su hash SHA-256."
-                                   Style="{StaticResource BodyText}"
-                                   Margin="0,8,0,0" />
+                                   Style="{StaticResource BodyText}" />
                         <TextBlock Text="{Binding SummaryText}"
                                    Style="{StaticResource SectionTitle}"
                                    Margin="0,14,0,0" />
