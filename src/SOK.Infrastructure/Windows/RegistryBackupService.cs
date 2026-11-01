@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.Versioning;
 using System.Text.Json;
 using SOK.Application.Abstractions;
 using SOK.Application.Common;
@@ -9,6 +10,7 @@ namespace SOK.Infrastructure.Windows;
 /// Exporta claves del registro de Windows con reg.exe y genera un
 /// manifiesto con el hash SHA-256 de cada archivo .reg.
 /// </summary>
+[SupportedOSPlatform("windows")]
 public sealed class RegistryBackupService : IRegistryBackupService
 {
     private static readonly string[] RegistryKeys =
@@ -59,6 +61,59 @@ public sealed class RegistryBackupService : IRegistryBackupService
         {
             throw new InvalidOperationException(
                 "No se pudo exportar ninguna clave del registro. Ejecute SOK con permisos de administrador.");
+        }
+
+        var manifestPath = Path.Combine(registryDirectory, "registry-manifest.json");
+        var manifestJson = JsonSerializer.Serialize(entries, JsonOptions);
+        await File.WriteAllTextAsync(manifestPath, manifestJson, cancellationToken).ConfigureAwait(false);
+
+        return manifestPath;
+    }
+
+    public async Task<string> CreateBackupForKeysAsync(
+        IReadOnlyCollection<string> registryKeys,
+        string destinationDirectory,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(registryKeys);
+        ArgumentException.ThrowIfNullOrWhiteSpace(destinationDirectory);
+
+        var registryDirectory = Path.Combine(destinationDirectory, "registry");
+        Directory.CreateDirectory(registryDirectory);
+
+        var entries = new List<RegistryBackupEntry>();
+
+        foreach (var key in registryKeys.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!RegistryPathHelper.KeyExists(key))
+            {
+                entries.Add(new RegistryBackupEntry(
+                    key,
+                    null,
+                    null,
+                    "La clave no existe en este equipo; no requiere respaldo."));
+                continue;
+            }
+
+            var fileName = SanitizeFileName(key) + ".reg";
+            var filePath = Path.Combine(registryDirectory, fileName);
+            var (success, error) = await ExportKeyAsync(key, filePath, cancellationToken).ConfigureAwait(false);
+
+            if (!success)
+            {
+                // La regla de oro exige respaldar antes de modificar: si una
+                // clave existente no se puede exportar, se aborta la operación.
+                throw new InvalidOperationException(
+                    $"No se pudo respaldar la clave '{key}': {error}");
+            }
+
+            var hash = await Sha256Helper
+                .ComputeFileHashAsync(filePath, cancellationToken)
+                .ConfigureAwait(false);
+
+            entries.Add(new RegistryBackupEntry(key, fileName, hash, null));
         }
 
         var manifestPath = Path.Combine(registryDirectory, "registry-manifest.json");
