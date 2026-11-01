@@ -41,7 +41,10 @@ public sealed class NavigationService : INavigationService
             {
                 DataContext = Ioc.Default.GetRequiredService<TelemetryViewModel>()
             },
-            "Services" => new ServicesView(),
+            "Services" => new ServicesView
+            {
+                DataContext = Ioc.Default.GetRequiredService<ServicesViewModel>()
+            },
             "Memory" => new MemoryView(),
             "Backups" => new BackupsView(),
             "Profiles" => new ProfilesView(),

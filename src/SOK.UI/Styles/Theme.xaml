@@ -253,4 +253,18 @@
         <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
     </Style>
 
+    <!-- Etiqueta de riesgo alto (servicios que afectan la usabilidad) -->
+    <Style x:Key="DangerBadge" TargetType="Border">
+        <Setter Property="Background" Value="#FEE2E2" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="6,2" />
+    </Style>
+
+    <Style x:Key="DangerBadgeText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="#B91C1C" />
+    </Style>
+
 </ResourceDictionary>

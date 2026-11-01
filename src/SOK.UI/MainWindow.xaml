@@ -35,7 +35,7 @@
                 </StackPanel>
 
                 <TextBlock DockPanel.Dock="Bottom"
-                           Text="v0.1 · Sprint 2"
+                           Text="v0.1 · Sprint 3"
                            FontFamily="Segoe UI"
                            FontSize="11"
                            Foreground="#64748B"
