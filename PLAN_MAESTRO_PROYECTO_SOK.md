@@ -3,9 +3,9 @@
 ## System Optimization Key — Trabajo de Aplicación Profesional
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
-> Generado el: 29 de septiembre de 2026 — Actualizado: 1 de noviembre de 2026
-> Versión: 1.11 (Sprint 4 completo: liberación de memoria)
-> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1, 2, 3 y 4 completados, Sprint 5 siguiente)
+> Generado el: 29 de septiembre de 2026 — Actualizado: 2 de noviembre de 2026
+> Versión: 1.12 (Sprint 5 completo: perfiles, restauración y tutorial)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1 a 5 completados; siguiente: Bloque D)
 
 ---
 
@@ -682,7 +682,7 @@ El diagrama se dividió en seis archivos para que cada uno sea legible al insert
 | `DiagramaClases_Windows.puml` | V.12.4 | WMI, respaldo de registro y de servicios | 1437 × 603 |
 | `DiagramaClases_Presentacion.puml` | V.12.5 | `App`, navegación, ViewModels y vistas | 1915 × 940 |
 
-Los diagramas se derivaron del grafo de Graphify (438 nodos, 991 aristas) y se contrastaron con los archivos `.csproj`. El análisis completo está en `docs/uml/mapa-conceptual-graphify.md`.
+Los diagramas se derivaron del grafo inicial de Graphify (438 nodos, 991 aristas) y se contrastaron con los archivos `.csproj`. El análisis completo está en `docs/uml/mapa-conceptual-graphify.md`. Al cierre del Sprint 5 el grafo se regeneró sobre el commit `8d48a95`: **1503 nodos, 4116 aristas y 74 comunidades**, con 88 % de relaciones extraídas del AST.
 
 #### Detalle de B.6 — Diagrama UML de secuencia (V.13)
 
@@ -718,9 +718,9 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | **Sprint 2** | Telemetría y Privacidad | HU-05, 06, 07 | 2 | 16 | V.19 Sprint 2 — ✅ Completado |
 | **Sprint 3** | Gestión de Servicios | HU-08, 09, 10 | 2 | 13 | V.19 Sprint 3 — ✅ Completado |
 | **Sprint 4** | Liberación de Memoria | HU-11, 12, 13 | 2 | 18 | V.19 Sprint 4 — ✅ Completado |
-| **Sprint 5** | Perfiles + Restore + Tutorial | HU-14, 15, 17, 18 | 2 | 21 | V.19 Sprint 5 |
+| **Sprint 5** | Perfiles + Restore + Tutorial | HU-14, 15, 17, 18 | 2 | 21 | V.19 Sprint 5 — ✅ Completado |
 
-**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30), Sprint 2 completado (rama `feature/sprint-2-telemetria-privacidad`, 2026-11-01), Sprint 3 completado (rama `feature/sprint-3-servicios`, 2026-11-01) y Sprint 4 completado (rama `feature/sprint-4-memoria`, 2026-11-01). El Sprint 5 (Perfiles + Restauración + Tutorial) queda como siguiente iteración.
+**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30), Sprint 2 completado (rama `feature/sprint-2-telemetria-privacidad`, 2026-11-01), Sprint 3 completado (rama `feature/sprint-3-servicios`, 2026-11-01), Sprint 4 completado (rama `feature/sprint-4-memoria`, 2026-11-01) y Sprint 5 completado (rama `feature/sprint-5-perfiles-restauracion-tutorial`, 2026-11-02). El Bloque C queda cerrado; el siguiente paso es el Bloque D (validación en campo, instalador y cierre del informe).
 
 #### Detalle Sprint 1 — Núcleo y Dashboard (23 SP)
 
@@ -800,7 +800,7 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 
 **Limitaciones conocidas:**
 
-- La restauración de un respaldo de telemetría desde la interfaz corresponde al Sprint 5 (HU-17); por ahora el manifiesto y los `.reg` quedan disponibles para restaurar manualmente.
+- La restauración de un respaldo de telemetría desde la interfaz se incorporó en el Sprint 5 (HU-17); el manifiesto y los `.reg` se verifican con SHA-256 y se importan desde el módulo **Respaldos**.
 - Los cambios marcados con «Requiere reinicio» (servicios `DiagTrack` y `dmwappushservice`, Cortana, SmartScreen) surten efecto tras reiniciar el equipo o el Explorador.
 - La validación visual requirió un script de PowerShell elevado porque la aplicación se ejecuta con `requireAdministrator` y la interfaz no puede inspeccionarse desde un proceso sin elevar (UIPI).
 
@@ -927,7 +927,7 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 - La liberación automática se evalúa mientras SOK está en ejecución y el módulo de memoria se abrió al menos una vez, porque el temporizador vive en `MemoryViewModel`, registrado como singleton.
 - La clave heredada `MemoryReleaseThreshold` solo se usa como valor de partida; las preferencias nuevas se guardan en `Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold`.
 
-#### Detalle Sprint 5 — Perfiles + Restore + Tutorial (21 SP)
+#### Detalle Sprint 5 — Perfiles + Restauración + Tutorial (21 SP) — ✅ Completado
 
 | HU | Descripción | SP |
 | --- | --- | --- |
@@ -935,6 +935,45 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | HU-17 | Restaurar sistema a punto anterior desde backup | 8 |
 | HU-18 | Tutorial integrado con guía paso a paso | 5 |
 | HU-15 | Exportar/importar perfil JSON | 3 |
+
+**Decisiones de implementación:**
+
+- Los perfiles base **Gamer** y **Ofimático** no se siembran con ajustes en el DDL. `ProfileCatalog` genera sus ajustes en código a partir de `TelemetryCatalog` y `ServiceCatalog`, de modo que el catálogo de claves y servicios siga teniendo una sola fuente de verdad y no se dupliquen datos en la base.
+- La interfaz separa **Activar** de **Aplicar**. Activar solo persiste `Settings.ActiveProfileId` y no modifica Windows; aplicar ejecuta los ajustes de telemetría, servicios y memoria con confirmación previa y un respaldo por módulo afectado.
+- Los perfiles personalizados solo se incorporan mediante **importación JSON**. Todo perfil importado se registra como `ProfileType.Personalizado`; si el nombre ya existe, se renombra automáticamente con el sufijo `(importado)` o `(importado N)`. No se incluye un editor manual de perfiles en este sprint.
+- La **restauración incluye la telemetría**: el manifiesto del respaldo ya contenía la ruta del archivo `.reg`; `RestoreManager` verifica el SHA-256 del manifiesto y de cada `.reg`, ejecuta `reg import` y devuelve los servicios a su tipo de inicio anterior. La bitácora usa `ActionResult.Revertido`.
+- El **tutorial** es híbrido: el contenido se redacta en Markdown (`docs/tutorial/steps/*.md`) y se incrusta como recurso del ensamblado; la interfaz lo convierte a `FlowDocument` con Markdig y lo muestra en `FlowDocumentScrollViewer`. Así el texto se reutiliza en el informe TAP y no se duplica en XAML.
+- `ITelemetryManager` y `IServiceManager` incorporan `ApplyDisabledAsync`, que aplica un conjunto explícito de claves o servicios con un único respaldo por módulo. `ProfileManager` los usa para aplicar un perfil sin generar un respaldo por cada elemento.
+
+**HU-14 — Selección de perfil.** Se implementan `IProfileManager` y `ProfileManager` con `GetAllProfilesAsync`, `GetActiveProfileAsync`, `SetActiveProfileAsync`, `ApplyProfileAsync` y `ApplyActiveProfileAsync`. Los perfiles base sin ajustes se completan en el primer acceso a partir de los catálogos. La aplicación de un perfil agrupa los ajustes por módulo, delega en `ApplyDisabledAsync` de telemetría y servicios, y persiste la configuración de memoria (`Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold`). El umbral es 75 % para Gamer y 85 % para Ofimático. La UI incorpora `ProfilesViewModel`, `ProfileItemViewModel` y `ProfilesView`, con insignia de perfil activo, confirmación antes de aplicar y rutas de los respaldos visibles.
+
+**HU-15 — Exportar e importar perfiles.** `ProfileExportDto` define un esquema versionado (`SchemaVersion = 1`) con nombre, tipo, descripción y ajustes. La exportación escribe JSON legible; la importación valida la versión, el nombre, los módulos, las acciones, las claves de telemetría, los nombres de servicio y los ajustes de memoria antes de escribir en la base. Los errores se informan con `InvalidDataException` y no dejan registros parciales. La UI agrega los diálogos de guardar y abrir archivo mediante `IFileDialogService`.
+
+**HU-17 — Restauración.** `IRestoreManager` y `RestoreManager` listan los respaldos con su estado de integridad (`BackupStatus`), verifican la existencia del archivo y comparan su SHA-256 con el valor guardado. Si el hash no coincide, la restauración se rechaza sin tocar el sistema. `RegistryRestoreService` importa cada archivo `.reg` del manifiesto con `reg.exe` después de verificar su hash individual. `BackupsViewModel` y `BackupsView` muestran tipo, fecha, descripción e integridad, y solo habilitan **Restaurar** cuando el respaldo es íntegro.
+
+**HU-18 — Tutorial.** `TutorialService` carga los ocho pasos incrustados, lee el encabezado de metadatos (`order`, `title`, `module`, `action`) y los ordena. `TutorialViewModel` controla el índice, los comandos Anterior/Siguiente, la apertura del módulo relacionado y el cierre. `MarkdownFlowDocumentBuilder` convierte encabezados, párrafos, énfasis, enlaces, listas, tablas, citas y bloques de código en un `FlowDocument` con los estilos de SOK. El tutorial se abre automáticamente en la primera ejecución y la clave `TutorialCompleted` evita repetirlo; después queda disponible en el menú lateral.
+
+**Limitaciones documentadas:**
+
+- La restauración devuelve las claves de registro y el tipo de inicio de los servicios, pero no el estado de ejecución de los servicios ni la lista de standby de memoria.
+- Los cambios de telemetría pueden requerir reiniciar Windows para surtir efecto completo; la interfaz lo advierte en el mensaje de resultado.
+- Los perfiles personalizados no se editan manualmente en esta versión: solo se crean por importación JSON.
+- La liberación automática de memoria se evalúa mientras SOK está en ejecución y el módulo de memoria se ha abierto al menos una vez en la sesión.
+- El tutorial automático solo aparece la primera vez; las siguientes ejecuciones lo dejan en el menú lateral.
+
+**Evidencia de verificación (02/11/2026):**
+
+| Criterio | Resultado |
+| --- | --- |
+| `dotnet build SOK.sln -c Debug` | 0 errores, 0 advertencias |
+| `dotnet build SOK.sln -c Release` | 0 errores, 0 advertencias |
+| `dotnet test SOK.sln` | 167/167 pruebas correctas (40 nuevas) |
+| Perfiles | Activación, aplicación, exportación e importación JSON cubiertas con pruebas unitarias |
+| Restauración | Verificación de hash, rechazo de respaldos alterados, restauración de registro y servicios, bitácora `Revertido` |
+| Tutorial | 8 pasos cargados, navegación, persistencia de `TutorialCompleted` y renderizado Markdown |
+| Graphify | 1503 nodos, 4116 aristas, 74 comunidades (88 % extraído) sobre el commit `8d48a95` |
+
+**Commits principales:** `a89b512` (gestor de perfiles), `3e092ea` (UI de perfiles), `15ad677` (pruebas de perfiles), `8e5f274` (restauración), `7088d4e` (UI de respaldos), `aa9a57d` (pruebas de restauración), `e16a5a8` (servicio de tutorial), `bab6a5b` (UI del tutorial) y `8d48a95` (pruebas del tutorial).
 
 ### BLOQUE D — VALIDACIÓN Y CIERRE
 
@@ -1001,13 +1040,13 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | Descripción de casos de uso — `docs/uml/descripcion-casos-uso.md` | B | ✅ Hecho |
 | Diagrama UML de clases (paquetes + 5 capas) — `docs/uml/Diagrama*.puml` | B | ✅ Hecho (V.12) |
 | Diagrama UML de secuencia (respaldo + panel) — `docs/uml/Secuencia*.puml` | B | ✅ Hecho (V.13) |
-| Mapa conceptual del código (Graphify) — `docs/uml/mapa-conceptual-graphify.md` | B | ✅ Hecho (438 nodos) |
+| Mapa conceptual del código (Graphify) — `docs/uml/mapa-conceptual-graphify.md` | B | ✅ Hecho (1503 nodos al cierre del Sprint 5) |
 | Configurar CI en GitHub Actions — `.github/workflows/ci.yml` | B | ✅ Hecho (compila y prueba en cada push) |
 | Implementación Sprint 1 (núcleo + dashboard + backup) | C | ✅ Hecho |
 | Implementación Sprint 2 (telemetría) | C | ✅ Hecho |
 | Implementación Sprint 3 (servicios) | C | ✅ Hecho |
 | Implementación Sprint 4 (memoria) | C | ✅ Hecho |
-| Implementación Sprint 5 (perfiles + tutorial) | C | ⏳ Pendiente |
+| Implementación Sprint 5 (perfiles + restauración + tutorial) | C | ✅ Hecho |
 | Instalador Inno Setup | D | ⏳ Pendiente |
 
 ---
@@ -1030,7 +1069,7 @@ El plan de estudios de Edgar es 100% web/móvil/cloud. **No hay ni un solo curso
 | 10 | **Telemetría Windows** (DiagTrack, ETW, Cortana) | Núcleo de O&O ShutUp10 | Sprint 2 |
 | 11 | **UAC / Elevación de privilegios** | Toda la app requiere admin | Sprint 1 |
 | 12 | **WPF / WinUI 3 / WinForms** (UI de escritorio) | Edgar conoce XAML → falta profundizar | Sprint 1 |
-| 13 | **Empaquetado MSI / MSIX / Inno Setup** | Distribución instalable | Sprint 5 |
+| 13 | **Empaquetado MSI / MSIX / Inno Setup** | Distribución instalable | Bloque D |
 | 14 | **Code signing (Authenticode)** | Evitar SmartScreen warnings | Post-TAP |
 | 15 | **ETW (Event Tracing for Windows)** | Monitoreo de rendimiento en tiempo real | Sprint 4 |
 | 16 | **Sysinternals** (ProcMon, RegMon, RAMMap) | Diagnóstico y referencia | Sprint 1-4 |
@@ -1119,9 +1158,9 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 ### Paso inmediato 4: Bloque C — Implementación
 
-**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos), Sprint 2 (telemetría y privacidad), Sprint 3 (gestión de servicios) y Sprint 4 (liberación de memoria) completados y validados en Windows 10 22H2.
+**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos), Sprint 2 (telemetría y privacidad), Sprint 3 (gestión de servicios), Sprint 4 (liberación de memoria) y Sprint 5 (perfiles, restauración y tutorial) completados y validados en Windows 10 22H2.
 
-**Siguiente:** Sprint 5 (Perfiles + Restauración + Tutorial, 21 SP) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
+**Siguiente:** Bloque D (validación en campo, instalador y cierre del informe) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
 
 ### Paso inmediato 5: Bloque D — Validación y cierre
 
@@ -1263,6 +1302,7 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.9 | 01/11/2026 | **Sprint 2 completado (Telemetría y Privacidad, 16 SP).** Se implementan las tres historias: catálogo estático de **46 claves en 11 categorías** con estado leído en vivo del registro (`TelemetryCatalog`, `ITelemetryRegistryService`, `TelemetryRegistryService` con `Microsoft.Win32.Registry` 5.0.0), cambio individual con interruptor (`TelemetryManager.SetDisabledAsync`) y privacidad máxima con un único respaldo (`ApplyMaxPrivacyAsync`). `IRegistryBackupService` se amplía con `CreateBackupForKeysAsync`, que exporta solo las claves afectadas, calcula el SHA-256 del manifiesto, registra las claves inexistentes como «no requiere respaldo» y aborta la operación si una clave existente no se puede exportar. La UI incorpora `TelemetryViewModel`, `TelemetryItemViewModel`, `TelemetryCategoryGroup`, la vista con tarjetas por categoría, filtro, resumen, badges de reinicio y los estilos `SokToggleSwitch`, `WarningBadge` y `BadgeText`. **Decisión de diseño:** se descartan las tablas `TelemetryKeys` y `TelemetryActionLogs` del plan inicial; el estado se lee del registro y la auditoría reutiliza la tabla `Logs` con `LogModule.Telemetria`. Verificación: 0 errores y 0 advertencias en Debug y Release, **55/55 pruebas correctas** (21 nuevas) y validación visual en Windows 10 22H2 con captura en `docs/capturas/sprint-2-telemetria.png`. |
 | 1.10 | 01/11/2026 | **Sprint 3 completado (Gestión de Servicios, 13 SP).** Se implementan las tres historias: catálogo estático de **30 servicios en 10 categorías** con estado leído del SCM, cambio individual con interruptor y perfiles Gamer/Ofimático. La lectura usa **WMI** (`Win32_Service`) y la escritura **`ServiceController`** más **`ChangeServiceConfig`** (`advapi32.dll`, P/Invoke), descartando `sc.exe`. `IServicesBackupService` se amplía con `CreateBackupForServicesAsync`, que exporta solo los servicios afectados y aborta si ninguno existe. La UI incorpora `ServicesViewModel`, `ServiceItemViewModel`, `ServiceCategoryGroup`, la vista con tarjetas por categoría, filtro, resumen, badges de riesgo y los estilos `DangerBadge`/`DangerBadgeText`. **Criterio de perfiles conservador en usabilidad:** ningún perfil deshabilita Bluetooth, Windows Search, Windows Hello, impresión, soporte remoto ni las apps nativas de Windows; los servicios de alto riesgo se listan para cambio manual, nunca automático. Verificación: 0 errores y 0 advertencias en Debug y Release, **96/96 pruebas correctas** (41 nuevas), validación real de deshabilitar y habilitar `PrintNotify` con dos respaldos y dos entradas en `Logs`, y captura en `docs/capturas/sprint-3-servicios.png`. |
 | 1.11 | 01/11/2026 | **Sprint 4 completado (Liberación de Memoria, 18 SP).** Se implementan las tres historias: medidor de RAM en tiempo real con `GlobalMemoryStatusEx`, liberación manual con `EmptyWorkingSet` sobre todos los procesos accesibles y liberación automática por umbral configurable (70 %–95 %, valor por defecto 80 %, intervalo mínimo de un minuto). La infraestructura usa P/Invoke (`EnumProcesses`, `OpenProcess`, `EmptyWorkingSet`, `CloseHandle`) con `EntryPoint` explícito; `MemoryManager` persiste la preferencia en `Settings` (`Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold`) con lectura de respaldo de la clave heredada `MemoryReleaseThreshold` y audita en `Logs` con el módulo `Memoria`. **Sin respaldo previo:** la liberación no modifica configuración persistente. **Desviación justificada:** se omiten `CachedBytes` y `ModifiedBytes` porque `GlobalMemoryStatusEx` no los expone. La UI incorpora `MemoryViewModel` (medición cada tres segundos, comandos, guardado del umbral) y `MemoryView`. Verificación: 0 errores y 0 advertencias en Debug y Release, **127/127 pruebas correctas** (31 nuevas), liberación real de 207 de 222 procesos con 399,1 MB estimados, liberación automática simulada registrada en `Logs` y captura en `docs/capturas/sprint-4-memoria.png`. |
+| 1.12 | 02/11/2026 | **Sprint 5 completado (Perfiles + Restauración + Tutorial, 21 SP).** Se implementan las cuatro historias: perfiles base Gamer y Ofimático generados desde los catálogos (`ProfileCatalog`), activación persistente en `Settings.ActiveProfileId`, aplicación con respaldo por módulo, exportación e importación JSON versionada, restauración con verificación SHA-256 del manifiesto y de cada `.reg`, importación con `reg.exe` y devolución de servicios a su tipo de inicio anterior, y tutorial de ocho pasos en Markdown incrustado y renderizado a `FlowDocument` con Markdig. `ITelemetryManager` y `IServiceManager` incorporan `ApplyDisabledAsync` para aplicar un conjunto explícito con un único respaldo. La UI suma `ProfilesView`, `BackupsView` y `TutorialView` con sus ViewModels, insignias de perfil activo e integridad, confirmaciones y navegación desde el tutorial. El tutorial se abre en la primera ejecución y `TutorialCompleted` evita repetirlo. Verificación: 0 errores y 0 advertencias en Debug y Release, **167/167 pruebas correctas** (40 nuevas) y grafo de Graphify regenerado con 1503 nodos, 4116 aristas y 74 comunidades sobre el commit `8d48a95`. |
 
 ---
 
@@ -1270,6 +1310,6 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 
 Este documento es la fuente única de verdad del proyecto SOK. Cualquier cambio en el alcance, stack, arquitectura o plan debe quedar reflejado aquí en una nueva versión.
 
-**Próxima actualización sugerida:** al cerrar el Sprint 5 (Perfiles + Restauración + Tutorial).
+**Próxima actualización sugerida:** al cerrar el Bloque D (validación en campo, instalador y cierre del informe TAP).
 
 **Contacto del autor:** Edgar Adrian Flores Herrera (egresado IESTP Trujillo).
