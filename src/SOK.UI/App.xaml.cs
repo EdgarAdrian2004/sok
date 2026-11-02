@@ -44,6 +44,7 @@ public partial class App : System.Windows.Application
             services.AddSingleton<ISystemInfoProvider, SystemInfoProvider>();
             services.AddSingleton<IRegistryBackupService, RegistryBackupService>();
             services.AddSingleton<IServicesBackupService, ServicesBackupService>();
+            services.AddSingleton<IRegistryRestoreService, RegistryRestoreService>();
             services.AddSingleton<ITelemetryRegistryService, TelemetryRegistryService>();
             services.AddSingleton<IServiceControlService, ServiceControlService>();
             services.AddSingleton<IMemoryProvider, MemoryProvider>();
@@ -55,6 +56,7 @@ public partial class App : System.Windows.Application
             services.AddSingleton<IServiceManager, ServiceManager>();
             services.AddSingleton<IMemoryManager, MemoryManager>();
             services.AddSingleton<IProfileManager, ProfileManager>();
+            services.AddSingleton<IRestoreManager, RestoreManager>();
 
             services.AddSingleton<IFileDialogService, FileDialogService>();
             services.AddSingleton<IUserDialogService, UserDialogService>();
@@ -66,6 +68,7 @@ public partial class App : System.Windows.Application
             services.AddSingleton<ServicesViewModel>();
             services.AddSingleton<MemoryViewModel>();
             services.AddSingleton<ProfilesViewModel>();
+            services.AddSingleton<BackupsViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
 

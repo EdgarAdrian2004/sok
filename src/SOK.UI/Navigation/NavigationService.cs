@@ -49,7 +49,10 @@ public sealed class NavigationService : INavigationService
             {
                 DataContext = Ioc.Default.GetRequiredService<MemoryViewModel>()
             },
-            "Backups" => new BackupsView(),
+            "Backups" => new BackupsView
+            {
+                DataContext = Ioc.Default.GetRequiredService<BackupsViewModel>()
+            },
             "Profiles" => new ProfilesView
             {
                 DataContext = Ioc.Default.GetRequiredService<ProfilesViewModel>()
