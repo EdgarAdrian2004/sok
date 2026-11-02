@@ -65,7 +65,7 @@ El workflow `.github/workflows/ci.yml` se ejecuta en cada push y en cada pull re
 1. Instala el SDK de .NET 8.
 2. Restaura los paquetes de la solución.
 3. Compila `SOK.sln` en configuración `Release`.
-4. Ejecuta las 96 pruebas (82 unitarias + 14 de integración) y publica el resumen y el archivo TRX como artefacto.
+4. Ejecuta las 127 pruebas (109 unitarias + 18 de integración) y publica el resumen y el archivo TRX como artefacto.
 
 ## Documentación
 
@@ -74,4 +74,4 @@ El workflow `.github/workflows/ci.yml` se ejecuta en cada push y en cada pull re
 - `docs/uml/mapa-conceptual-graphify.md` — mapa de entidades y dependencias reales del código (438 nodos y 991 aristas)
 - `docs/db/` — diseño de base de datos: DDL verificado, modelo entidad-relación y documento de diseño
 - `docs/capturas/` — evidencia visual de la aplicación en ejecución
-- `docs/bitacora-sprint-1.md`, `docs/bitacora-sprint-2.md` y `docs/bitacora-sprint-3.md` — bitácoras de los sprints completados
+- `docs/bitacora-sprint-1.md`, `docs/bitacora-sprint-2.md`, `docs/bitacora-sprint-3.md` y `docs/bitacora-sprint-4.md` — bitácoras de los sprints completados

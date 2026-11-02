@@ -4,8 +4,8 @@
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
 > Generado el: 29 de septiembre de 2026 — Actualizado: 1 de noviembre de 2026
-> Versión: 1.10 (Sprint 3 completo: gestión de servicios)
-> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1, 2 y 3 completados, Sprint 4 siguiente)
+> Versión: 1.11 (Sprint 4 completo: liberación de memoria)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1, 2, 3 y 4 completados, Sprint 5 siguiente)
 
 ---
 
@@ -717,10 +717,10 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | **Sprint 1** | Núcleo + Dashboard + Backup | HU-01, 02, 03, 04, 16 | 2 | 23 | V.19 Sprint 1 — ✅ Completado |
 | **Sprint 2** | Telemetría y Privacidad | HU-05, 06, 07 | 2 | 16 | V.19 Sprint 2 — ✅ Completado |
 | **Sprint 3** | Gestión de Servicios | HU-08, 09, 10 | 2 | 13 | V.19 Sprint 3 — ✅ Completado |
-| **Sprint 4** | Liberación de Memoria | HU-11, 12, 13 | 2 | 18 | V.19 Sprint 4 |
+| **Sprint 4** | Liberación de Memoria | HU-11, 12, 13 | 2 | 18 | V.19 Sprint 4 — ✅ Completado |
 | **Sprint 5** | Perfiles + Restore + Tutorial | HU-14, 15, 17, 18 | 2 | 21 | V.19 Sprint 5 |
 
-**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30), Sprint 2 completado (rama `feature/sprint-2-telemetria-privacidad`, 2026-11-01) y Sprint 3 completado (rama `feature/sprint-3-servicios`, 2026-11-01). El Sprint 4 (Liberación de Memoria) queda como siguiente iteración.
+**Estado actual:** Sprint 1 completado (rama `feature/sprint-1-nucleo-dashboard-backup`, 2026-10-30), Sprint 2 completado (rama `feature/sprint-2-telemetria-privacidad`, 2026-11-01), Sprint 3 completado (rama `feature/sprint-3-servicios`, 2026-11-01) y Sprint 4 completado (rama `feature/sprint-4-memoria`, 2026-11-01). El Sprint 5 (Perfiles + Restauración + Tutorial) queda como siguiente iteración.
 
 #### Detalle Sprint 1 — Núcleo y Dashboard (23 SP)
 
@@ -874,12 +874,58 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | HU-12 | Liberar memoria con un clic (EmptyWorkingSet) | 8 |
 | HU-13 | Liberación automática por umbral (70%-95%) | 5 |
 
-**APIs Win32 a usar:**
+**APIs Win32 usadas:**
 
-- `EmptyWorkingSet` (psapi.dll) — libera working set de un proceso
-- `EnumProcesses` (psapi.dll) — lista procesos activos
-- `OpenProcess` (kernel32.dll) — obtiene handle de un proceso
-- `GlobalMemoryStatusEx` (kernel32.dll) — info de memoria global
+- `GlobalMemoryStatusEx` (kernel32.dll) — memoria física total y disponible.
+- `EnumProcesses` (psapi.dll) — lista de procesos activos.
+- `OpenProcess` (kernel32.dll) — handle de proceso con `PROCESS_SET_QUOTA` y `PROCESS_QUERY_INFORMATION`.
+- `EmptyWorkingSet` (psapi.dll) — liberación del working set de un proceso.
+- `CloseHandle` (kernel32.dll) — cierre de los handles abiertos.
+
+**Implementación final (01/11/2026):** el módulo se organiza en las cuatro capas. En `SOK.Application/DTOs` se declaran `MemorySnapshot` (total, disponible, porcentaje de uso, hora de captura y bytes en uso calculados), `MemoryReleaseResult` (éxito, procesos intentados, correctos, fallidos, estimación de bytes liberados y mensaje, con la fábrica `Failed`) y `MemoryAutoReleaseOptions` (activación, umbral y normalización al rango 70 %–95 %). Los contratos `IMemoryProvider`, `IMemoryReleaseService` e `IMemoryManager` viven en `SOK.Application/Abstractions`; `MemoryManager` orquesta la medición, la liberación manual, la liberación automática, la persistencia del umbral y el registro en `Logs` con el módulo `Memoria`. En `SOK.Infrastructure/Windows`, `NativeMemoryMethods` concentra las firmas P/Invoke con `EntryPoint` explícito, `MemoryProvider` lee la memoria física y `MemoryReleaseService` recorre los procesos, abre cada handle, ejecuta `EmptyWorkingSet` y calcula la diferencia de memoria disponible antes y después. En la UI, `MemoryViewModel` actualiza el medidor cada tres segundos con un `DispatcherTimer`, expone los comandos `RefreshNowCommand` y `ReleaseNowCommand`, muestra el último resultado y guarda el interruptor y el umbral en `Settings`; `MemoryView` presenta la tarjeta del medidor, la barra de uso, las acciones y la configuración automática. El ViewModel se registra como singleton y la vista se resuelve desde `NavigationService` con la clave `Memory`.
+
+**Decisiones de diseño:**
+
+| Decisión | Justificación |
+| --- | --- |
+| Medición con `GlobalMemoryStatusEx` | Es la API oficial del estado global de memoria física y evita la latencia de WMI, ya usada en el panel de control. |
+| Liberación con `EmptyWorkingSet` sobre todos los procesos accesibles | Es el mecanismo estándar para devolver páginas al sistema. Los procesos protegidos o sin permisos se cuentan como fallidos y no interrumpen la operación. |
+| Sin respaldo previo | La liberación no modifica configuración persistente: solo solicita a Windows vaciar working sets. La regla de oro se mantiene para telemetría, servicios y respaldos. |
+| Umbral por defecto del 80 % | Coincide con el valor sembrado por el DDL (`MemoryReleaseThreshold`) y el rango configurable se limita a 70 %–95 %. |
+| Intervalo mínimo de un minuto entre liberaciones automáticas | Evita que el medidor dispare una liberación en cada actualización de tres segundos mientras la RAM sigue por encima del umbral. El reloj se inyecta con `TimeProvider` para poder probarlo. |
+| Claves `Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold` | Separan la preferencia del usuario de la clave heredada del DDL. Si la clave nueva no existe, se lee `MemoryReleaseThreshold` como valor de partida. |
+| `FreedBytesEstimate` por diferencia de memoria disponible | `EmptyWorkingSet` no devuelve los bytes liberados; la diferencia antes/después es una estimación verificable. |
+
+**Desviación respecto del plan inicial:** el plan preveía `CachedBytes` y `ModifiedBytes` dentro de `MemorySnapshot` a partir de `GlobalMemoryStatusEx`. Esa API no expone memoria en caché ni páginas modificadas, por lo que el DTO final conserva solo los valores que la llamada nativa entrega directamente. Incorporar esos campos habría requerido `GetPerformanceInfo` u otra API y no aportaba al criterio de aceptación de la HU-11 (GB usados/libres, porcentaje y barra). El ajuste no cambia el alcance del sprint.
+
+**Definición de Hecho (DoD) del Sprint 4:**
+
+- ✅ Código versionado en Git con commits atómicos
+- ✅ Pruebas unitarias y de integración pasan (xUnit): 127/127 (96 anteriores + 31 nuevas)
+- ✅ Código revisado
+- ✅ Funcionalidad validada en Windows 10 22H2 (10.0.19045)
+- ✅ Bitácora del sprint actualizada
+
+**Evidencia de verificación (01/11/2026):**
+
+| Criterio | Resultado |
+| --- | --- |
+| `dotnet build SOK.sln` | 0 errores, 0 advertencias (Debug y Release) |
+| `dotnet test SOK.sln` | 127/127 pruebas correctas (96 anteriores + 31 nuevas) |
+| Medición real | 15,9 GB totales; 33,0 % de uso inicial y 31,0 % después de la liberación |
+| Liberación manual (arnés) | 115 de 223 procesos, 108 sin acceso y 237,0 MB estimados |
+| Liberación desde la interfaz | 207 de 222 procesos, 15 sin acceso y 399,1 MB estimados |
+| Bitácora | Entrada en `Logs` con módulo `Memoria`, acción «Liberar memoria», resultado `Exitoso` y detalle de procesos y MB |
+| Umbral automático | Configuración guardada (activado, 70 %) y liberación simulada al 99 % registrada como «Liberación automática» |
+| Captura de pantalla | `docs/capturas/sprint-4-memoria.png` |
+
+**Limitaciones conocidas:**
+
+- La liberación es «best effort»: los procesos protegidos, elevados o sin permisos se contabilizan como fallidos y no interrumpen la operación.
+- `FreedBytesEstimate` es una estimación por diferencia de memoria disponible; no representa los bytes exactos devueltos por cada proceso.
+- No se vacía la lista de standby ni el archivo de paginación: requeriría APIs no documentadas (`NtSetSystemInformation`) y queda fuera del alcance del sprint.
+- La liberación automática se evalúa mientras SOK está en ejecución y el módulo de memoria se abrió al menos una vez, porque el temporizador vive en `MemoryViewModel`, registrado como singleton.
+- La clave heredada `MemoryReleaseThreshold` solo se usa como valor de partida; las preferencias nuevas se guardan en `Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold`.
 
 #### Detalle Sprint 5 — Perfiles + Restore + Tutorial (21 SP)
 
@@ -960,7 +1006,7 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 | Implementación Sprint 1 (núcleo + dashboard + backup) | C | ✅ Hecho |
 | Implementación Sprint 2 (telemetría) | C | ✅ Hecho |
 | Implementación Sprint 3 (servicios) | C | ✅ Hecho |
-| Implementación Sprint 4 (memoria) | C | ⏳ Pendiente |
+| Implementación Sprint 4 (memoria) | C | ✅ Hecho |
 | Implementación Sprint 5 (perfiles + tutorial) | C | ⏳ Pendiente |
 | Instalador Inno Setup | D | ⏳ Pendiente |
 
@@ -1073,9 +1119,9 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 ### Paso inmediato 4: Bloque C — Implementación
 
-**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos), Sprint 2 (telemetría y privacidad) y Sprint 3 (gestión de servicios) completados y validados en Windows 10 22H2.
+**Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos), Sprint 2 (telemetría y privacidad), Sprint 3 (gestión de servicios) y Sprint 4 (liberación de memoria) completados y validados en Windows 10 22H2.
 
-**Siguiente:** Sprint 4 (Liberación de Memoria) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
+**Siguiente:** Sprint 5 (Perfiles + Restauración + Tutorial, 21 SP) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
 
 ### Paso inmediato 5: Bloque D — Validación y cierre
 
@@ -1216,6 +1262,7 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.8 | 30/10/2026 | **Bloque B completo (B.8: integración continua).** Se agrega `.github/workflows/ci.yml`: en cada push y pull request hacia `main` instala el SDK de .NET 8 con caché NuGet, restaura, compila `SOK.sln` en `Release`, ejecuta las 34 pruebas con salida TRX, escribe el resumen en el job summary y publica el archivo de resultados como artefacto (14 días). El runner es `windows-latest` porque `SOK.UI` apunta a `net8.0-windows` y las pruebas de integración usan WMI y `reg.exe`. Primera ejecución ([run #1](https://github.com/EdgarAdrian2004/sok/actions/runs/41125212927)) exitosa en 129 segundos. El README incorpora la insignia de estado y la sección del flujo. Con esto, el Bloque B queda en 8/8 y el siguiente paso es el Sprint 2 (Telemetría y Privacidad). |
 | 1.9 | 01/11/2026 | **Sprint 2 completado (Telemetría y Privacidad, 16 SP).** Se implementan las tres historias: catálogo estático de **46 claves en 11 categorías** con estado leído en vivo del registro (`TelemetryCatalog`, `ITelemetryRegistryService`, `TelemetryRegistryService` con `Microsoft.Win32.Registry` 5.0.0), cambio individual con interruptor (`TelemetryManager.SetDisabledAsync`) y privacidad máxima con un único respaldo (`ApplyMaxPrivacyAsync`). `IRegistryBackupService` se amplía con `CreateBackupForKeysAsync`, que exporta solo las claves afectadas, calcula el SHA-256 del manifiesto, registra las claves inexistentes como «no requiere respaldo» y aborta la operación si una clave existente no se puede exportar. La UI incorpora `TelemetryViewModel`, `TelemetryItemViewModel`, `TelemetryCategoryGroup`, la vista con tarjetas por categoría, filtro, resumen, badges de reinicio y los estilos `SokToggleSwitch`, `WarningBadge` y `BadgeText`. **Decisión de diseño:** se descartan las tablas `TelemetryKeys` y `TelemetryActionLogs` del plan inicial; el estado se lee del registro y la auditoría reutiliza la tabla `Logs` con `LogModule.Telemetria`. Verificación: 0 errores y 0 advertencias en Debug y Release, **55/55 pruebas correctas** (21 nuevas) y validación visual en Windows 10 22H2 con captura en `docs/capturas/sprint-2-telemetria.png`. |
 | 1.10 | 01/11/2026 | **Sprint 3 completado (Gestión de Servicios, 13 SP).** Se implementan las tres historias: catálogo estático de **30 servicios en 10 categorías** con estado leído del SCM, cambio individual con interruptor y perfiles Gamer/Ofimático. La lectura usa **WMI** (`Win32_Service`) y la escritura **`ServiceController`** más **`ChangeServiceConfig`** (`advapi32.dll`, P/Invoke), descartando `sc.exe`. `IServicesBackupService` se amplía con `CreateBackupForServicesAsync`, que exporta solo los servicios afectados y aborta si ninguno existe. La UI incorpora `ServicesViewModel`, `ServiceItemViewModel`, `ServiceCategoryGroup`, la vista con tarjetas por categoría, filtro, resumen, badges de riesgo y los estilos `DangerBadge`/`DangerBadgeText`. **Criterio de perfiles conservador en usabilidad:** ningún perfil deshabilita Bluetooth, Windows Search, Windows Hello, impresión, soporte remoto ni las apps nativas de Windows; los servicios de alto riesgo se listan para cambio manual, nunca automático. Verificación: 0 errores y 0 advertencias en Debug y Release, **96/96 pruebas correctas** (41 nuevas), validación real de deshabilitar y habilitar `PrintNotify` con dos respaldos y dos entradas en `Logs`, y captura en `docs/capturas/sprint-3-servicios.png`. |
+| 1.11 | 01/11/2026 | **Sprint 4 completado (Liberación de Memoria, 18 SP).** Se implementan las tres historias: medidor de RAM en tiempo real con `GlobalMemoryStatusEx`, liberación manual con `EmptyWorkingSet` sobre todos los procesos accesibles y liberación automática por umbral configurable (70 %–95 %, valor por defecto 80 %, intervalo mínimo de un minuto). La infraestructura usa P/Invoke (`EnumProcesses`, `OpenProcess`, `EmptyWorkingSet`, `CloseHandle`) con `EntryPoint` explícito; `MemoryManager` persiste la preferencia en `Settings` (`Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold`) con lectura de respaldo de la clave heredada `MemoryReleaseThreshold` y audita en `Logs` con el módulo `Memoria`. **Sin respaldo previo:** la liberación no modifica configuración persistente. **Desviación justificada:** se omiten `CachedBytes` y `ModifiedBytes` porque `GlobalMemoryStatusEx` no los expone. La UI incorpora `MemoryViewModel` (medición cada tres segundos, comandos, guardado del umbral) y `MemoryView`. Verificación: 0 errores y 0 advertencias en Debug y Release, **127/127 pruebas correctas** (31 nuevas), liberación real de 207 de 222 procesos con 399,1 MB estimados, liberación automática simulada registrada en `Logs` y captura en `docs/capturas/sprint-4-memoria.png`. |
 
 ---
 
@@ -1223,6 +1270,6 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 
 Este documento es la fuente única de verdad del proyecto SOK. Cualquier cambio en el alcance, stack, arquitectura o plan debe quedar reflejado aquí en una nueva versión.
 
-**Próxima actualización sugerida:** al cerrar el Sprint 4 (Liberación de Memoria).
+**Próxima actualización sugerida:** al cerrar el Sprint 5 (Perfiles + Restauración + Tutorial).
 
 **Contacto del autor:** Edgar Adrian Flores Herrera (egresado IESTP Trujillo).
