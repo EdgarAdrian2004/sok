@@ -45,16 +45,21 @@ public partial class App : System.Windows.Application
             services.AddSingleton<IServicesBackupService, ServicesBackupService>();
             services.AddSingleton<ITelemetryRegistryService, TelemetryRegistryService>();
             services.AddSingleton<IServiceControlService, ServiceControlService>();
+            services.AddSingleton<IMemoryProvider, MemoryProvider>();
+            services.AddSingleton<IMemoryReleaseService, MemoryReleaseService>();
+            services.AddSingleton(TimeProvider.System);
             services.AddSingleton<ILogService, LogService>();
             services.AddSingleton<IBackupManager, BackupManager>();
             services.AddSingleton<ITelemetryManager, TelemetryManager>();
             services.AddSingleton<IServiceManager, ServiceManager>();
+            services.AddSingleton<IMemoryManager, MemoryManager>();
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<DashboardViewModel>();
             services.AddSingleton<TelemetryViewModel>();
             services.AddSingleton<ServicesViewModel>();
+            services.AddSingleton<MemoryViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
 
