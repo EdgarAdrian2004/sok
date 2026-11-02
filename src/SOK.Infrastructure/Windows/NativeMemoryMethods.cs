@@ -125,17 +125,17 @@ internal static class NativeMemoryMethods
         uint size,
         out uint bytesReturned);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [DllImport("kernel32.dll", EntryPoint = "OpenProcess", SetLastError = true)]
     private static extern IntPtr OpenProcessNative(
         uint desiredAccess,
         [MarshalAs(UnmanagedType.Bool)] bool inheritHandle,
         uint processId);
 
-    [DllImport("psapi.dll", SetLastError = true)]
+    [DllImport("psapi.dll", EntryPoint = "EmptyWorkingSet", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool EmptyWorkingSetNative(IntPtr processHandle);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [DllImport("kernel32.dll", EntryPoint = "CloseHandle", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool CloseHandleNative(IntPtr handle);
 }
