@@ -50,7 +50,10 @@ public sealed class NavigationService : INavigationService
                 DataContext = Ioc.Default.GetRequiredService<MemoryViewModel>()
             },
             "Backups" => new BackupsView(),
-            "Profiles" => new ProfilesView(),
+            "Profiles" => new ProfilesView
+            {
+                DataContext = Ioc.Default.GetRequiredService<ProfilesViewModel>()
+            },
             "Tutorial" => new TutorialView(),
             _ => throw new ArgumentOutOfRangeException(nameof(key), key, "Módulo desconocido.")
         };

@@ -10,6 +10,7 @@ using SOK.Infrastructure.Persistence;
 using SOK.Infrastructure.Persistence.Repositories;
 using SOK.Infrastructure.Windows;
 using SOK.UI.Navigation;
+using SOK.UI.Services;
 using SOK.UI.ViewModels;
 
 namespace SOK.UI;
@@ -53,6 +54,10 @@ public partial class App : System.Windows.Application
             services.AddSingleton<ITelemetryManager, TelemetryManager>();
             services.AddSingleton<IServiceManager, ServiceManager>();
             services.AddSingleton<IMemoryManager, MemoryManager>();
+            services.AddSingleton<IProfileManager, ProfileManager>();
+
+            services.AddSingleton<IFileDialogService, FileDialogService>();
+            services.AddSingleton<IUserDialogService, UserDialogService>();
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<MainViewModel>();
@@ -60,6 +65,7 @@ public partial class App : System.Windows.Application
             services.AddSingleton<TelemetryViewModel>();
             services.AddSingleton<ServicesViewModel>();
             services.AddSingleton<MemoryViewModel>();
+            services.AddSingleton<ProfilesViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
 
