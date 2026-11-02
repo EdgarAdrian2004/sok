@@ -13,6 +13,8 @@ public sealed class NavigationService : INavigationService
 {
     private readonly Dictionary<string, FrameworkElement> _views = new(StringComparer.OrdinalIgnoreCase);
 
+    public event EventHandler<string>? NavigationRequested;
+
     public IReadOnlyList<NavigationItem> MenuItems { get; } = new List<NavigationItem>
     {
         new("Dashboard", "Panel de control", "Estado del sistema en tiempo real"),
@@ -49,13 +51,28 @@ public sealed class NavigationService : INavigationService
             {
                 DataContext = Ioc.Default.GetRequiredService<MemoryViewModel>()
             },
-            "Backups" => new BackupsView(),
-            "Profiles" => new ProfilesView(),
-            "Tutorial" => new TutorialView(),
+            "Backups" => new BackupsView
+            {
+                DataContext = Ioc.Default.GetRequiredService<BackupsViewModel>()
+            },
+            "Profiles" => new ProfilesView
+            {
+                DataContext = Ioc.Default.GetRequiredService<ProfilesViewModel>()
+            },
+            "Tutorial" => new TutorialView
+            {
+                DataContext = Ioc.Default.GetRequiredService<TutorialViewModel>()
+            },
             _ => throw new ArgumentOutOfRangeException(nameof(key), key, "Módulo desconocido.")
         };
 
         _views[key] = view;
         return view;
+    }
+
+    public void RequestNavigation(string key)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
+        NavigationRequested?.Invoke(this, key);
     }
 }

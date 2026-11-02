@@ -10,6 +10,7 @@ using SOK.Infrastructure.Persistence;
 using SOK.Infrastructure.Persistence.Repositories;
 using SOK.Infrastructure.Windows;
 using SOK.UI.Navigation;
+using SOK.UI.Services;
 using SOK.UI.ViewModels;
 
 namespace SOK.UI;
@@ -43,6 +44,7 @@ public partial class App : System.Windows.Application
             services.AddSingleton<ISystemInfoProvider, SystemInfoProvider>();
             services.AddSingleton<IRegistryBackupService, RegistryBackupService>();
             services.AddSingleton<IServicesBackupService, ServicesBackupService>();
+            services.AddSingleton<IRegistryRestoreService, RegistryRestoreService>();
             services.AddSingleton<ITelemetryRegistryService, TelemetryRegistryService>();
             services.AddSingleton<IServiceControlService, ServiceControlService>();
             services.AddSingleton<IMemoryProvider, MemoryProvider>();
@@ -53,6 +55,12 @@ public partial class App : System.Windows.Application
             services.AddSingleton<ITelemetryManager, TelemetryManager>();
             services.AddSingleton<IServiceManager, ServiceManager>();
             services.AddSingleton<IMemoryManager, MemoryManager>();
+            services.AddSingleton<IProfileManager, ProfileManager>();
+            services.AddSingleton<IRestoreManager, RestoreManager>();
+            services.AddSingleton<ITutorialService, TutorialService>();
+
+            services.AddSingleton<IFileDialogService, FileDialogService>();
+            services.AddSingleton<IUserDialogService, UserDialogService>();
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<MainViewModel>();
@@ -60,6 +68,9 @@ public partial class App : System.Windows.Application
             services.AddSingleton<TelemetryViewModel>();
             services.AddSingleton<ServicesViewModel>();
             services.AddSingleton<MemoryViewModel>();
+            services.AddSingleton<ProfilesViewModel>();
+            services.AddSingleton<BackupsViewModel>();
+            services.AddSingleton<TutorialViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
 
@@ -70,6 +81,8 @@ public partial class App : System.Windows.Application
 
             MainWindow = window;
             window.Show();
+
+            ShowTutorialOnFirstRun();
         }
         catch (Exception ex)
         {
@@ -80,6 +93,34 @@ public partial class App : System.Windows.Application
                 MessageBoxImage.Error);
 
             Shutdown(1);
+        }
+    }
+
+    /// <summary>
+    /// Abre el tutorial automáticamente la primera vez que se ejecuta la
+    /// aplicación. La marca se guarda al completar o saltar la guía.
+    /// </summary>
+    private static void ShowTutorialOnFirstRun()
+    {
+        try
+        {
+            var settings = Ioc.Default.GetRequiredService<ISettingsRepository>();
+            var completed = settings
+                .GetAsync(TutorialViewModel.TutorialCompletedKey)
+                .GetAwaiter()
+                .GetResult();
+
+            if (!string.Equals(completed?.Value, "true", StringComparison.OrdinalIgnoreCase))
+            {
+                Ioc.Default
+                    .GetRequiredService<INavigationService>()
+                    .RequestNavigation("Tutorial");
+            }
+        }
+        catch
+        {
+            // Si la configuración no se puede leer, la aplicación sigue
+            // funcionando y el tutorial queda disponible en el menú.
         }
     }
 }

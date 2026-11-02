@@ -7,6 +7,8 @@ Aplicación de escritorio Windows (C# .NET 8 + WPF + MVVM) que unifica las herra
 Proyecto de titulación (TAP) — **Edgar Adrian Flores Herrera**
 IESTP "Trujillo" — Diseño y Programación Web
 
+**Estado:** Sprints 1 a 5 completados (Bloque C cerrado). La siguiente etapa es el Bloque D: validación en campo, instalador y cierre del informe.
+
 ## Módulos
 
 | Módulo | Descripción |
@@ -41,6 +43,7 @@ SOK.UI → SOK.Infrastructure → SOK.Application → SOK.Domain
 - C# .NET 8 + WPF
 - MVVM con CommunityToolkit.Mvvm
 - SQLite (Microsoft.Data.Sqlite)
+- Markdig (renderizado Markdown del tutorial)
 - PowerShell 7
 - Win32 P/Invoke
 
@@ -65,13 +68,14 @@ El workflow `.github/workflows/ci.yml` se ejecuta en cada push y en cada pull re
 1. Instala el SDK de .NET 8.
 2. Restaura los paquetes de la solución.
 3. Compila `SOK.sln` en configuración `Release`.
-4. Ejecuta las 127 pruebas (109 unitarias + 18 de integración) y publica el resumen y el archivo TRX como artefacto.
+4. Ejecuta las 167 pruebas (149 unitarias + 18 de integración) y publica el resumen y el archivo TRX como artefacto.
 
 ## Documentación
 
 - `PLAN_MAESTRO_PROYECTO_SOK.md` — fuente única de verdad del proyecto
 - `docs/uml/` — diagramas de casos de uso (general + 8 sub-diagramas), diagramas de clases (paquetes + 5 capas) y diagramas de secuencia (respaldo completo y actualización del panel)
-- `docs/uml/mapa-conceptual-graphify.md` — mapa de entidades y dependencias reales del código (438 nodos y 991 aristas)
+- `docs/uml/mapa-conceptual-graphify.md` — mapa de entidades y dependencias reales del código (1503 nodos y 4116 aristas al cierre del Sprint 5)
 - `docs/db/` — diseño de base de datos: DDL verificado, modelo entidad-relación y documento de diseño
+- `docs/tutorial/steps/` — contenido Markdown de los ocho pasos del tutorial integrado
 - `docs/capturas/` — evidencia visual de la aplicación en ejecución
-- `docs/bitacora-sprint-1.md`, `docs/bitacora-sprint-2.md`, `docs/bitacora-sprint-3.md` y `docs/bitacora-sprint-4.md` — bitácoras de los sprints completados
+- `docs/bitacora-sprint-1.md`, `docs/bitacora-sprint-2.md`, `docs/bitacora-sprint-3.md`, `docs/bitacora-sprint-4.md` y `docs/bitacora-sprint-5.md` — bitácoras de los sprints completados
