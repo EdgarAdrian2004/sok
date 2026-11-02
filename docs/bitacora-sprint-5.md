@@ -92,6 +92,7 @@
   - Carga de los ocho pasos del tutorial, navegación entre pasos, apertura del módulo relacionado y persistencia de `TutorialCompleted`.
   - Renderizado de encabezados, énfasis, enlaces, listas, tablas, citas y código en `FlowDocument`.
 - Grafo de Graphify regenerado sobre el commit `8d48a95`: **1503 nodos, 4116 aristas y 74 comunidades**, con 88 % de relaciones extraídas del AST.
+- Integración continua: [ejecución 41394997190](https://github.com/EdgarAdrian2004/sok/actions/runs/41394997190) exitosa en 94 segundos (compilación Release y 167 pruebas).
 - Validación funcional de la interfaz con UI Automation sobre la compilación Release:
   - Primera ejecución: el tutorial se abrió automáticamente en el paso 1 de 8, con el índice completo de pasos y los botones Anterior, Siguiente y Saltar tutorial.
   - Al pulsar **Saltar tutorial**, la aplicación guardó `TutorialCompleted = "true"`, navegó al Panel de control y mostró el estado del sistema.
@@ -135,6 +136,6 @@
 - [x] Actualizar el `PLAN_MAESTRO` a la versión 1.12 con el Sprint 5 completado.
 - [x] Actualizar el README con los módulos, las pruebas y la bitácora.
 - [x] Generar la captura de la interfaz del sprint.
-- [ ] Crear el pull request, esperar la integración continua y fusionar a `main`.
+- [x] Crear el pull request y obtener la integración continua en verde.
 
 **Estado:** Sprint 5 cerrado el 02/11/2026. El Bloque C queda completo; la siguiente iteración es el Bloque D (validación en campo, instalador y cierre del informe TAP).
