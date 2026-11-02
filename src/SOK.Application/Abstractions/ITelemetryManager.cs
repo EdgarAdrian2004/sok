@@ -29,4 +29,14 @@ public interface ITelemetryManager
     /// tengan. Genera un único respaldo antes de escribir el registro.
     /// </summary>
     Task<TelemetryOperationResult> ApplyMaxPrivacyAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deshabilita o habilita un conjunto explícito de claves del catálogo.
+    /// Genera un único respaldo antes de escribir el registro. Lo usa el
+    /// módulo de perfiles para aplicar sus ajustes de telemetría.
+    /// </summary>
+    Task<TelemetryOperationResult> ApplyDisabledAsync(
+        IReadOnlyCollection<string> keyIds,
+        bool disabled,
+        CancellationToken cancellationToken = default);
 }

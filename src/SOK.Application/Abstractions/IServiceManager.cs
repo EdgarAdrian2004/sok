@@ -32,4 +32,14 @@ public interface IServiceManager
     Task<ServiceOperationResult> ApplyProfileAsync(
         ServiceProfile profile,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deshabilita o habilita un conjunto explícito de servicios del
+    /// catálogo. Genera un único respaldo antes de modificar el sistema. Lo
+    /// usa el módulo de perfiles para aplicar sus ajustes de servicios.
+    /// </summary>
+    Task<ServiceOperationResult> ApplyDisabledAsync(
+        IReadOnlyCollection<string> serviceNames,
+        bool disabled,
+        CancellationToken cancellationToken = default);
 }

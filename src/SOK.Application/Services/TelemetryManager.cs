@@ -147,6 +147,86 @@ public sealed class TelemetryManager : ITelemetryManager
             return TelemetryOperationResult.NoChange("La privacidad máxima ya está aplicada en este equipo.");
         }
 
+        return await ApplyPendingAsync(
+            pending,
+            disabled: true,
+            "Aplicar privacidad máxima",
+            "Privacidad máxima",
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<TelemetryOperationResult> ApplyDisabledAsync(
+        IReadOnlyCollection<string> keyIds,
+        bool disabled,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(keyIds);
+
+        var definitions = TelemetryCatalog.CreateDefinitions()
+            .ToDictionary(item => item.Id, StringComparer.Ordinal);
+
+        var pending = new List<TelemetryKey>();
+        var failures = new List<string>();
+
+        foreach (var keyId in keyIds.Distinct(StringComparer.Ordinal))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!definitions.TryGetValue(keyId, out var item))
+            {
+                failures.Add($"Clave de telemetría desconocida: «{keyId}».");
+                continue;
+            }
+
+            item.Status = await GetStatusAsync(item, cancellationToken).ConfigureAwait(false);
+            var desired = disabled ? TelemetryStatus.Deshabilitado : TelemetryStatus.Habilitado;
+            if (item.Status != desired)
+            {
+                pending.Add(item);
+            }
+        }
+
+        if (pending.Count == 0)
+        {
+            var message = failures.Count == 0
+                ? disabled
+                    ? "Las telemetrías del perfil ya estaban deshabilitadas."
+                    : "Las telemetrías del perfil ya estaban habilitadas."
+                : string.Join(" ", failures);
+
+            return failures.Count == 0
+                ? TelemetryOperationResult.NoChange(message)
+                : TelemetryOperationResult.Completed(0, failures.Count, null, failures, message);
+        }
+
+        var result = await ApplyPendingAsync(
+            pending,
+            disabled,
+            disabled ? "Deshabilitar telemetrías del perfil" : "Habilitar telemetrías del perfil",
+            "Ajustes de telemetría del perfil",
+            cancellationToken).ConfigureAwait(false);
+
+        if (failures.Count == 0)
+        {
+            return result;
+        }
+
+        var merged = result.Failures.Concat(failures).ToList();
+        return TelemetryOperationResult.Completed(
+            result.AppliedCount,
+            result.FailedCount + failures.Count,
+            result.BackupFilePath,
+            merged,
+            result.Message + " " + string.Join(" ", failures));
+    }
+
+    private async Task<TelemetryOperationResult> ApplyPendingAsync(
+        IReadOnlyCollection<TelemetryKey> pending,
+        bool disabled,
+        string action,
+        string description,
+        CancellationToken cancellationToken)
+    {
         var registryKeys = pending
             .Select(item => item.RegistryPath)
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -154,7 +234,7 @@ public sealed class TelemetryManager : ITelemetryManager
 
         var backup = await CreateBackupAsync(
             registryKeys,
-            "Privacidad máxima",
+            description,
             cancellationToken).ConfigureAwait(false);
 
         var applied = 0;
@@ -166,15 +246,18 @@ public sealed class TelemetryManager : ITelemetryManager
 
             try
             {
+                var value = disabled ? item.DisabledValue : item.EnabledValue;
+
                 await _registryService.WriteValueAsync(
                     item.RegistryPath,
                     item.ValueName,
-                    item.DisabledValue,
+                    value,
                     item.ValueKind,
                     cancellationToken).ConfigureAwait(false);
 
                 var status = await GetStatusAsync(item, cancellationToken).ConfigureAwait(false);
-                if (status == TelemetryStatus.Deshabilitado)
+                var desired = disabled ? TelemetryStatus.Deshabilitado : TelemetryStatus.Habilitado;
+                if (status == desired)
                 {
                     applied++;
                 }
@@ -198,7 +281,7 @@ public sealed class TelemetryManager : ITelemetryManager
 
         await _logService.LogAsync(
             LogModule.Telemetria,
-            "Aplicar privacidad máxima",
+            action,
             null,
             success ? ActionResult.Exitoso : ActionResult.Fallido,
             detail,
@@ -211,8 +294,8 @@ public sealed class TelemetryManager : ITelemetryManager
             backup.FilePath,
             failures,
             success
-                ? $"Privacidad máxima aplicada: {applied} claves deshabilitadas."
-                : $"Privacidad máxima aplicada parcialmente: {applied} correctas y {failures.Count} con error.");
+                ? $"{action}: {applied} claves actualizadas."
+                : $"{action}: {applied} correctas y {failures.Count} con error.");
     }
 
     private async Task<TelemetryStatus> GetStatusAsync(

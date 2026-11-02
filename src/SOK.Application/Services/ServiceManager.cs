@@ -287,6 +287,142 @@ public sealed class ServiceManager : IServiceManager
     private static string ProfileName(ServiceProfile profile) =>
         profile == ServiceProfile.Gamer ? "Gamer" : "Ofimático";
 
+    public async Task<ServiceOperationResult> ApplyDisabledAsync(
+        IReadOnlyCollection<string> serviceNames,
+        bool disabled,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(serviceNames);
+
+        var definitions = ServiceCatalog.CreateDefinitions()
+            .ToDictionary(entry => entry.Id, StringComparer.OrdinalIgnoreCase);
+
+        var pending = new List<ServiceEntry>();
+        var failures = new List<string>();
+
+        foreach (var name in serviceNames.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (!definitions.TryGetValue(name, out var entry))
+            {
+                failures.Add($"Servicio desconocido: «{name}».");
+                continue;
+            }
+
+            var snapshot = await _serviceControl
+                .GetAsync(entry.Id, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (snapshot is null)
+            {
+                failures.Add($"{entry.DisplayName}: no existe en este equipo.");
+                continue;
+            }
+
+            entry.Exists = true;
+            entry.StartMode = snapshot.StartMode;
+            entry.State = snapshot.State;
+
+            var desired = disabled ? ServiceStatus.Deshabilitado : ServiceStatus.Habilitado;
+            if (entry.Status != desired)
+            {
+                pending.Add(entry);
+            }
+        }
+
+        if (pending.Count == 0)
+        {
+            var message = failures.Count == 0
+                ? disabled
+                    ? "Los servicios del perfil ya estaban deshabilitados."
+                    : "Los servicios del perfil ya estaban habilitados."
+                : string.Join(" ", failures);
+
+            return failures.Count == 0
+                ? ServiceOperationResult.NoChange(message)
+                : ServiceOperationResult.Completed(0, failures.Count, null, failures, message);
+        }
+
+        var backup = await CreateBackupAsync(
+            pending.Select(entry => entry.Id).ToList(),
+            disabled ? "Ajustes de servicios del perfil" : "Habilitación de servicios del perfil",
+            cancellationToken).ConfigureAwait(false);
+
+        var applied = 0;
+
+        foreach (var entry in pending)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            try
+            {
+                if (disabled)
+                {
+                    await _serviceControl
+                        .TryStopAsync(entry.Id, cancellationToken)
+                        .ConfigureAwait(false);
+
+                    await _serviceControl
+                        .SetStartModeAsync(entry.Id, ServiceStartMode.Deshabilitado, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await _serviceControl
+                        .SetStartModeAsync(entry.Id, entry.DefaultStartMode, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+
+                var after = await _serviceControl
+                    .GetAsync(entry.Id, cancellationToken)
+                    .ConfigureAwait(false);
+
+                var expected = disabled ? ServiceStartMode.Deshabilitado : entry.DefaultStartMode;
+                if (after?.StartMode == expected)
+                {
+                    applied++;
+                }
+                else
+                {
+                    failures.Add($"{entry.DisplayName}: tipo de inicio {after?.StartMode.ToString() ?? "desconocido"}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                failures.Add($"{entry.DisplayName}: {ex.Message}");
+            }
+        }
+
+        var success = failures.Count == 0;
+        var action = disabled
+            ? "Deshabilitar servicios del perfil"
+            : "Habilitar servicios del perfil";
+        var detail = $"{applied} de {pending.Count} servicios actualizados.";
+        if (!success)
+        {
+            detail += " Fallos: " + string.Join("; ", failures);
+        }
+
+        await _logService.LogAsync(
+            LogModule.Servicios,
+            action,
+            null,
+            success ? ActionResult.Exitoso : ActionResult.Fallido,
+            detail,
+            backup.Id,
+            cancellationToken).ConfigureAwait(false);
+
+        return ServiceOperationResult.Completed(
+            applied,
+            failures.Count,
+            backup.FilePath,
+            failures,
+            success
+                ? $"{action}: {applied} servicios actualizados."
+                : $"{action}: {applied} correctos y {failures.Count} con error.");
+    }
+
     private static string BuildDetail(ServiceEntry entry, ServiceSnapshot after, bool stopped)
     {
         var state = after.State == ServiceState.EnEjecucion ? "en ejecución" : "detenido";
