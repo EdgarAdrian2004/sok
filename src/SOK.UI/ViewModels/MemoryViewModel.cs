@@ -20,6 +20,7 @@ public partial class MemoryViewModel : ObservableObject, IDisposable
 
     private bool _isRefreshing;
     private bool _isLoadingSettings;
+    private bool _hasSnapshot;
     private bool _savePending;
     private Task _pendingSaveTask = Task.CompletedTask;
 
@@ -164,6 +165,7 @@ public partial class MemoryViewModel : ObservableObject, IDisposable
 
         try
         {
+            var hadSnapshot = _hasSnapshot;
             var snapshot = await _memoryManager.GetSnapshotAsync();
             ApplySnapshot(snapshot);
 
@@ -181,7 +183,7 @@ public partial class MemoryViewModel : ObservableObject, IDisposable
                 }
             }
 
-            if (isManual && !autoReleased && !IsBusy)
+            if (!autoReleased && !IsBusy && (isManual || !hadSnapshot))
             {
                 StatusMessage = "Medidor de memoria actualizado correctamente.";
             }
@@ -226,6 +228,7 @@ public partial class MemoryViewModel : ObservableObject, IDisposable
 
     private void ApplySnapshot(MemorySnapshot snapshot)
     {
+        _hasSnapshot = true;
         RamUsagePercent = snapshot.UsagePercent;
         RamUsageText = $"{ToGb(snapshot.UsedBytes):0.0} / {ToGb(snapshot.TotalBytes):0.0} GB en uso";
         RamAvailableText = $"{ToGb(snapshot.AvailableBytes):0.0} GB disponibles";
