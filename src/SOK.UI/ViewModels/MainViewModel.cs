@@ -17,6 +17,7 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel(INavigationService navigationService)
     {
         _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+        _navigationService.NavigationRequested += OnNavigationRequested;
         MenuItems = navigationService.MenuItems;
         SelectedNavigationItem = MenuItems.FirstOrDefault();
     }
@@ -58,5 +59,16 @@ public partial class MainViewModel : ObservableObject
         CurrentView = _navigationService.GetView(item.Key);
         CurrentTitle = item.Label;
         CurrentSubtitle = item.Description;
+    }
+
+    private void OnNavigationRequested(object? sender, string key)
+    {
+        var item = MenuItems.FirstOrDefault(
+            candidate => string.Equals(candidate.Key, key, StringComparison.OrdinalIgnoreCase));
+
+        if (item is not null)
+        {
+            SelectedNavigationItem = item;
+        }
     }
 }
