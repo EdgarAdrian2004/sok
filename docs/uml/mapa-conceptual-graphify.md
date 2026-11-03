@@ -2,15 +2,16 @@
 
 **Proyecto:** SOK — System Optimization Key  
 **Autor del análisis:** Edgar Adrian Flores Herrera  
-**Commit analizado:** `693eda11ae8f7478bac902825c6cdc5ef29456ab` (merge del Sprint 1)  
+**Commit del análisis inicial:** `693eda11ae8f7478bac902825c6cdc5ef29456ab` (merge del Sprint 1)  
+**Commit de la actualización:** `8d48a957f890ef8e112db6cee177f978a547444a` (cierre del Sprint 5)  
 **Herramienta:** Graphify con extracción AST local (`graphify extract . --code-only`)  
-**Fecha:** 30/10/2026
+**Fecha:** 30/10/2026 — actualizado el 02/11/2026
 
 ---
 
 ## 1. Propósito
 
-Este documento registra el mapa de entidades y dependencias reales del código del Sprint 1. Su función es doble:
+Este documento registra el mapa de entidades y dependencias reales del código del Sprint 1. Las secciones 2 a 9 conservan ese análisis detallado; la sección 10 actualiza las métricas y los nodos principales al cierre del Sprint 5. Su función es doble:
 
 1. Servir de **insumo verificable** para los diagramas UML de clases (V.12) y de secuencia (V.13): las clases, los contratos y las relaciones que aparecen en los diagramas provienen de este grafo, no de una suposición.
 2. Dejar **evidencia de la estructura interna** del proyecto para la sección de desarrollo del informe TAP, de modo que la arquitectura de cuatro capas pueda sustentarse con datos medibles.
@@ -259,11 +260,11 @@ graphify explain "BackupManager"
 graphify path "DashboardViewModel" "SokDbContext"
 ```
 
-La carpeta `graphify-out/` está excluida del control de versiones porque es un artefacto regenerable. Este documento conserva los resultados del commit `693eda1` para que el informe TAP pueda citarlos sin depender de la herramienta instalada.
+La carpeta `graphify-out/` está excluida del control de versiones porque es un artefacto regenerable. Este documento conserva los resultados del commit `693eda1` (Sprint 1) y del commit `8d48a95` (cierre del Sprint 5) para que el informe TAP pueda citarlos sin depender de la herramienta instalada.
 
 ---
 
-## 9. Conclusión del análisis
+## 9. Conclusión del análisis del Sprint 1
 
 El grafo confirma que el Sprint 1 no es un prototipo de pantalla: es una solución con separación efectiva de responsabilidades. Las cifras lo respaldan:
 
@@ -273,3 +274,45 @@ El grafo confirma que el Sprint 1 no es un prototipo de pantalla: es una soluci�
 - **Ninguna dependencia ascendente** entre capas, verificado tanto en el grafo como en los archivos `.csproj`.
 
 Estos resultados sustentan la afirmación del informe de que la arquitectura de cuatro capas se implementó de forma verificable y no solo declarativa.
+
+---
+
+## 10. Actualización al cierre del Sprint 5
+
+Al terminar el Bloque C se regeneró el grafo sobre el commit `8d48a95` con el mismo método de extracción AST. El objetivo fue comprobar que el crecimiento de los Sprints 2 a 5 mantuviera la separación de capas y actualizar las cifras que cita el informe TAP.
+
+### 10.1 Comparación de métricas
+
+| Métrica | Sprint 1 (`693eda1`) | Sprint 5 (`8d48a95`) | Variación |
+| --- | --- | --- | --- |
+| Nodos | 438 | 1503 | +1065 |
+| Aristas | 991 | 4116 | +3125 |
+| Comunidades | 17 | 74 | +57 |
+| Aristas `EXTRACTED` | 86 % | 88 % | +2 puntos |
+| Aristas `INFERRED` | 14 % | 12 % | −2 puntos |
+| Aristas `AMBIGUOUS` | 0 % | 0 % | Sin cambio |
+
+El corpus de la última extracción comprendió 170 archivos de código: 49 se volvieron a analizar y 121 se reutilizaron desde la caché del AST. El aumento de nodos y aristas corresponde a los módulos incorporados después del Sprint 1 (telemetría, servicios, memoria, perfiles, respaldos y tutorial) y a sus pruebas.
+
+### 10.2 Nodos con más conexiones al cierre del Sprint 5
+
+| # | Nodo | Aristas | Capa | Interpretación |
+| --- | --- | --- | --- | --- |
+| 1 | `SOK.Domain.Enums` | 61 | Dominio | Agrupa las enumeraciones que comparten todas las capas. |
+| 2 | `SOK.Application.Abstractions` | 55 | Aplicación | Concentra los contratos de los servicios y proveedores. |
+| 3 | `TutorialViewModel` | 42 | UI | Coordina pasos, comandos, navegación y persistencia del tutorial. |
+| 4 | `ProfilesViewModel` | 41 | UI | Orquesta activación, aplicación, exportación e importación de perfiles. |
+| 5 | `SOK.Application.DTOs` | 41 | Aplicación | Reúne los objetos de transferencia de todos los módulos. |
+| 6 | `MemoryViewModel` | 40 | UI | Coordina medición, liberación manual y liberación automática. |
+| 7 | `ServicesViewModel` | 40 | UI | Coordina el catálogo de servicios y la aplicación de perfiles. |
+| 8 | `SOK.Domain.Entities` | 38 | Dominio | Agrupa las entidades persistidas en SQLite. |
+| 9 | `TelemetryViewModel` | 35 | UI | Coordina el catálogo de claves y la privacidad máxima. |
+| 10 | `UserControl` | 34 | WPF (framework) | Clase base de las vistas; Graphify registra una segunda ocurrencia con 33 aristas por los archivos XAML parciales. |
+
+**Lectura:** los nodos más conectados siguen siendo los espacios de nombres del dominio y de los contratos de aplicación. Los ViewModels aparecen en los primeros lugares porque cada módulo concentra comandos, servicios, DTOs y reglas de presentación; no se observan dependencias ascendentes ni accesos directos de la UI a la persistencia. El grafo es consistente con la arquitectura de cuatro capas definida en el plan maestro.
+
+### 10.3 Limitaciones de la actualización
+
+- `docs/db/SOK_DDL.sql` continúa sin aportar nodos porque el entorno no incluye el analizador `tree_sitter_sql`. El DDL se valida por separado contra SQLite.
+- Graphify emite una advertencia por un nodo `UserControl` duplicado, originado en los archivos XAML parciales de las vistas. La tabla 10.2 conserva ambas ocurrencias para no alterar la salida de la herramienta.
+- El grafo se construyó sobre `8d48a95`. Los commits posteriores solo incorporan documentación y el texto del pie de ventana, por lo que las métricas estructurales no cambian.
