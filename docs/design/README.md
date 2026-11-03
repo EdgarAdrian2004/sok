@@ -48,13 +48,14 @@ Cada tema resuelve **379 tokens**. Las referencias entre tokens usan la sintaxis
 3. En el panel del plugin, abre la opción de importar/cargar tokens y selecciona `design-tokens.json`. La etiqueta exacta cambia según la versión (`Import`, `Load from file` o `Tools → Import`).
 4. Verifica que aparezcan los sets `global`, `light`, `dark` y `components`.
 5. Abre el panel **Themes** y activa **SOK / Light**. Deben quedar habilitados `global`, `light` y `components`; `dark` debe estar deshabilitado.
-6. En el panel de estilos y variables del plugin, aplica los tokens como:
+6. Si tu versión del plugin no reconoce el bloque `$themes`, habilita manualmente los sets `global`, `light` y `components` en el panel de sets; el resultado es equivalente.
+7. En el panel de estilos y variables del plugin, aplica los tokens como:
    - **Color styles / variables** para `color.*`.
    - **Text styles** para `typography.*`.
    - **Effect styles** para `shadow.elevation1`, `elevation2` y `elevation3`.
    - **Number/string variables** para `spacing.*`, `radius.*`, `borderWidth.*` y `sizing`.
-7. Cuando termines el tema claro, activa **SOK / Dark** y repite la aplicación de estilos. Los nombres son los mismos; cambian los valores.
-8. Guarda el archivo y compártelo con permiso de lectura.
+8. Cuando termines el tema claro, activa **SOK / Dark** y repite la aplicación de estilos. Los nombres son los mismos; cambian los valores.
+9. Guarda el archivo y compártelo con permiso de lectura.
 
 > **Nota:** Figma no admite tipografías ni sombras compuestas como variables nativas. Tokens Studio las convierte en *text styles* y *effect styles*. Las opciones exactas de exportación a variables dependen de la versión y del plan del plugin.
 
@@ -64,7 +65,7 @@ Cada tema resuelve **379 tokens**. Las referencias entre tokens usan la sintaxis
 | --- | --- |
 | `00 · Fundamentos` | Paleta, tipografía, espaciado, radios, sombras y estados. |
 | `01 · Componentes` | Biblioteca de componentes con variantes y estados. |
-| `02 · Pantallas` | Las cinco pantallas prioritarias, en claro y oscuro. |
+| `02 · Pantallas` | Las pantallas prioritarias, en claro y oscuro. |
 | `03 · Assets` | Iconos SVG e ilustraciones exportables. |
 
 ---
