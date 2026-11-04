@@ -5,7 +5,7 @@
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
 > Generado el: 29 de septiembre de 2026 — Actualizado: 3 de noviembre de 2026
 > Versión: 1.13 (fase de diseño visual: tokens, prototipo navegable y tema oscuro)
-> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1 a 5 completados; Bloque C.5 — diseño visual en curso; siguiente: Bloque D)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1 a 5 completados; Bloque C.5 — diseño visual completado; siguiente: Bloque D)
 
 ---
 
@@ -998,10 +998,10 @@ vistas de la interfaz adaptadas, sin cambios en la lógica de negocio.
 | C.5.2 | Definir tokens semánticos para tema claro y oscuro | `docs/design/design-tokens.json` | ✅ Hecho |
 | C.5.3 | Construir el prototipo navegable | `docs/design/prototype/` | ✅ Hecho |
 | C.5.4 | Verificar contraste, foco y navegación por teclado | Lista de accesibilidad del prototipo | ✅ Hecho |
-| C.5.5 | Traducir tokens y componentes a XAML | `src/SOK.UI/Styles/Theme.xaml` | ⏳ Pendiente |
-| C.5.6 | Adaptar `MainWindow` y las vistas al nuevo tema | `src/SOK.UI/Views/` | ⏳ Pendiente |
-| C.5.7 | Agregar selector de tema persistente | `Settings.Theme` + preferencia de usuario | ⏳ Pendiente |
-| C.5.8 | Verificar compilación, 167 pruebas y capturas | `docs/capturas/` | ⏳ Pendiente |
+| C.5.5 | Traducir tokens y componentes a XAML | `src/SOK.UI/Styles/Theme.xaml`, `Styles/Themes/Light.xaml`, `Styles/Themes/Dark.xaml` | ✅ Hecho |
+| C.5.6 | Adaptar `MainWindow` y las vistas al nuevo tema | `src/SOK.UI/MainWindow.xaml`, `src/SOK.UI/Views/` | ✅ Hecho |
+| C.5.7 | Agregar selector de tema persistente | `Settings.Theme` + `ThemeService` + botón en la cabecera | ✅ Hecho |
+| C.5.8 | Verificar compilación, 167 pruebas y capturas | `docs/capturas/` | ✅ Hecho |
 
 #### Por qué un prototipo HTML y no Figma
 
@@ -1257,9 +1257,7 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 ### Paso inmediato 5: Bloque C.5 — Diseño visual y tema oscuro
 
-**Hecho:** sistema de 451 tokens (`docs/design/design-tokens.json`), prototipo navegable de seis pantallas (`docs/design/prototype/`) y verificación de accesibilidad (contraste WCAG AA, foco visible, navegación por teclado, `prefers-reduced-motion`). El prototipo se abre desde `index.html` sin compilación ni servidor.
-
-**Pendiente:** traducir los tokens y componentes a `Theme.xaml`, adaptar `MainWindow` y las vistas, agregar el selector de tema persistente y verificar las 167 pruebas con capturas nuevas. Estimación: 4-6 días.
+**Hecho:** sistema de 451 tokens (`docs/design/design-tokens.json`), prototipo navegable de seis pantallas (`docs/design/prototype/`), verificación de accesibilidad (contraste WCAG AA, foco visible, navegación por teclado, `prefers-reduced-motion`), traducción a WPF (`Styles/Themes/Light.xaml` y `Dark.xaml`, `Theme.xaml` actualizado con tokens y componentes nuevos), adaptación de `MainWindow` y las vistas, selector de tema persistente (`ThemeService` + botón en la cabecera) y verificación de compilación en Debug y Release con **167/167 pruebas correctas** y capturas en `docs/capturas/`. El prototipo se abre desde `index.html` sin compilación ni servidor.
 
 ### Paso inmediato 6: Bloque D — Validación y cierre
 
