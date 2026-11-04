@@ -54,6 +54,10 @@
 
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
+                                        <Path Data="{StaticResource IconDatabase}" Width="18" Height="18"
+                                              Stroke="{DynamicResource TextSecondaryBrush}" StrokeThickness="1.75"
+                                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              Fill="Transparent" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <TextBlock Text="{Binding Name}"
                                                    Style="{StaticResource SectionTitle}" />
                                         <Border Background="{DynamicResource AccentSubtleBrush}"
@@ -77,20 +81,40 @@
                                                Style="{StaticResource BodyText}"
                                                Margin="0,6,0,0" />
 
-                                    <TextBlock Text="{Binding IntegrityText}"
-                                               Margin="0,6,0,0">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
-                                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
-                                                <Setter Property="FontWeight" Value="SemiBold" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsIntegrityOk}" Value="True">
-                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
+                                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                        <Path Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center">
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Setter Property="Data" Value="{StaticResource IconAlertTriangle}" />
+                                                    <Setter Property="Stroke" Value="{DynamicResource DangerBrush}" />
+                                                    <Setter Property="StrokeThickness" Value="1.75" />
+                                                    <Setter Property="StrokeLineJoin" Value="Round" />
+                                                    <Setter Property="StrokeStartLineCap" Value="Round" />
+                                                    <Setter Property="StrokeEndLineCap" Value="Round" />
+                                                    <Setter Property="Fill" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsIntegrityOk}" Value="True">
+                                                            <Setter Property="Data" Value="{StaticResource IconCheck}" />
+                                                            <Setter Property="Stroke" Value="{DynamicResource SuccessBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
+                                        <TextBlock Text="{Binding IntegrityText}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
+                                                    <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsIntegrityOk}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </StackPanel>
 
                                 <Button Grid.Column="1"
