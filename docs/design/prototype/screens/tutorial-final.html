@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1120">
+  <title>Tutorial · Todo listo · SOK</title>
+  <script>
+    try {
+      var stored = localStorage.getItem('sok-theme');
+      document.documentElement.dataset.theme = stored === 'light' ? 'light' : 'dark';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <link rel="stylesheet" href="../layout.css">
+  <link rel="stylesheet" href="../motion.css">
+</head>
+<body data-page="tutorial-final" data-title="Tutorial · Todo listo" data-section="Tutorial">
+
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="app">
+    <aside id="sidebar-mount"></aside>
+
+    <div class="main">
+      <header id="header-mount"></header>
+
+      <main class="content" id="main">
+
+        <div class="page-head">
+          <div class="page-head__copy">
+            <h1 class="page-head__title">Último paso</h1>
+            <p class="page-head__desc">
+              Ya conoces las zonas del panel y cómo se protege cada cambio. Solo queda aplicar
+              tu primera optimización.
+            </p>
+          </div>
+          <div class="page-head__actions">
+            <a class="btn btn--ghost" href="dashboard.html">Saltar tutorial</a>
+          </div>
+        </div>
+
+        <div class="tutorial">
+
+          <aside class="tutorial__aside" aria-label="Progreso del tutorial">
+            <div class="tutorial__aside-head">
+              <span class="tutorial__aside-title">Tu progreso</span>
+              <span class="tutorial__aside-progress">Paso 3 de 3</span>
+              <div class="progress progress--success" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="3" aria-label="Progreso del tutorial">
+                <div class="progress__fill" style="width: 100%"></div>
+              </div>
+            </div>
+
+            <ol class="stepper">
+              <li class="stepper__item stepper__item--completed">
+                <span class="stepper__marker" aria-hidden="true"><span data-icon="check"></span></span>
+                <div class="stepper__copy">
+                  <span class="stepper__title">Bienvenida<span class="visually-hidden"> (completado)</span></span>
+                  <span class="stepper__desc">Qué es SOK · completado</span>
+                </div>
+              </li>
+              <li class="stepper__item stepper__item--completed">
+                <span class="stepper__marker" aria-hidden="true"><span data-icon="check"></span></span>
+                <div class="stepper__copy">
+                  <span class="stepper__title">Panel de control<span class="visually-hidden"> (completado)</span></span>
+                  <span class="stepper__desc">Dónde está cada cosa · completado</span>
+                </div>
+              </li>
+              <li class="stepper__item stepper__item--active" aria-current="step">
+                <span class="stepper__marker" aria-hidden="true">3</span>
+                <div class="stepper__copy">
+                  <span class="stepper__title">Todo listo</span>
+                  <span class="stepper__desc">Tu primera optimización · 30 s</span>
+                </div>
+              </li>
+            </ol>
+
+            <hr class="divider">
+
+            <div class="stack stack--tight">
+              <span class="metric__meta"><span data-icon="check-circle"></span>Tutorial completado</span>
+              <span class="metric__meta"><span data-icon="clock"></span>2 minutos en total</span>
+            </div>
+
+            <a class="btn btn--ghost btn--sm" href="dashboard.html">Salir del tutorial</a>
+          </aside>
+
+          <div class="tutorial__main">
+
+            <section class="tutorial__panel" aria-labelledby="final-title">
+              <div class="empty-state" style="padding-top: 0;">
+                <span class="empty-state__icon empty-state__icon--success"><span data-icon="check"></span></span>
+                <h2 class="tutorial__title" id="final-title">Todo listo para optimizar</h2>
+                <p class="empty-state__desc">
+                  SOK ya tiene lo necesario para aplicar el perfil recomendado. El primer cambio
+                  creará un respaldo automático y podrás deshacerlo desde la pantalla de respaldos.
+                </p>
+              </div>
+
+              <div class="grid grid--3">
+                <div class="stat-card">
+                  <span class="stat__label">Perfil recomendado</span>
+                  <span class="stat__value">Gamer</span>
+                  <span class="stat__meta">42 claves · 6 servicios</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat__label">Respaldo automático</span>
+                  <span class="stat__value">42,6 MB</span>
+                  <span class="stat__meta">Verificado con SHA-256</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat__label">Tiempo estimado</span>
+                  <span class="stat__value">40 s</span>
+                  <span class="stat__meta">Sin reinicio</span>
+                </div>
+              </div>
+
+              <div class="tutorial__prose">
+                <h3>Qué incluye la primera optimización</h3>
+              </div>
+
+              <div class="checklist">
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span><strong>Respaldo previo:</strong> se guardan las claves de registro y el estado de los servicios.</span>
+                </div>
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span><strong>Limpieza segura:</strong> archivos temporales y cachés con más de 7 días.</span>
+                </div>
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span><strong>Ajustes del perfil:</strong> 42 claves y 6 servicios, todos reversibles.</span>
+                </div>
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span><strong>Verificación final:</strong> SOK comprueba que los servicios esenciales sigan activos.</span>
+                </div>
+              </div>
+
+              <div class="infobar infobar--warning">
+                <span class="infobar__icon" data-icon="alert-triangle"></span>
+                <div class="infobar__content">
+                  <strong class="infobar__title">Se requiere tu confirmación</strong>
+                  <span class="infobar__text">La optimización no empieza hasta que confirmes el resumen de cambios en el panel de control.</span>
+                </div>
+              </div>
+            </section>
+
+            <div class="action-bar">
+              <div class="action-bar__hint">
+                <span data-icon="book"></span>
+                <span>Puedes repetir el tutorial cuando quieras.</span>
+              </div>
+              <div class="action-bar__actions">
+                <a class="btn btn--secondary" href="tutorial-welcome.html">
+                  <span data-icon="rotate-ccw"></span>
+                  Repetir tutorial
+                </a>
+                <a class="btn btn--primary" href="dashboard.html">
+                  Ir al panel de control
+                  <span data-icon="arrow-right"></span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="footer">
+        <span>SOK 1.0 · Prototipo visual · Datos de ejemplo</span>
+        <div class="footer__links">
+          <a href="dashboard.html">Panel</a>
+          <a href="backups.html">Respaldos</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="../shell.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1120">
+  <title>Panel de control · SOK</title>
+  <script>
+    try {
+      var stored = localStorage.getItem('sok-theme');
+      document.documentElement.dataset.theme = stored === 'light' ? 'light' : 'dark';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <link rel="stylesheet" href="../layout.css">
+  <link rel="stylesheet" href="../motion.css">
+</head>
+<body data-page="dashboard" data-title="Panel de control" data-section="Operación">
+
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="app">
+    <aside id="sidebar-mount"></aside>
+
+    <div class="main">
+      <header id="header-mount"></header>
+
+      <main class="content" id="main">
+
+        <div class="infobar infobar--info" id="demo-note">
+          <span class="infobar__icon" data-icon="info"></span>
+          <div class="infobar__content">
+            <strong class="infobar__title">Prototipo visual</strong>
+            <span class="infobar__text">Los valores de CPU, memoria y respaldos son de ejemplo. Ninguna acción modifica el equipo.</span>
+          </div>
+          <button class="btn btn--ghost btn--sm" type="button" data-dismiss="demo-note">Entendido</button>
+        </div>
+
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero__copy">
+            <span class="hero__eyebrow"><span data-icon="shield"></span>Sistema estable</span>
+            <h1 class="hero__title" id="hero-title">Tu equipo está en buen estado</h1>
+            <p class="hero__desc">
+              SOK revisó 42 ajustes, 6 servicios y 3 respaldos. No se detectaron riesgos
+              pendientes. Puedes optimizar ahora o revisar el detalle antes de aplicar cambios.
+            </p>
+            <div class="hero__actions">
+              <button class="btn btn--primary btn--lg" type="button" data-dialog-open="dialog-optimize">
+                Optimizar ahora
+                <span data-icon="arrow-right"></span>
+              </button>
+              <button class="btn btn--secondary btn--lg" type="button" data-dialog-open="dialog-backup">
+                <span data-icon="save"></span>
+                Crear respaldo
+              </button>
+            </div>
+            <p class="metric__meta">
+              <span data-icon="clock"></span>
+              Última optimización: hoy, 09:41 · hace 3 horas
+            </p>
+          </div>
+
+          <div class="hero__aside">
+            <div class="ring ring--success" style="--value: 92; --ring-size: 136px; --ring-thickness: 12px;"
+                 role="img" aria-label="Salud del sistema: 92 de 100">
+              <div class="ring__content">
+                <span class="ring__value">92</span>
+                <span class="ring__label">Salud</span>
+              </div>
+            </div>
+            <div class="hero__ring-copy">
+              <p class="hero__ring-title">Todo en orden</p>
+              <ul class="hero__ring-list">
+                <li><span data-icon="check"></span>3 respaldos verificados</li>
+                <li><span data-icon="check"></span>Sin servicios detenidos</li>
+                <li><span data-icon="check"></span>Telemetría desactivada</li>
+              </ul>
+              <span class="badge badge--success badge--dot">Sin alertas</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="metric-strip" aria-label="Métricas del sistema">
+          <div class="metric-strip__item">
+            <div class="metric-strip__head">
+              <span class="metric__label"><span data-icon="cpu"></span>CPU</span>
+              <span class="metric__trend metric__trend--good">−2%</span>
+            </div>
+            <div class="metric__value metric__value--sm">34<span class="metric__unit">%</span></div>
+            <div class="metric__meta">Ryzen 5 5600G · 6 núcleos</div>
+          </div>
+
+          <div class="metric-strip__item">
+            <div class="metric-strip__head">
+              <span class="metric__label"><span data-icon="layers"></span>Memoria</span>
+              <span class="metric__trend metric__trend--neutral">+4%</span>
+            </div>
+            <div class="metric__value metric__value--sm">61<span class="metric__unit">%</span></div>
+            <div class="metric__meta">9,8 GB de 16 GB en uso</div>
+          </div>
+
+          <div class="metric-strip__item">
+            <div class="metric-strip__head">
+              <span class="metric__label"><span data-icon="drive"></span>Disco</span>
+              <span class="metric__trend metric__trend--neutral">estable</span>
+            </div>
+            <div class="metric__value metric__value--sm">72<span class="metric__unit">%</span></div>
+            <div class="metric__meta">SSD NVMe · 142 GB libres</div>
+          </div>
+
+          <div class="metric-strip__item">
+            <div class="metric-strip__head">
+              <span class="metric__label"><span data-icon="activity"></span>Procesos</span>
+              <span class="metric__trend metric__trend--neutral">12 servicios</span>
+            </div>
+            <div class="metric__value metric__value--sm">148<span class="metric__unit">activos</span></div>
+            <div class="metric__meta">Todos los servicios esenciales activos</div>
+          </div>
+        </section>
+
+        <div class="grid grid--12">
+
+          <section class="card col-8" aria-labelledby="chart-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="chart-title">Rendimiento en tiempo real</h2>
+                <p class="card__subtitle">Últimos 30 minutos · muestreo cada 30 segundos</p>
+              </div>
+              <div class="card__actions">
+                <span class="badge badge--success badge--dot">En vivo</span>
+                <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más opciones de la gráfica" data-tooltip="Opciones">
+                  <span data-icon="more"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card__body">
+              <div class="chart">
+                <div class="chart__canvas" role="img" aria-label="Gráfica de uso de CPU y memoria durante los últimos 30 minutos. La CPU se mantiene entre 20 y 45 por ciento.">
+                  <div class="chart__bars" aria-hidden="true">
+                    <div class="chart__bar" style="height: 28%"></div>
+                    <div class="chart__bar" style="height: 34%"></div>
+                    <div class="chart__bar" style="height: 30%"></div>
+                    <div class="chart__bar" style="height: 42%"></div>
+                    <div class="chart__bar" style="height: 38%"></div>
+                    <div class="chart__bar" style="height: 47%"></div>
+                    <div class="chart__bar" style="height: 41%"></div>
+                    <div class="chart__bar" style="height: 36%"></div>
+                    <div class="chart__bar chart__bar--muted" style="height: 55%"></div>
+                    <div class="chart__bar chart__bar--muted" style="height: 58%"></div>
+                    <div class="chart__bar" style="height: 44%"></div>
+                    <div class="chart__bar" style="height: 39%"></div>
+                    <div class="chart__bar" style="height: 33%"></div>
+                    <div class="chart__bar" style="height: 31%"></div>
+                    <div class="chart__bar" style="height: 45%"></div>
+                    <div class="chart__bar" style="height: 52%"></div>
+                    <div class="chart__bar chart__bar--muted" style="height: 62%"></div>
+                    <div class="chart__bar chart__bar--muted" style="height: 66%"></div>
+                    <div class="chart__bar" style="height: 48%"></div>
+                    <div class="chart__bar" style="height: 43%"></div>
+                    <div class="chart__bar" style="height: 37%"></div>
+                    <div class="chart__bar" style="height: 35%"></div>
+                    <div class="chart__bar" style="height: 40%"></div>
+                    <div class="chart__bar" style="height: 46%"></div>
+                    <div class="chart__bar chart__bar--muted" style="height: 57%"></div>
+                    <div class="chart__bar chart__bar--muted" style="height: 61%"></div>
+                    <div class="chart__bar" style="height: 49%"></div>
+                    <div class="chart__bar" style="height: 42%"></div>
+                    <div class="chart__bar" style="height: 36%"></div>
+                    <div class="chart__bar" style="height: 34%"></div>
+                  </div>
+                </div>
+                <div class="chart__legend">
+                  <span class="chart__legend-item"><span class="chart__swatch"></span>CPU</span>
+                  <span class="chart__legend-item"><span class="chart__swatch chart__swatch--alt"></span>Memoria</span>
+                  <span class="row__spacer"></span>
+                  <span>Pico: 66% · Promedio: 43%</span>
+                </div>
+              </div>
+
+              <div class="stat-grid">
+                <div class="stat">
+                  <span class="stat__label">Temperatura</span>
+                  <span class="stat__value">52 °C</span>
+                  <span class="stat__meta">Normal para carga ligera</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Frecuencia</span>
+                  <span class="stat__value">3,9 GHz</span>
+                  <span class="stat__meta">Turbo activo</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Disco</span>
+                  <span class="stat__value">1,2 MB/s</span>
+                  <span class="stat__meta">Lectura en reposo</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Red</span>
+                  <span class="stat__value">8 ms</span>
+                  <span class="stat__meta">Latencia estable</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card col-4" aria-labelledby="protection-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="protection-title">Protección</h2>
+                <p class="card__subtitle">Respaldos e integridad</p>
+              </div>
+              <span class="badge badge--success">Al día</span>
+            </div>
+
+            <div class="card__body">
+              <div class="row">
+                <span class="quick-action__icon" style="background: var(--color-success-bg); color: var(--color-success-fg);">
+                  <span data-icon="shield"></span>
+                </span>
+                <div class="quick-action__copy">
+                  <span class="quick-action__title">Último respaldo verificado</span>
+                  <span class="quick-action__desc">Hoy, 09:41 · 42,6 MB · SHA-256 correcto</span>
+                </div>
+              </div>
+
+              <div class="progress progress--success">
+                <div class="progress__fill" style="width: 100%"></div>
+              </div>
+              <div class="progress__legend">
+                <span>Integridad de respaldos</span>
+                <span>3 de 3 verificados</span>
+              </div>
+
+              <dl class="dialog__summary" style="gap: var(--space-6);">
+                <div class="dialog__summary-row">
+                  <dt>Política</dt>
+                  <dd>Antes de cada cambio</dd>
+                </div>
+                <div class="dialog__summary-row">
+                  <dt>Retención</dt>
+                  <dd>Últimos 10</dd>
+                </div>
+                <div class="dialog__summary-row">
+                  <dt>Espacio usado</dt>
+                  <dd>248 MB</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="card__footer" style="border-top: 0; padding-top: 0;">
+              <a class="btn btn--secondary btn--sm" href="backups.html">Ver respaldos</a>
+              <a class="btn btn--ghost btn--sm" href="backups.html">Configurar</a>
+            </div>
+          </section>
+        </div>
+
+        <div class="grid grid--12">
+
+          <section class="card col-4" aria-labelledby="profile-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="profile-title">Perfil activo</h2>
+                <p class="card__subtitle">Ajustes aplicados al sistema</p>
+              </div>
+              <span class="badge badge--accent">Activo</span>
+            </div>
+
+            <div class="card__body">
+              <div class="row">
+                <span class="profile-card__icon"><span data-icon="gamepad"></span></span>
+                <div class="profile-card__copy">
+                  <span class="profile-card__name">Gamer</span>
+                  <span class="profile-card__desc">Máximo rendimiento y latencia baja</span>
+                </div>
+              </div>
+
+              <div class="profile-card__tags">
+                <span class="badge badge--neutral">Alto rendimiento</span>
+                <span class="badge badge--neutral">Game DVR off</span>
+                <span class="badge badge--neutral">GPU preferida</span>
+              </div>
+
+              <div class="profile-card__stats">
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">42</span>
+                  <span class="profile-card__stat-label">Claves</span>
+                </div>
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">6</span>
+                  <span class="profile-card__stat-label">Servicios</span>
+                </div>
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">3</span>
+                  <span class="profile-card__stat-label">Apps</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card__footer">
+              <a class="btn btn--ghost btn--sm" href="profiles.html">Comparar perfiles</a>
+              <a class="btn btn--secondary btn--sm" href="profiles.html">Cambiar</a>
+            </div>
+          </section>
+
+          <section class="card col-4" aria-labelledby="activity-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="activity-title">Actividad reciente</h2>
+                <p class="card__subtitle">Últimas 24 horas</p>
+              </div>
+            </div>
+
+            <div class="card__body">
+              <ol class="activity">
+                <li class="activity__item">
+                  <span class="activity__marker activity__marker--success"><span data-icon="check"></span></span>
+                  <div class="activity__copy">
+                    <span class="activity__title">Optimización completada</span>
+                    <span class="activity__meta">Hoy, 09:41 · 1,8 GB liberados</span>
+                  </div>
+                </li>
+                <li class="activity__item">
+                  <span class="activity__marker activity__marker--accent"><span data-icon="save"></span></span>
+                  <div class="activity__copy">
+                    <span class="activity__title">Respaldo creado automáticamente</span>
+                    <span class="activity__meta">Hoy, 09:40 · 42,6 MB</span>
+                  </div>
+                </li>
+                <li class="activity__item">
+                  <span class="activity__marker activity__marker--warning"><span data-icon="alert-triangle"></span></span>
+                  <div class="activity__copy">
+                    <span class="activity__title">Servicio «SysMain» detenido</span>
+                    <span class="activity__meta">Ayer, 18:12 · Reversible</span>
+                  </div>
+                </li>
+                <li class="activity__item">
+                  <span class="activity__marker"><span data-icon="rotate-ccw"></span></span>
+                  <div class="activity__copy">
+                    <span class="activity__title">Perfil Gamer aplicado</span>
+                    <span class="activity__meta">Ayer, 18:10 · 42 claves</span>
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <div class="card__footer">
+              <a class="btn btn--ghost btn--sm" href="#">Ver historial completo</a>
+            </div>
+          </section>
+
+          <section class="card col-4" aria-labelledby="quick-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="quick-title">Acciones rápidas</h2>
+                <p class="card__subtitle">Tareas frecuentes</p>
+              </div>
+            </div>
+
+            <div class="card__body" style="gap: var(--space-4);">
+              <a class="quick-action" href="#" data-dialog-open="dialog-optimize">
+                <span class="quick-action__icon" style="background: var(--color-accent-subtle); color: var(--color-accent-default);">
+                  <span data-icon="zap"></span>
+                </span>
+                <span class="quick-action__copy">
+                  <span class="quick-action__title">Optimizar el sistema</span>
+                  <span class="quick-action__desc">Limpieza y ajustes del perfil activo</span>
+                </span>
+                <span class="quick-action__arrow" data-icon="chevron-right"></span>
+              </a>
+
+              <a class="quick-action" href="backups.html">
+                <span class="quick-action__icon"><span data-icon="database"></span></span>
+                <span class="quick-action__copy">
+                  <span class="quick-action__title">Restaurar un respaldo</span>
+                  <span class="quick-action__desc">Vuelve a un estado anterior verificado</span>
+                </span>
+                <span class="quick-action__arrow" data-icon="chevron-right"></span>
+              </a>
+
+              <a class="quick-action" href="profiles.html">
+                <span class="quick-action__icon"><span data-icon="users"></span></span>
+                <span class="quick-action__copy">
+                  <span class="quick-action__title">Cambiar de perfil</span>
+                  <span class="quick-action__desc">Gamer, Ofimático o personalizado</span>
+                </span>
+                <span class="quick-action__arrow" data-icon="chevron-right"></span>
+              </a>
+
+              <a class="quick-action" href="tutorial-welcome.html">
+                <span class="quick-action__icon"><span data-icon="book"></span></span>
+                <span class="quick-action__copy">
+                  <span class="quick-action__title">Repetir el tutorial</span>
+                  <span class="quick-action__desc">3 pasos · menos de 2 minutos</span>
+                </span>
+                <span class="quick-action__arrow" data-icon="chevron-right"></span>
+              </a>
+            </div>
+          </section>
+        </div>
+
+      </main>
+
+      <footer class="footer">
+        <span>SOK 1.0 · Prototipo visual · Datos de ejemplo</span>
+        <div class="footer__links">
+          <a href="tutorial-welcome.html">Tutorial</a>
+          <a href="backups.html">Respaldos</a>
+          <a href="../README.md">Guía de diseño</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Confirmación: optimizar -->
+  <div class="dialog" id="dialog-optimize" role="dialog" aria-modal="true" aria-labelledby="optimize-title" aria-hidden="true" hidden>
+    <div class="dialog__backdrop"></div>
+    <div class="dialog__panel">
+      <div class="dialog__header">
+        <div class="dialog__heading">
+          <span class="dialog__icon"><span data-icon="zap"></span></span>
+          <div>
+            <h2 class="dialog__title" id="optimize-title">Optimizar el sistema</h2>
+            <p class="dialog__subtitle">Perfil Gamer · se aplicará en 2 etapas</p>
+          </div>
+        </div>
+        <button class="btn btn--ghost btn--icon btn--sm" type="button" data-dialog-close aria-label="Cerrar">
+          <span data-icon="x"></span>
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <div class="infobar infobar--warning">
+          <span class="infobar__icon" data-icon="shield"></span>
+          <div class="infobar__content">
+            <strong class="infobar__title">Respaldo automático incluido</strong>
+            <span class="infobar__text">Antes de aplicar los cambios se creará un punto de restauración de 42,6 MB.</span>
+          </div>
+        </div>
+
+        <dl class="dialog__summary">
+          <div class="dialog__summary-row"><dt>Ajustes de registro</dt><dd>42 claves</dd></div>
+          <div class="dialog__summary-row"><dt>Servicios afectados</dt><dd>6</dd></div>
+          <div class="dialog__summary-row"><dt>Espacio estimado a liberar</dt><dd>1,8 GB</dd></div>
+          <div class="dialog__summary-row"><dt>Reinicio requerido</dt><dd>No</dd></div>
+        </dl>
+
+        <p>Puedes deshacer los cambios restaurando el respaldo creado en esta operación.</p>
+      </div>
+
+      <div class="dialog__footer">
+        <button class="btn btn--secondary" type="button" data-dialog-close data-autofocus>Cancelar</button>
+        <button class="btn btn--primary" type="button" data-dialog-close
+                data-toast-title="Optimización completada"
+                data-toast="Se liberaron 1,8 GB y el respaldo quedó verificado."
+                data-toast-tone="success">
+          Aplicar y optimizar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmación: respaldo -->
+  <div class="dialog" id="dialog-backup" role="dialog" aria-modal="true" aria-labelledby="backup-title" aria-hidden="true" hidden>
+    <div class="dialog__backdrop"></div>
+    <div class="dialog__panel">
+      <div class="dialog__header">
+        <div class="dialog__heading">
+          <span class="dialog__icon" style="background: var(--color-accent-subtle); color: var(--color-accent-default);">
+            <span data-icon="save"></span>
+          </span>
+          <div>
+            <h2 class="dialog__title" id="backup-title">Crear un respaldo</h2>
+            <p class="dialog__subtitle">Copia de seguridad del estado actual</p>
+          </div>
+        </div>
+        <button class="btn btn--ghost btn--icon btn--sm" type="button" data-dialog-close aria-label="Cerrar">
+          <span data-icon="x"></span>
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <p>Se guardarán las claves de registro y el estado de los servicios modificados por SOK. El respaldo se verifica con SHA-256 al finalizar.</p>
+        <dl class="dialog__summary">
+          <div class="dialog__summary-row"><dt>Contenido</dt><dd>Registro + servicios</dd></div>
+          <div class="dialog__summary-row"><dt>Tamaño estimado</dt><dd>42,6 MB</dd></div>
+          <div class="dialog__summary-row"><dt>Ubicación</dt><dd>%LOCALAPPDATA%\SOK\Backups</dd></div>
+        </dl>
+      </div>
+
+      <div class="dialog__footer">
+        <button class="btn btn--secondary" type="button" data-dialog-close data-autofocus>Cancelar</button>
+        <button class="btn btn--primary" type="button" data-dialog-close
+                data-toast-title="Respaldo creado"
+                data-toast="42,6 MB · integridad verificada con SHA-256."
+                data-toast-tone="success">
+          Crear respaldo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shell.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>

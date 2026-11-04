@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1120">
+  <meta name="description" content="Prototipo visual navegable de SOK, Sistema de Optimización Key.">
+  <title>SOK · Prototipo visual</title>
+  <script>
+    try {
+      var stored = localStorage.getItem('sok-theme');
+      document.documentElement.dataset.theme = stored === 'light' ? 'light' : 'dark';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+<body class="cover">
+
+  <header class="cover__header">
+    <a class="cover__brand" href="index.html">
+      <span class="logo-mark"><span data-icon="shield"></span></span>
+      <span class="cover__brand-copy">
+        <span class="cover__brand-name">SOK</span>
+        <span class="cover__brand-tag">Prototipo visual</span>
+      </span>
+    </a>
+    <div class="row">
+      <a class="btn btn--ghost btn--sm" href="../README.md">Guía de diseño</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="true" aria-label="Cambiar a tema claro" data-tooltip="Cambiar tema">
+        <span data-icon="moon" class="theme-toggle__moon icon"></span>
+        <span data-icon="sun" class="theme-toggle__sun icon"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="cover__main">
+
+    <div class="cover__intro">
+      <div class="cover__badges">
+        <span class="badge badge--accent"><span data-icon="sparkles"></span>Diseño v1</span>
+        <span class="badge badge--neutral">6 pantallas</span>
+        <span class="badge badge--success"><span data-icon="check"></span>WCAG AA</span>
+        <span class="badge badge--info">Tema claro y oscuro</span>
+      </div>
+      <h1 class="cover__title">La interfaz de <em>SOK</em>, antes del código.</h1>
+      <p class="cover__desc">
+        Prototipo navegable en HTML, CSS y JavaScript sin dependencias. Sirve como referencia
+        visual y funcional para traducir cada componente a WPF con Segoe UI, geometría Fluent
+        y los mismos tokens de color.
+      </p>
+    </div>
+
+    <section aria-labelledby="screens-title">
+      <div class="section-heading" style="margin-bottom: var(--space-16);">
+        <div class="section-heading__copy">
+          <h2 class="section-heading__title" id="screens-title">Pantallas incluidas</h2>
+          <p class="section-heading__desc">Recorre el flujo completo: panel, tutorial, perfiles y respaldos.</p>
+        </div>
+      </div>
+
+      <div class="cover__grid">
+
+        <a class="screen-card" href="screens/dashboard.html">
+          <div class="screen-card__head">
+            <span class="screen-card__icon" data-icon="dashboard"></span>
+            <span class="screen-card__index">01</span>
+          </div>
+          <h3 class="screen-card__title">Panel de control</h3>
+          <p class="screen-card__desc">
+            Métrica principal de CPU, salud del sistema, rendimiento en vivo, perfil activo y
+            estado de protección en una sola vista.
+          </p>
+          <div class="screen-card__foot">
+            <div class="screen-card__tags">
+              <span class="badge badge--neutral">Hero metric</span>
+              <span class="badge badge--neutral">Actividad</span>
+            </div>
+            <span class="screen-card__cta">Abrir <span data-icon="arrow-right"></span></span>
+          </div>
+        </a>
+
+        <a class="screen-card" href="screens/tutorial-welcome.html">
+          <div class="screen-card__head">
+            <span class="screen-card__icon" data-icon="book"></span>
+            <span class="screen-card__index">02</span>
+          </div>
+          <h3 class="screen-card__title">Tutorial · Bienvenida</h3>
+          <p class="screen-card__desc">
+            Primera impresión con propuesta de valor, tres beneficios clave y un único llamado
+            a la acción. El tutorial se puede omitir.
+          </p>
+          <div class="screen-card__foot">
+            <div class="screen-card__tags">
+              <span class="badge badge--neutral">Paso 1 de 3</span>
+              <span class="badge badge--neutral">Onboarding</span>
+            </div>
+            <span class="screen-card__cta">Abrir <span data-icon="arrow-right"></span></span>
+          </div>
+        </a>
+
+        <a class="screen-card" href="screens/tutorial-step02.html">
+          <div class="screen-card__head">
+            <span class="screen-card__icon" data-icon="monitor"></span>
+            <span class="screen-card__index">03</span>
+          </div>
+          <h3 class="screen-card__title">Tutorial · Panel de control</h3>
+          <p class="screen-card__desc">
+            El paso que había quedado ilegible: estados de paso accesibles, mapa de la pantalla
+            y una barra de acciones fija con la acción principal a la derecha.
+          </p>
+          <div class="screen-card__foot">
+            <div class="screen-card__tags">
+              <span class="badge badge--warning">Rediseñado</span>
+              <span class="badge badge--neutral">Paso 2 de 3</span>
+            </div>
+            <span class="screen-card__cta">Abrir <span data-icon="arrow-right"></span></span>
+          </div>
+        </a>
+
+        <a class="screen-card" href="screens/tutorial-final.html">
+          <div class="screen-card__head">
+            <span class="screen-card__icon" data-icon="rocket"></span>
+            <span class="screen-card__index">04</span>
+          </div>
+          <h3 class="screen-card__title">Tutorial · Todo listo</h3>
+          <p class="screen-card__desc">
+            Cierre con resumen de lo aprendido, verificación de requisitos y salida directa al
+            panel de control.
+          </p>
+          <div class="screen-card__foot">
+            <div class="screen-card__tags">
+              <span class="badge badge--neutral">Paso 3 de 3</span>
+              <span class="badge badge--success">Cierre</span>
+            </div>
+            <span class="screen-card__cta">Abrir <span data-icon="arrow-right"></span></span>
+          </div>
+        </a>
+
+        <a class="screen-card" href="screens/profiles.html">
+          <div class="screen-card__head">
+            <span class="screen-card__icon" data-icon="users"></span>
+            <span class="screen-card__index">05</span>
+          </div>
+          <h3 class="screen-card__title">Perfiles</h3>
+          <p class="screen-card__desc">
+            Perfiles Gamer y Ofimático como tarjetas comparables, perfil activo señalizado,
+            confirmación con respaldo automático y estado vacío para importados.
+          </p>
+          <div class="screen-card__foot">
+            <div class="screen-card__tags">
+              <span class="badge badge--neutral">Settings cards</span>
+              <span class="badge badge--neutral">Confirmación</span>
+            </div>
+            <span class="screen-card__cta">Abrir <span data-icon="arrow-right"></span></span>
+          </div>
+        </a>
+
+        <a class="screen-card" href="screens/backups.html">
+          <div class="screen-card__head">
+            <span class="screen-card__icon" data-icon="database"></span>
+            <span class="screen-card__index">06</span>
+          </div>
+          <h3 class="screen-card__title">Respaldos</h3>
+          <p class="screen-card__desc">
+            Tabla con integridad verificada, restauración con resumen de impacto y política de
+            respaldo automático antes de cada cambio.
+          </p>
+          <div class="screen-card__foot">
+            <div class="screen-card__tags">
+              <span class="badge badge--success">Integridad</span>
+              <span class="badge badge--neutral">Trust UX</span>
+            </div>
+            <span class="screen-card__cta">Abrir <span data-icon="arrow-right"></span></span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="cover__notes" aria-label="Notas del prototipo">
+      <div class="cover__note">
+        <h3 class="cover__note-title"><span data-icon="keyboard"></span>Cómo recorrerlo</h3>
+        <p>
+          Abre <code>index.html</code> directamente en el navegador. Usa <span class="kbd">Tab</span>
+          para moverte, <span class="kbd">Ctrl</span> + <span class="kbd">K</span> para buscar una
+          sección y <span class="kbd">?</span> para ver los atajos.
+        </p>
+      </div>
+      <div class="cover__note">
+        <h3 class="cover__note-title"><span data-icon="sun"></span>Temas</h3>
+        <p>
+          El tema oscuro es el predeterminado, igual que en Figma. El botón de la cabecera alterna
+          a claro y la elección se conserva entre pantallas.
+        </p>
+      </div>
+      <div class="cover__note">
+        <h3 class="cover__note-title"><span data-icon="info"></span>Datos de ejemplo</h3>
+        <p>
+          Los valores de CPU, memoria y respaldos son ficticios. El prototipo valida jerarquía,
+          estados y accesibilidad; no ejecuta acciones reales sobre Windows.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="cover__footer">
+    SOK · Sistema de Optimización Key · Prototipo visual v1 · IESTP Trujillo
+  </footer>
+
+  <script src="shell.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

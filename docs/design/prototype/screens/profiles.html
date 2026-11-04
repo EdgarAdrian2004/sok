@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1120">
+  <title>Perfiles · SOK</title>
+  <script>
+    try {
+      var stored = localStorage.getItem('sok-theme');
+      document.documentElement.dataset.theme = stored === 'light' ? 'light' : 'dark';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <link rel="stylesheet" href="../layout.css">
+  <link rel="stylesheet" href="../motion.css">
+</head>
+<body data-page="profiles" data-title="Perfiles" data-section="Operación">
+
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="app">
+    <aside id="sidebar-mount"></aside>
+
+    <div class="main">
+      <header id="header-mount"></header>
+
+      <main class="content" id="main">
+
+        <div class="page-head">
+          <div class="page-head__copy">
+            <h1 class="page-head__title">Perfiles de optimización</h1>
+            <p class="page-head__desc">
+              Un perfil agrupa ajustes de registro, servicios y preferencias de aplicaciones.
+              Aplicarlo tarda menos de un minuto y siempre se puede revertir.
+            </p>
+          </div>
+          <div class="page-head__actions">
+            <label class="btn btn--secondary">
+              <span data-icon="upload"></span>
+              Importar perfil
+              <input type="file" class="visually-hidden" accept=".sokprofile,.json" data-file-toast>
+            </label>
+            <button class="btn btn--primary" type="button" data-dialog-open="dialog-new-profile">
+              <span data-icon="plus"></span>
+              Nuevo perfil
+            </button>
+          </div>
+        </div>
+
+        <div class="infobar infobar--warning">
+          <span class="infobar__icon" data-icon="shield"></span>
+          <div class="infobar__content">
+            <strong class="infobar__title">Aplicar un perfil modifica el sistema</strong>
+            <span class="infobar__text">SOK crea un respaldo automático antes de cada cambio. La regla de oro del proyecto es no tocar nada sin una copia verificada.</span>
+          </div>
+        </div>
+
+        <section class="stack" aria-labelledby="base-profiles">
+          <div class="section-heading">
+            <div class="section-heading__copy">
+              <h2 class="section-heading__title" id="base-profiles">Perfiles base</h2>
+              <p class="section-heading__desc">Configuraciones verificadas y mantenidas por SOK.</p>
+            </div>
+            <span class="badge badge--neutral">2 de 2 disponibles</span>
+          </div>
+
+          <div class="profile-grid">
+
+            <article class="profile-card profile-card--active">
+              <div class="profile-card__head">
+                <span class="profile-card__icon"><span data-icon="gamepad"></span></span>
+                <div class="profile-card__copy">
+                  <h3 class="profile-card__name">Gamer</h3>
+                  <p class="profile-card__desc">Máximo rendimiento, latencia baja y prioridad para juegos.</p>
+                </div>
+                <span class="badge badge--success badge--dot">Activo</span>
+              </div>
+
+              <div class="profile-card__tags">
+                <span class="badge badge--neutral">Alto rendimiento</span>
+                <span class="badge badge--neutral">Game DVR off</span>
+                <span class="badge badge--neutral">GPU prioritaria</span>
+              </div>
+
+              <div class="profile-card__stats">
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">42</span>
+                  <span class="profile-card__stat-label">Claves</span>
+                </div>
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">6</span>
+                  <span class="profile-card__stat-label">Servicios</span>
+                </div>
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">3</span>
+                  <span class="profile-card__stat-label">Apps</span>
+                </div>
+              </div>
+
+              <div class="profile-card__footer">
+                <span class="metric__meta"><span data-icon="clock"></span>Aplicado hoy, 09:41</span>
+                <div class="card__actions">
+                  <button class="btn btn--ghost btn--sm" type="button" data-toast="Se creó una copia editable del perfil Gamer." data-toast-tone="info">Duplicar</button>
+                  <button class="btn btn--secondary btn--sm" type="button" disabled>Aplicado</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="profile-card">
+              <div class="profile-card__head">
+                <span class="profile-card__icon profile-card__icon--violet"><span data-icon="briefcase"></span></span>
+                <div class="profile-card__copy">
+                  <h3 class="profile-card__name">Ofimático</h3>
+                  <p class="profile-card__desc">Equilibrio entre rendimiento, autonomía y estabilidad.</p>
+                </div>
+                <span class="badge badge--neutral">Disponible</span>
+              </div>
+
+              <div class="profile-card__tags">
+                <span class="badge badge--neutral">Plan equilibrado</span>
+                <span class="badge badge--neutral">Efectos visuales</span>
+                <span class="badge badge--neutral">Sin reinicio</span>
+              </div>
+
+              <div class="profile-card__stats">
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">28</span>
+                  <span class="profile-card__stat-label">Claves</span>
+                </div>
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">4</span>
+                  <span class="profile-card__stat-label">Servicios</span>
+                </div>
+                <div class="profile-card__stat">
+                  <span class="profile-card__stat-value">2</span>
+                  <span class="profile-card__stat-label">Apps</span>
+                </div>
+              </div>
+
+              <div class="profile-card__footer">
+                <span class="metric__meta"><span data-icon="clock"></span>Última aplicación: hace 6 días</span>
+                <div class="card__actions">
+                  <button class="btn btn--ghost btn--sm" type="button" data-toast="Se creó una copia editable del perfil Ofimático." data-toast-tone="info">Duplicar</button>
+                  <button class="btn btn--primary btn--sm" type="button" data-dialog-open="dialog-apply">Aplicar perfil</button>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <section class="card card--flush" aria-labelledby="compare-title">
+          <div class="card__header" style="padding: var(--space-20) var(--space-24);">
+            <div class="card__heading">
+              <h2 class="card__title" id="compare-title">Diferencias clave</h2>
+              <p class="card__subtitle">Qué cambia cada perfil en el equipo</p>
+            </div>
+            <span class="badge badge--info">Referencia</span>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <caption class="visually-hidden">Comparación de ajustes entre los perfiles Gamer y Ofimático</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Ajuste</th>
+                  <th scope="col">Gamer</th>
+                  <th scope="col">Ofimático</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Plan de energía</strong></td>
+                  <td><span class="badge badge--accent">Alto rendimiento</span></td>
+                  <td><span class="badge badge--neutral">Equilibrado</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Efectos visuales</strong></td>
+                  <td>Desactivados</td>
+                  <td>Predeterminados</td>
+                </tr>
+                <tr>
+                  <td><strong>Game DVR</strong></td>
+                  <td>Desactivado</td>
+                  <td>Sin cambios</td>
+                </tr>
+                <tr>
+                  <td><strong>Servicios en segundo plano</strong></td>
+                  <td>6 optimizados</td>
+                  <td>4 optimizados</td>
+                </tr>
+                <tr>
+                  <td><strong>Prioridad de GPU</strong></td>
+                  <td>Alta</td>
+                  <td>Automática</td>
+                </tr>
+                <tr>
+                  <td><strong>Reinicio requerido</strong></td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check"></span>No</span></td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check"></span>No</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="imported-title">
+          <div class="card__header">
+            <div class="card__heading">
+              <h2 class="card__title" id="imported-title">Perfiles importados</h2>
+              <p class="card__subtitle">Compartidos por otros usuarios o creados por ti</p>
+            </div>
+            <span class="badge badge--neutral">0</span>
+          </div>
+
+          <div class="empty-state">
+            <span class="empty-state__icon"><span data-icon="folder"></span></span>
+            <h3 class="empty-state__title">Aún no hay perfiles importados</h3>
+            <p class="empty-state__desc">
+              Los archivos <code>.sokprofile</code> incluyen los ajustes y su firma de integridad.
+              SOK los valida antes de mostrarlos como disponibles.
+            </p>
+            <div class="row">
+              <label class="btn btn--secondary">
+                <span data-icon="upload"></span>
+                Importar archivo
+                <input type="file" class="visually-hidden" accept=".sokprofile,.json" data-file-toast>
+              </label>
+              <button class="btn btn--ghost" type="button" data-toast="El formato .sokprofile se documentará en la versión WPF." data-toast-tone="info">Ver formato</button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <footer class="footer">
+        <span>SOK 1.0 · Prototipo visual · Datos de ejemplo</span>
+        <div class="footer__links">
+          <a href="dashboard.html">Panel</a>
+          <a href="backups.html">Respaldos</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Aplicar perfil -->
+  <div class="dialog" id="dialog-apply" role="dialog" aria-modal="true" aria-labelledby="apply-title" aria-hidden="true" hidden>
+    <div class="dialog__backdrop"></div>
+    <div class="dialog__panel">
+      <div class="dialog__header">
+        <div class="dialog__heading">
+          <span class="dialog__icon"><span data-icon="alert-triangle"></span></span>
+          <div>
+            <h2 class="dialog__title" id="apply-title">Aplicar perfil Ofimático</h2>
+            <p class="dialog__subtitle">28 claves · 4 servicios · 2 aplicaciones</p>
+          </div>
+        </div>
+        <button class="btn btn--ghost btn--icon btn--sm" type="button" data-dialog-close aria-label="Cerrar">
+          <span data-icon="x"></span>
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <div class="infobar infobar--warning">
+          <span class="infobar__icon" data-icon="shield"></span>
+          <div class="infobar__content">
+            <strong class="infobar__title">Respaldo obligatorio antes de aplicar</strong>
+            <span class="infobar__text">Se guardarán 42,6 MB con verificación SHA-256. Podrás restaurar el estado actual desde Respaldos.</span>
+          </div>
+        </div>
+
+        <dl class="dialog__summary">
+          <div class="dialog__summary-row"><dt>Perfil actual</dt><dd>Gamer</dd></div>
+          <div class="dialog__summary-row"><dt>Perfil nuevo</dt><dd>Ofimático</dd></div>
+          <div class="dialog__summary-row"><dt>Claves de registro</dt><dd>28</dd></div>
+          <div class="dialog__summary-row"><dt>Servicios afectados</dt><dd>4</dd></div>
+          <div class="dialog__summary-row"><dt>Reinicio requerido</dt><dd>No</dd></div>
+        </dl>
+
+        <label class="toggle">
+          <input type="checkbox" checked disabled>
+          <span class="toggle__track"><span class="toggle__thumb"></span></span>
+          <span class="toggle__label">Crear respaldo antes de aplicar (obligatorio)</span>
+        </label>
+
+        <p class="field__hint">Los servicios esenciales de Windows nunca se desactivan. SOK verifica su estado al finalizar.</p>
+      </div>
+
+      <div class="dialog__footer">
+        <button class="btn btn--secondary" type="button" data-dialog-close data-autofocus>Cancelar</button>
+        <button class="btn btn--primary" type="button" data-dialog-close
+                data-toast-title="Perfil aplicado"
+                data-toast="Ofimático está activo. El respaldo anterior quedó guardado."
+                data-toast-tone="success">
+          Aplicar perfil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nuevo perfil -->
+  <div class="dialog" id="dialog-new-profile" role="dialog" aria-modal="true" aria-labelledby="new-profile-title" aria-hidden="true" hidden>
+    <div class="dialog__backdrop"></div>
+    <div class="dialog__panel">
+      <div class="dialog__header">
+        <div class="dialog__heading">
+          <span class="dialog__icon" style="background: var(--color-accent-subtle); color: var(--color-accent-default);">
+            <span data-icon="users"></span>
+          </span>
+          <div>
+            <h2 class="dialog__title" id="new-profile-title">Nuevo perfil</h2>
+            <p class="dialog__subtitle">Parte de un perfil base y ajusta lo necesario</p>
+          </div>
+        </div>
+        <button class="btn btn--ghost btn--icon btn--sm" type="button" data-dialog-close aria-label="Cerrar">
+          <span data-icon="x"></span>
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <div class="field">
+          <label class="field__label" for="profile-name">Nombre del perfil</label>
+          <input class="input" id="profile-name" type="text" placeholder="Ej. Diseño y edición" data-autofocus>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="profile-base">Perfil base</label>
+          <select class="select" id="profile-base">
+            <option>Ofimático</option>
+            <option>Gamer</option>
+            <option>Sin base (desde cero)</option>
+          </select>
+          <span class="field__hint">Los ajustes del perfil base se copian y luego puedes editarlos.</span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="profile-desc">Descripción</label>
+          <textarea class="textarea" id="profile-desc" placeholder="Para qué sirve este perfil"></textarea>
+        </div>
+      </div>
+
+      <div class="dialog__footer">
+        <button class="btn btn--secondary" type="button" data-dialog-close>Cancelar</button>
+        <button class="btn btn--primary" type="button" data-dialog-close
+                data-toast-title="Perfil creado"
+                data-toast="El perfil quedó guardado como borrador. La edición real llega con la versión WPF."
+                data-toast-tone="info">
+          Crear perfil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shell.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>

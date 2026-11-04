@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1120">
+  <title>Respaldos · SOK</title>
+  <script>
+    try {
+      var stored = localStorage.getItem('sok-theme');
+      document.documentElement.dataset.theme = stored === 'light' ? 'light' : 'dark';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <link rel="stylesheet" href="../layout.css">
+  <link rel="stylesheet" href="../motion.css">
+</head>
+<body data-page="backups" data-title="Respaldos" data-section="Operación">
+
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="app">
+    <aside id="sidebar-mount"></aside>
+
+    <div class="main">
+      <header id="header-mount"></header>
+
+      <main class="content" id="main">
+
+        <div class="page-head">
+          <div class="page-head__copy">
+            <h1 class="page-head__title">Respaldos</h1>
+            <p class="page-head__desc">
+              Cada cambio que aplica SOK queda respaldado. Restaurar devuelve el registro y los
+              servicios al estado exacto de esa copia.
+            </p>
+          </div>
+          <div class="page-head__actions">
+            <button class="btn btn--secondary" type="button" data-toast="La carpeta de respaldos se abrirá en la versión WPF." data-toast-tone="info">
+              <span data-icon="folder"></span>
+              Abrir carpeta
+            </button>
+            <button class="btn btn--primary" type="button" data-dialog-open="dialog-backup">
+              <span data-icon="save"></span>
+              Crear respaldo ahora
+            </button>
+          </div>
+        </div>
+
+        <section class="backup-summary" aria-label="Resumen de respaldos">
+          <div class="backup-summary__item">
+            <span class="backup-summary__icon backup-summary__icon--accent"><span data-icon="database"></span></span>
+            <div class="backup-summary__copy">
+              <span class="backup-summary__value">12</span>
+              <span class="backup-summary__label">Respaldos guardados</span>
+            </div>
+          </div>
+          <div class="backup-summary__item">
+            <span class="backup-summary__icon"><span data-icon="clock"></span></span>
+            <div class="backup-summary__copy">
+              <span class="backup-summary__value">Hace 2 h</span>
+              <span class="backup-summary__label">Último respaldo</span>
+            </div>
+          </div>
+          <div class="backup-summary__item">
+            <span class="backup-summary__icon"><span data-icon="drive"></span></span>
+            <div class="backup-summary__copy">
+              <span class="backup-summary__value">248 MB</span>
+              <span class="backup-summary__label">Espacio utilizado</span>
+            </div>
+          </div>
+          <div class="backup-summary__item">
+            <span class="backup-summary__icon backup-summary__icon--success"><span data-icon="shield"></span></span>
+            <div class="backup-summary__copy">
+              <span class="backup-summary__value">100%</span>
+              <span class="backup-summary__label">Integridad verificada</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="infobar infobar--info">
+          <span class="infobar__icon" data-icon="info"></span>
+          <div class="infobar__content">
+            <strong class="infobar__title">Restaurar es una operación de impacto</strong>
+            <span class="infobar__text">Se cierran las aplicaciones afectadas y se reinician los servicios implicados. SOK pedirá confirmación y verificará el hash antes de escribir.</span>
+          </div>
+        </div>
+
+        <section class="card card--flush" aria-labelledby="history-title">
+          <div class="card__header" style="padding: var(--space-20) var(--space-24);">
+            <div class="card__heading">
+              <h2 class="card__title" id="history-title">Historial de respaldos</h2>
+              <p class="card__subtitle">Ordenados del más reciente al más antiguo</p>
+            </div>
+            <div class="card__actions">
+              <div class="search" style="min-width: 180px;">
+                <span data-icon="search"></span>
+                <input class="search__input" type="search" placeholder="Buscar por perfil…" aria-label="Buscar respaldos por perfil">
+              </div>
+              <button class="btn btn--secondary btn--icon" type="button" aria-label="Filtrar respaldos" data-tooltip="Filtrar">
+                <span data-icon="filter"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <caption class="visually-hidden">Historial de respaldos con fecha, perfil, tamaño, integridad y acciones</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Perfil</th>
+                  <th scope="col">Tamaño</th>
+                  <th scope="col">Integridad</th>
+                  <th scope="col" style="text-align: right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="table__primary">
+                      <strong>Hoy, 09:40</strong>
+                      <span>Automático · antes de optimizar</span>
+                    </div>
+                  </td>
+                  <td>Gamer</td>
+                  <td class="table__num">42,6 MB</td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check-circle"></span>Verificado</span></td>
+                  <td>
+                    <div class="table__actions">
+                      <button class="btn btn--secondary btn--sm" type="button"
+                              data-dialog-open="dialog-restore"
+                              data-restore-date="Hoy, 09:40"
+                              data-restore-profile="Gamer"
+                              data-restore-size="42,6 MB"
+                              data-restore-hash="a3f1…9c2e">Restaurar</button>
+                      <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más acciones" data-tooltip="Más acciones"
+                              data-toast="Las acciones adicionales estarán disponibles en la versión WPF." data-toast-tone="info">
+                        <span data-icon="more"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="table__primary">
+                      <strong>Ayer, 18:10</strong>
+                      <span>Manual · antes de aplicar Gamer</span>
+                    </div>
+                  </td>
+                  <td>Gamer</td>
+                  <td class="table__num">41,9 MB</td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check-circle"></span>Verificado</span></td>
+                  <td>
+                    <div class="table__actions">
+                      <button class="btn btn--secondary btn--sm" type="button"
+                              data-dialog-open="dialog-restore"
+                              data-restore-date="Ayer, 18:10"
+                              data-restore-profile="Gamer"
+                              data-restore-size="41,9 MB"
+                              data-restore-hash="7b40…1d88">Restaurar</button>
+                      <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más acciones" data-tooltip="Más acciones"
+                              data-toast="Las acciones adicionales estarán disponibles en la versión WPF." data-toast-tone="info">
+                        <span data-icon="more"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="table__primary">
+                      <strong>28 oct, 12:05</strong>
+                      <span>Automático · antes de limpiar</span>
+                    </div>
+                  </td>
+                  <td>Ofimático</td>
+                  <td class="table__num">38,2 MB</td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check-circle"></span>Verificado</span></td>
+                  <td>
+                    <div class="table__actions">
+                      <button class="btn btn--secondary btn--sm" type="button"
+                              data-dialog-open="dialog-restore"
+                              data-restore-date="28 oct, 12:05"
+                              data-restore-profile="Ofimático"
+                              data-restore-size="38,2 MB"
+                              data-restore-hash="c9e2…4a71">Restaurar</button>
+                      <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más acciones" data-tooltip="Más acciones"
+                              data-toast="Las acciones adicionales estarán disponibles en la versión WPF." data-toast-tone="info">
+                        <span data-icon="more"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="table__primary">
+                      <strong>26 oct, 20:14</strong>
+                      <span>Manual · punto de control</span>
+                    </div>
+                  </td>
+                  <td>Gamer</td>
+                  <td class="table__num">40,1 MB</td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check-circle"></span>Verificado</span></td>
+                  <td>
+                    <div class="table__actions">
+                      <button class="btn btn--secondary btn--sm" type="button"
+                              data-dialog-open="dialog-restore"
+                              data-restore-date="26 oct, 20:14"
+                              data-restore-profile="Gamer"
+                              data-restore-size="40,1 MB"
+                              data-restore-hash="e18c…77b3">Restaurar</button>
+                      <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más acciones" data-tooltip="Más acciones"
+                              data-toast="Las acciones adicionales estarán disponibles en la versión WPF." data-toast-tone="info">
+                        <span data-icon="more"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="table__primary">
+                      <strong>24 oct, 08:32</strong>
+                      <span>Automático · antes de aplicar Ofimático</span>
+                    </div>
+                  </td>
+                  <td>Ofimático</td>
+                  <td class="table__num">37,8 MB</td>
+                  <td><span class="integrity integrity--warn"><span data-icon="alert-triangle"></span>Parcial</span></td>
+                  <td>
+                    <div class="table__actions">
+                      <button class="btn btn--secondary btn--sm" type="button"
+                              data-dialog-open="dialog-restore"
+                              data-restore-date="24 oct, 08:32"
+                              data-restore-profile="Ofimático"
+                              data-restore-size="37,8 MB"
+                              data-restore-hash="5d7a…0f16">Restaurar</button>
+                      <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más acciones" data-tooltip="Más acciones"
+                              data-toast="Las acciones adicionales estarán disponibles en la versión WPF." data-toast-tone="info">
+                        <span data-icon="more"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="table__primary">
+                      <strong>21 oct, 19:48</strong>
+                      <span>Manual · antes de actualizar</span>
+                    </div>
+                  </td>
+                  <td>Gamer</td>
+                  <td class="table__num">39,4 MB</td>
+                  <td><span class="integrity integrity--ok"><span data-icon="check-circle"></span>Verificado</span></td>
+                  <td>
+                    <div class="table__actions">
+                      <button class="btn btn--secondary btn--sm" type="button"
+                              data-dialog-open="dialog-restore"
+                              data-restore-date="21 oct, 19:48"
+                              data-restore-profile="Gamer"
+                              data-restore-size="39,4 MB"
+                              data-restore-hash="2f90…6c47">Restaurar</button>
+                      <button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Más acciones" data-tooltip="Más acciones"
+                              data-toast="Las acciones adicionales estarán disponibles en la versión WPF." data-toast-tone="info">
+                        <span data-icon="more"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card__footer" style="padding: var(--space-16) var(--space-24); margin: 0;">
+            <span class="metric__meta">Mostrando 6 de 12 respaldos</span>
+            <div class="card__actions">
+              <button class="btn btn--secondary btn--sm" type="button" disabled>
+                <span data-icon="chevron-left"></span>
+                Anterior
+              </button>
+              <button class="btn btn--secondary btn--sm" type="button" data-toast="La paginación completa llega con la versión WPF." data-toast-tone="info">
+                Siguiente
+                <span data-icon="chevron-right"></span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div class="grid grid--2">
+
+          <section class="card" aria-labelledby="schedule-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="schedule-title">Programación automática</h2>
+                <p class="card__subtitle">La regla de oro de SOK, configurable</p>
+              </div>
+              <span class="badge badge--success badge--dot">Activa</span>
+            </div>
+
+            <div class="card__body">
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                <span class="toggle__label">Crear respaldo antes de cada cambio</span>
+              </label>
+              <p class="field__hint">No se puede desactivar mientras haya perfiles activos. Es la garantía de reversibilidad.</p>
+
+              <hr class="divider">
+
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                <span class="toggle__label">Respaldo diario a las 21:00</span>
+              </label>
+
+              <div class="field" style="margin-top: var(--space-8);">
+                <label class="field__label" for="retention">Conservar</label>
+                <select class="select" id="retention">
+                  <option>Últimos 10 respaldos</option>
+                  <option>Últimos 20 respaldos</option>
+                  <option>Últimos 30 días</option>
+                  <option>Sin límite</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="scope-title">
+            <div class="card__header">
+              <div class="card__heading">
+                <h2 class="card__title" id="scope-title">Alcance del respaldo</h2>
+                <p class="card__subtitle">Qué se guarda y qué nunca se toca</p>
+              </div>
+            </div>
+
+            <div class="card__body">
+              <div class="checklist">
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span>Claves de registro modificadas por SOK (HKCU y HKLM).</span>
+                </div>
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span>Estado y tipo de inicio de los servicios afectados.</span>
+                </div>
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span>Preferencias de SOK y perfil activo en la base SQLite.</span>
+                </div>
+                <div class="checklist__item">
+                  <span class="checklist__icon"><span data-icon="check"></span></span>
+                  <span>Hash SHA-256 para detectar copias alteradas o incompletas.</span>
+                </div>
+              </div>
+
+              <div class="infobar infobar--warning">
+                <span class="infobar__icon" data-icon="lock"></span>
+                <div class="infobar__content">
+                  <strong class="infobar__title">Nunca se incluyen archivos personales</strong>
+                  <span class="infobar__text">Documentos, fotos y credenciales quedan fuera del respaldo por diseño.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </main>
+
+      <footer class="footer">
+        <span>SOK 1.0 · Prototipo visual · Datos de ejemplo</span>
+        <div class="footer__links">
+          <a href="dashboard.html">Panel</a>
+          <a href="profiles.html">Perfiles</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Restaurar -->
+  <div class="dialog" id="dialog-restore" role="dialog" aria-modal="true" aria-labelledby="restore-title" aria-hidden="true" hidden>
+    <div class="dialog__backdrop"></div>
+    <div class="dialog__panel">
+      <div class="dialog__header">
+        <div class="dialog__heading">
+          <span class="dialog__icon" style="background: var(--color-danger-bg); color: var(--color-danger-fg);">
+            <span data-icon="rotate-ccw"></span>
+          </span>
+          <div>
+            <h2 class="dialog__title" id="restore-title">Restaurar respaldo</h2>
+            <p class="dialog__subtitle"><span data-fill="date">Hoy, 09:40</span> · perfil <span data-fill="profile">Gamer</span></p>
+          </div>
+        </div>
+        <button class="btn btn--ghost btn--icon btn--sm" type="button" data-dialog-close aria-label="Cerrar">
+          <span data-icon="x"></span>
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <div class="infobar infobar--danger">
+          <span class="infobar__icon" data-icon="alert-triangle"></span>
+          <div class="infobar__content">
+            <strong class="infobar__title">Se sobrescribirá el estado actual</strong>
+            <span class="infobar__text">Las claves y servicios modificados después de este respaldo volverán a su valor anterior. Los archivos personales no se ven afectados.</span>
+          </div>
+        </div>
+
+        <dl class="dialog__summary">
+          <div class="dialog__summary-row"><dt>Fecha del respaldo</dt><dd data-fill="date">Hoy, 09:40</dd></div>
+          <div class="dialog__summary-row"><dt>Perfil</dt><dd data-fill="profile">Gamer</dd></div>
+          <div class="dialog__summary-row"><dt>Tamaño</dt><dd data-fill="size">42,6 MB</dd></div>
+          <div class="dialog__summary-row"><dt>Hash SHA-256</dt><dd><code data-fill="hash">a3f1…9c2e</code></dd></div>
+          <div class="dialog__summary-row"><dt>Servicios a reiniciar</dt><dd>4</dd></div>
+        </dl>
+
+        <label class="toggle">
+          <input type="checkbox" data-guard="restore-confirm">
+          <span class="toggle__track"><span class="toggle__thumb"></span></span>
+          <span class="toggle__label">Entiendo que se reiniciarán los servicios afectados</span>
+        </label>
+      </div>
+
+      <div class="dialog__footer">
+        <button class="btn btn--secondary" type="button" data-dialog-close data-autofocus>Cancelar</button>
+        <button class="btn btn--danger" id="restore-confirm" type="button" disabled data-dialog-close
+                data-toast-title="Respaldo restaurado"
+                data-toast="El estado anterior quedó aplicado. Los servicios se reiniciaron correctamente."
+                data-toast-tone="success">
+          Restaurar respaldo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crear respaldo -->
+  <div class="dialog" id="dialog-backup" role="dialog" aria-modal="true" aria-labelledby="backup-title" aria-hidden="true" hidden>
+    <div class="dialog__backdrop"></div>
+    <div class="dialog__panel">
+      <div class="dialog__header">
+        <div class="dialog__heading">
+          <span class="dialog__icon" style="background: var(--color-accent-subtle); color: var(--color-accent-default);">
+            <span data-icon="save"></span>
+          </span>
+          <div>
+            <h2 class="dialog__title" id="backup-title">Crear un respaldo</h2>
+            <p class="dialog__subtitle">Copia de seguridad del estado actual</p>
+          </div>
+        </div>
+        <button class="btn btn--ghost btn--icon btn--sm" type="button" data-dialog-close aria-label="Cerrar">
+          <span data-icon="x"></span>
+        </button>
+      </div>
+
+      <div class="dialog__body">
+        <p>Se guardarán las claves de registro y el estado de los servicios modificados por SOK. El respaldo se verifica con SHA-256 al finalizar.</p>
+        <dl class="dialog__summary">
+          <div class="dialog__summary-row"><dt>Contenido</dt><dd>Registro + servicios</dd></div>
+          <div class="dialog__summary-row"><dt>Tamaño estimado</dt><dd>42,6 MB</dd></div>
+          <div class="dialog__summary-row"><dt>Ubicación</dt><dd>%LOCALAPPDATA%\SOK\Backups</dd></div>
+        </dl>
+      </div>
+
+      <div class="dialog__footer">
+        <button class="btn btn--secondary" type="button" data-dialog-close data-autofocus>Cancelar</button>
+        <button class="btn btn--primary" type="button" data-dialog-close
+                data-toast-title="Respaldo creado"
+                data-toast="42,6 MB · integridad verificada con SHA-256."
+                data-toast-tone="success">
+          Crear respaldo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shell.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>

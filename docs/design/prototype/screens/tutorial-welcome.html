@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1120">
+  <title>Tutorial · Bienvenida · SOK</title>
+  <script>
+    try {
+      var stored = localStorage.getItem('sok-theme');
+      document.documentElement.dataset.theme = stored === 'light' ? 'light' : 'dark';
+    } catch (error) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components.css">
+  <link rel="stylesheet" href="../layout.css">
+  <link rel="stylesheet" href="../motion.css">
+</head>
+<body data-page="tutorial-welcome" data-title="Tutorial · Bienvenida" data-section="Tutorial">
+
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="app">
+    <aside id="sidebar-mount"></aside>
+
+    <div class="main">
+      <header id="header-mount"></header>
+
+      <main class="content" id="main">
+
+        <div class="page-head">
+          <div class="page-head__copy">
+            <h1 class="page-head__title">Primeros pasos con SOK</h1>
+            <p class="page-head__desc">
+              Tres pasos, menos de dos minutos. Al terminar sabrás optimizar tu equipo sin
+              perder la posibilidad de volver atrás.
+            </p>
+          </div>
+          <div class="page-head__actions">
+            <a class="btn btn--ghost" href="dashboard.html">Saltar tutorial</a>
+          </div>
+        </div>
+
+        <div class="tutorial">
+
+          <aside class="tutorial__aside" aria-label="Progreso del tutorial">
+            <div class="tutorial__aside-head">
+              <span class="tutorial__aside-title">Tu progreso</span>
+              <span class="tutorial__aside-progress">Paso 1 de 3</span>
+              <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1" aria-label="Progreso del tutorial">
+                <div class="progress__fill" style="width: 33%"></div>
+              </div>
+            </div>
+
+            <ol class="stepper">
+              <li class="stepper__item stepper__item--active" aria-current="step">
+                <span class="stepper__marker" aria-hidden="true">1</span>
+                <div class="stepper__copy">
+                  <span class="stepper__title">Bienvenida</span>
+                  <span class="stepper__desc">Qué es SOK · 40 s</span>
+                </div>
+              </li>
+              <li class="stepper__item stepper__item--upcoming">
+                <span class="stepper__marker" aria-hidden="true">2</span>
+                <div class="stepper__copy">
+                  <span class="stepper__title">Panel de control</span>
+                  <span class="stepper__desc">Dónde está cada cosa · 50 s</span>
+                </div>
+              </li>
+              <li class="stepper__item stepper__item--upcoming">
+                <span class="stepper__marker" aria-hidden="true">3</span>
+                <div class="stepper__copy">
+                  <span class="stepper__title">Todo listo</span>
+                  <span class="stepper__desc">Tu primera optimización · 30 s</span>
+                </div>
+              </li>
+            </ol>
+
+            <hr class="divider">
+
+            <div class="stack stack--tight">
+              <span class="metric__meta"><span data-icon="clock"></span>Duración total: 2 minutos</span>
+              <span class="metric__meta"><span data-icon="shield"></span>Sin cambios hasta el paso 3</span>
+            </div>
+
+            <a class="btn btn--ghost btn--sm" href="dashboard.html">Salir del tutorial</a>
+          </aside>
+
+          <div class="tutorial__main">
+
+            <section class="tutorial__panel" aria-labelledby="welcome-title">
+              <div class="tutorial__split">
+                <div class="stack">
+                  <span class="tutorial__kicker"><span data-icon="sparkles"></span>Paso 1 de 3</span>
+                  <h2 class="tutorial__title" id="welcome-title">Bienvenido a SOK</h2>
+                  <p class="tutorial__desc">
+                    SOK reúne limpieza, ajustes de rendimiento y respaldos en un solo lugar.
+                    Cada cambio se puede deshacer, y siempre se guarda una copia antes de tocar
+                    el sistema.
+                  </p>
+                </div>
+
+                <div class="tutorial__figure">
+                  <svg class="illustration" viewBox="0 0 320 220" role="img" aria-label="Ilustración de un equipo protegido y optimizado por SOK">
+                    <circle class="illustration__glow" cx="160" cy="110" r="98"/>
+                    <rect class="illustration__surface" x="34" y="42" width="252" height="152" rx="16"/>
+                    <rect class="illustration__panel" x="50" y="58" width="220" height="120" rx="10"/>
+                    <rect class="illustration__accent" x="66" y="76" width="82" height="84" rx="8"/>
+                    <rect class="illustration__accent-solid" x="80" y="118" width="9" height="28" rx="3"/>
+                    <rect class="illustration__accent-solid" x="96" y="104" width="9" height="42" rx="3"/>
+                    <rect class="illustration__accent-solid" x="112" y="92" width="9" height="54" rx="3"/>
+                    <rect class="illustration__accent-solid" x="128" y="110" width="9" height="36" rx="3"/>
+                    <line class="illustration__line" x1="164" y1="88" x2="250" y2="88" stroke-width="6" stroke-linecap="round"/>
+                    <line class="illustration__line" x1="164" y1="106" x2="232" y2="106" stroke-width="6" stroke-linecap="round"/>
+                    <line class="illustration__line" x1="164" y1="124" x2="244" y2="124" stroke-width="6" stroke-linecap="round"/>
+                    <circle class="illustration__success-solid" cx="248" cy="164" r="26"/>
+                    <path d="m236 164 8 8 16-17" fill="none" stroke="var(--color-success-on-solid)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <p class="tutorial__figure-caption">Todo lo que necesitas, en una sola ventana.</p>
+                </div>
+              </div>
+
+              <div class="stack stack--tight">
+                <div class="benefit">
+                  <span class="benefit__icon"><span data-icon="zap"></span></span>
+                  <div class="benefit__copy">
+                    <span class="benefit__title">Optimiza en un clic</span>
+                    <span class="benefit__desc">Aplica un perfil completo sin revisar ajuste por ajuste.</span>
+                  </div>
+                </div>
+                <div class="benefit">
+                  <span class="benefit__icon"><span data-icon="shield"></span></span>
+                  <div class="benefit__copy">
+                    <span class="benefit__title">Siempre reversible</span>
+                    <span class="benefit__desc">Cada operación crea un respaldo verificado antes de aplicar.</span>
+                  </div>
+                </div>
+                <div class="benefit">
+                  <span class="benefit__icon"><span data-icon="eye"></span></span>
+                  <div class="benefit__copy">
+                    <span class="benefit__title">Sin sorpresas</span>
+                    <span class="benefit__desc">Ves qué cambia, cuánto ocupa y si requiere reinicio.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tutorial__prose">
+                <h3>Qué vas a aprender</h3>
+                <ul>
+                  <li>Dónde está la métrica principal y cómo leerla.</li>
+                  <li>Cómo aplicar un perfil y cómo revertirlo.</li>
+                  <li>Qué hacer si un cambio no da el resultado esperado.</li>
+                </ul>
+              </div>
+
+              <div class="callout">
+                <span class="callout__icon" data-icon="info"></span>
+                <div>
+                  <strong class="callout__title">Este tutorial es opcional</strong>
+                  Puedes salir en cualquier momento y volver desde el panel de control. Nada se
+                  modifica hasta que tú lo confirmes.
+                </div>
+              </div>
+            </section>
+
+            <div class="action-bar">
+              <div class="action-bar__hint">
+                <span data-icon="keyboard"></span>
+                <span>Usa <span class="kbd">Tab</span> y <span class="kbd">Enter</span> para avanzar sin ratón.</span>
+              </div>
+              <div class="action-bar__actions">
+                <a class="btn btn--secondary" href="dashboard.html">Ahora no</a>
+                <a class="btn btn--primary" href="tutorial-step02.html">
+                  Comenzar
+                  <span data-icon="arrow-right"></span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="footer">
+        <span>SOK 1.0 · Prototipo visual · Datos de ejemplo</span>
+        <div class="footer__links">
+          <a href="dashboard.html">Panel</a>
+          <a href="backups.html">Respaldos</a>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="../shell.js"></script>
+  <script src="../app.js"></script>
+</body>
+</html>
