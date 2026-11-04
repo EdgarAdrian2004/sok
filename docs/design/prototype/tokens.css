@@ -1,0 +1,480 @@
+/* ==========================================================================
+   SOK · Design Tokens
+   Single source of truth for the HTML/CSS prototype.
+   Mirrors docs/design/design-tokens.json and maps 1:1 to Theme.xaml.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---------------------------------------------------------------------
+     Brand palette
+     --------------------------------------------------------------------- */
+  --brand-50: #EFF6FF;
+  --brand-100: #DBEAFE;
+  --brand-200: #BFDBFE;
+  --brand-300: #93C5FD;
+  --brand-400: #60A5FA;
+  --brand-500: #3B82F6;
+  --brand-600: #2563EB;
+  --brand-700: #1D4ED8;
+  --brand-800: #1E40AF;
+  --brand-900: #1E3A8A;
+  --brand-950: #172554;
+
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --slate-950: #020617;
+
+  --emerald-50: #ECFDF5;
+  --emerald-100: #D1FAE5;
+  --emerald-200: #A7F3D0;
+  --emerald-300: #6EE7B7;
+  --emerald-400: #34D399;
+  --emerald-500: #10B981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065F46;
+  --emerald-900: #064E3B;
+  --emerald-950: #022C22;
+
+  --amber-50: #FFFBEB;
+  --amber-100: #FEF3C7;
+  --amber-200: #FDE68A;
+  --amber-300: #FCD34D;
+  --amber-400: #FBBF24;
+  --amber-500: #F59E0B;
+  --amber-600: #D97706;
+  --amber-700: #B45309;
+  --amber-800: #92400E;
+  --amber-900: #78350F;
+  --amber-950: #451A03;
+
+  --rose-50: #FFF1F2;
+  --rose-100: #FFE4E6;
+  --rose-200: #FECDD3;
+  --rose-300: #FDA4AF;
+  --rose-400: #FB7185;
+  --rose-500: #F43F5E;
+  --rose-600: #E11D48;
+  --rose-700: #BE123C;
+  --rose-800: #9F1239;
+  --rose-900: #881337;
+  --rose-950: #4C0519;
+
+  --sky-50: #F0F9FF;
+  --sky-100: #E0F2FE;
+  --sky-200: #BAE6FD;
+  --sky-300: #7DD3FC;
+  --sky-400: #38BDF8;
+  --sky-500: #0EA5E9;
+  --sky-600: #0284C7;
+  --sky-700: #0369A1;
+  --sky-800: #075985;
+  --sky-900: #0C4A6E;
+  --sky-950: #082F49;
+
+  --violet-50: #F5F3FF;
+  --violet-100: #EDE9FE;
+  --violet-200: #DDD6FE;
+  --violet-300: #C4B5FD;
+  --violet-400: #A78BFA;
+  --violet-500: #8B5CF6;
+  --violet-600: #7C3AED;
+  --violet-700: #6D28D9;
+  --violet-800: #5B21B6;
+  --violet-900: #4C1D95;
+  --violet-950: #2E1065;
+
+  /* ---------------------------------------------------------------------
+     Semantic colors · Light
+     --------------------------------------------------------------------- */
+  --color-bg-canvas: #F8FAFC;
+  --color-bg-subtle: #F1F5F9;
+  --color-bg-muted: #E2E8F0;
+
+  --color-surface-default: #FFFFFF;
+  --color-surface-subtle: #F8FAFC;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-hover: #F8FAFC;
+  --color-surface-pressed: #F1F5F9;
+  --color-surface-selected: #EFF6FF;
+
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748B;
+  --color-text-disabled: #94A3B8;
+  --color-text-inverse: #FFFFFF;
+  --color-text-link: #2563EB;
+
+  --color-border-subtle: #E2E8F0;
+  --color-border-default: #CBD5E1;
+  --color-border-strong: #94A3B8;
+
+  --color-accent-default: #2563EB;
+  --color-accent-hover: #1D4ED8;
+  --color-accent-pressed: #1E40AF;
+  --color-accent-subtle: #EFF6FF;
+  --color-accent-subtle-hover: #DBEAFE;
+  --color-accent-border: #BFDBFE;
+  --color-accent-on: #FFFFFF;
+
+  --color-success-bg: #ECFDF5;
+  --color-success-bg-strong: #D1FAE5;
+  --color-success-fg: #047857;
+  --color-success-solid: #047857;
+  --color-success-solid-hover: #065F46;
+  --color-success-on-solid: #FFFFFF;
+  --color-success-border: #A7F3D0;
+
+  --color-warning-bg: #FFFBEB;
+  --color-warning-bg-strong: #FEF3C7;
+  --color-warning-fg: #B45309;
+  --color-warning-solid: #B45309;
+  --color-warning-solid-hover: #92400E;
+  --color-warning-on-solid: #FFFFFF;
+  --color-warning-border: #FDE68A;
+
+  --color-danger-bg: #FFF1F2;
+  --color-danger-bg-strong: #FFE4E6;
+  --color-danger-fg: #BE123C;
+  --color-danger-solid: #BE123C;
+  --color-danger-solid-hover: #9F1239;
+  --color-danger-on-solid: #FFFFFF;
+  --color-danger-border: #FECDD3;
+
+  --color-info-bg: #F0F9FF;
+  --color-info-bg-strong: #E0F2FE;
+  --color-info-fg: #0369A1;
+  --color-info-solid: #0369A1;
+  --color-info-solid-hover: #075985;
+  --color-info-on-solid: #FFFFFF;
+  --color-info-border: #BAE6FD;
+
+  --color-sidebar-bg: #0F172A;
+  --color-sidebar-bg-elevated: #1E293B;
+  --color-sidebar-hover: #1E293B;
+  --color-sidebar-active: #2563EB;
+  --color-sidebar-active-hover: #1D4ED8;
+  --color-sidebar-text: #CBD5E1;
+  --color-sidebar-text-muted: #94A3B8;
+  --color-sidebar-text-active: #FFFFFF;
+  --color-sidebar-border: #1E293B;
+  --color-sidebar-indicator: #60A5FA;
+
+  --color-overlay-scrim: rgba(15, 23, 42, 0.72);
+  --color-tooltip-bg: #0F172A;
+  --color-tooltip-fg: #F8FAFC;
+
+  --color-shadow-soft: rgba(15, 23, 42, 0.06);
+  --color-shadow-medium: rgba(15, 23, 42, 0.10);
+  --color-shadow-strong: rgba(15, 23, 42, 0.18);
+  --color-focus-ring: #2563EB;
+
+  --color-chart-primary: #2563EB;
+  --color-chart-secondary: #7C3AED;
+  --color-chart-tertiary: #0EA5E9;
+  --color-chart-quaternary: #D97706;
+  --color-chart-grid: #E2E8F0;
+
+  /* ---------------------------------------------------------------------
+     Typography
+     --------------------------------------------------------------------- */
+  --font-sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "Cascadia Mono", "Consolas", "SFMono-Regular", monospace;
+
+  --text-overline: 11px;
+  --text-caption: 12px;
+  --text-body-s: 13px;
+  --text-body: 14px;
+  --text-body-l: 15px;
+  --text-h4: 16px;
+  --text-h3: 20px;
+  --text-h2: 24px;
+  --text-h1: 28px;
+  --text-display: 32px;
+  --text-metric: 40px;
+  --text-metric-lg: 48px;
+
+  --leading-overline: 16px;
+  --leading-caption: 16px;
+  --leading-body-s: 20px;
+  --leading-body: 22px;
+  --leading-body-l: 24px;
+  --leading-h4: 24px;
+  --leading-h3: 28px;
+  --leading-h2: 32px;
+  --leading-h1: 36px;
+  --leading-display: 40px;
+  --leading-metric: 44px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-snug: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+
+  /* ---------------------------------------------------------------------
+     Spacing · 4px grid
+     --------------------------------------------------------------------- */
+  --space-0: 0;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+
+  /* ---------------------------------------------------------------------
+     Radius
+     --------------------------------------------------------------------- */
+  --radius-none: 0;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ---------------------------------------------------------------------
+     Borders
+     --------------------------------------------------------------------- */
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+  --border-width-3: 3px;
+
+  /* ---------------------------------------------------------------------
+     Elevation
+     --------------------------------------------------------------------- */
+  --shadow-e1: 0 1px 2px var(--color-shadow-soft), 0 1px 3px var(--color-shadow-soft);
+  --shadow-e2: 0 4px 12px var(--color-shadow-medium), 0 2px 4px var(--color-shadow-soft);
+  --shadow-e3: 0 12px 32px var(--color-shadow-strong), 0 4px 8px var(--color-shadow-medium);
+
+  /* ---------------------------------------------------------------------
+     Motion
+     --------------------------------------------------------------------- */
+  --duration-fast: 120ms;
+  --duration-normal: 180ms;
+  --duration-slow: 240ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---------------------------------------------------------------------
+     Layout
+     --------------------------------------------------------------------- */
+  --layout-sidebar-w: 248px;
+  --layout-sidebar-w-rail: 72px;
+  --layout-header-h: 64px;
+  --layout-content-pad: 32px;
+  --layout-content-gap: 24px;
+  --layout-content-max: 1280px;
+
+  /* ---------------------------------------------------------------------
+     Component tokens
+     --------------------------------------------------------------------- */
+  --btn-height-sm: 32px;
+  --btn-height-md: 40px;
+  --btn-height-lg: 48px;
+  --btn-pad-x-sm: 12px;
+  --btn-pad-x-md: 16px;
+  --btn-pad-x-lg: 20px;
+  --btn-radius: var(--radius-md);
+
+  --card-radius: var(--radius-xl);
+  --card-pad: var(--space-24);
+  --card-gap: var(--space-16);
+
+  --nav-item-h: 42px;
+  --nav-item-radius: var(--radius-md);
+
+  --stepper-circle: 28px;
+  --progress-h: 8px;
+
+  --toggle-w: 44px;
+  --toggle-h: 24px;
+  --toggle-thumb: 18px;
+
+  --table-row-h: 52px;
+
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+  --icon-xl: 32px;
+}
+
+/* ==========================================================================
+   Dark theme
+   ========================================================================== */
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg-canvas: #0B1120;
+  --color-bg-subtle: #0F172A;
+  --color-bg-muted: #1E293B;
+
+  --color-surface-default: #111827;
+  --color-surface-subtle: #0F172A;
+  --color-surface-raised: #1E293B;
+  --color-surface-hover: #1E293B;
+  --color-surface-pressed: #334155;
+  --color-surface-selected: #172554;
+
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
+  --color-text-tertiary: #94A3B8;
+  --color-text-disabled: #64748B;
+  --color-text-inverse: #0F172A;
+  --color-text-link: #93C5FD;
+
+  --color-border-subtle: #1E293B;
+  --color-border-default: #334155;
+  --color-border-strong: #475569;
+
+  --color-accent-default: #60A5FA;
+  --color-accent-hover: #93C5FD;
+  --color-accent-pressed: #BFDBFE;
+  --color-accent-subtle: #172554;
+  --color-accent-subtle-hover: #1E3A8A;
+  --color-accent-border: #1E40AF;
+  --color-accent-on: #0B1120;
+
+  --color-success-bg: #022C22;
+  --color-success-bg-strong: #064E3B;
+  --color-success-fg: #6EE7B7;
+  --color-success-solid: #10B981;
+  --color-success-solid-hover: #34D399;
+  --color-success-on-solid: #022C22;
+  --color-success-border: #065F46;
+
+  --color-warning-bg: #451A03;
+  --color-warning-bg-strong: #78350F;
+  --color-warning-fg: #FCD34D;
+  --color-warning-solid: #F59E0B;
+  --color-warning-solid-hover: #FBBF24;
+  --color-warning-on-solid: #451A03;
+  --color-warning-border: #92400E;
+
+  --color-danger-bg: #4C0519;
+  --color-danger-bg-strong: #881337;
+  --color-danger-fg: #FDA4AF;
+  --color-danger-solid: #F43F5E;
+  --color-danger-solid-hover: #FB7185;
+  --color-danger-on-solid: #4C0519;
+  --color-danger-border: #9F1239;
+
+  --color-info-bg: #082F49;
+  --color-info-bg-strong: #0C4A6E;
+  --color-info-fg: #7DD3FC;
+  --color-info-solid: #0EA5E9;
+  --color-info-solid-hover: #38BDF8;
+  --color-info-on-solid: #082F49;
+  --color-info-border: #075985;
+
+  --color-sidebar-bg: #020617;
+  --color-sidebar-bg-elevated: #0F172A;
+  --color-sidebar-hover: #1E293B;
+  --color-sidebar-active: #1E40AF;
+  --color-sidebar-active-hover: #1D4ED8;
+  --color-sidebar-text: #CBD5E1;
+  --color-sidebar-text-muted: #94A3B8;
+  --color-sidebar-text-active: #FFFFFF;
+  --color-sidebar-border: #1E293B;
+  --color-sidebar-indicator: #60A5FA;
+
+  --color-overlay-scrim: rgba(0, 0, 0, 0.78);
+  --color-tooltip-bg: #E2E8F0;
+  --color-tooltip-fg: #0F172A;
+
+  --color-shadow-soft: rgba(0, 0, 0, 0.30);
+  --color-shadow-medium: rgba(0, 0, 0, 0.40);
+  --color-shadow-strong: rgba(0, 0, 0, 0.60);
+  --color-focus-ring: #60A5FA;
+
+  --color-chart-primary: #60A5FA;
+  --color-chart-secondary: #A78BFA;
+  --color-chart-tertiary: #38BDF8;
+  --color-chart-quaternary: #FBBF24;
+  --color-chart-grid: #334155;
+}
+
+/* ==========================================================================
+   High contrast / forced colors
+   ========================================================================== */
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-border-subtle: #94A3B8;
+    --color-border-default: #64748B;
+    --color-border-strong: #334155;
+    --color-text-tertiary: #334155;
+  }
+
+  [data-theme="dark"] {
+    --color-border-subtle: #64748B;
+    --color-border-default: #94A3B8;
+    --color-border-strong: #CBD5E1;
+    --color-text-tertiary: #CBD5E1;
+  }
+}
+
+@media (forced-colors: active) {
+  :root,
+  [data-theme="dark"] {
+    --color-bg-canvas: Canvas;
+    --color-bg-subtle: Canvas;
+    --color-bg-muted: Canvas;
+    --color-surface-default: Canvas;
+    --color-surface-subtle: Canvas;
+    --color-surface-raised: Canvas;
+    --color-surface-hover: Highlight;
+    --color-surface-pressed: Highlight;
+    --color-text-primary: CanvasText;
+    --color-text-secondary: CanvasText;
+    --color-text-tertiary: CanvasText;
+    --color-text-disabled: GrayText;
+    --color-text-inverse: Canvas;
+    --color-border-subtle: CanvasText;
+    --color-border-default: CanvasText;
+    --color-border-strong: CanvasText;
+    --color-accent-default: Highlight;
+    --color-accent-hover: Highlight;
+    --color-accent-pressed: Highlight;
+    --color-accent-subtle: Canvas;
+    --color-accent-subtle-hover: Canvas;
+    --color-accent-border: CanvasText;
+    --color-accent-on: HighlightText;
+    --color-sidebar-bg: Canvas;
+    --color-sidebar-bg-elevated: Canvas;
+    --color-sidebar-hover: Highlight;
+    --color-sidebar-active: Highlight;
+    --color-sidebar-active-hover: Highlight;
+    --color-sidebar-text: CanvasText;
+    --color-sidebar-text-muted: CanvasText;
+    --color-sidebar-text-active: HighlightText;
+    --color-sidebar-border: CanvasText;
+    --color-sidebar-indicator: Highlight;
+    --color-focus-ring: Highlight;
+  }
+}
