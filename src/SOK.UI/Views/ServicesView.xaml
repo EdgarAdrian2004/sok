@@ -18,6 +18,13 @@
             <!-- Encabezado y acciones -->
             <Border Style="{StaticResource CardBorder}">
                 <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Path Data="{StaticResource IconGear}" Width="20" Height="20"
+                              Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.75"
+                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Fill="Transparent" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Servicios" Style="{StaticResource SectionTitle}" />
+                    </StackPanel>
                     <TextBlock Text="SOK revisa los servicios no esenciales de Windows. Cada cambio crea un respaldo en JSON antes de detener o deshabilitar el servicio."
                                Style="{StaticResource BodyText}" />
 

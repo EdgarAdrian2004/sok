@@ -24,6 +24,13 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <Path Data="{StaticResource IconGauge}" Width="20" Height="20"
+                                  Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.75"
+                                  StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Fill="Transparent" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Telemetría y privacidad" Style="{StaticResource SectionTitle}" />
+                        </StackPanel>
                         <TextBlock Text="SOK revisa las claves de telemetría y privacidad de Windows. Antes de aplicar cualquier cambio se crea un respaldo del registro con su hash SHA-256."
                                    Style="{StaticResource BodyText}" />
                         <TextBlock Text="{Binding SummaryText}"
