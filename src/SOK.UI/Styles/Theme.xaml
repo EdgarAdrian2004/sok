@@ -300,4 +300,74 @@
         <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
     </Style>
 
+    <!-- InfoBar (mensajes en contexto) -->
+    <Style x:Key="InfoBarBase" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0,8" />
+    </Style>
+
+    <Style x:Key="InfoBarInfo" TargetType="Border" BasedOn="{StaticResource InfoBarBase}">
+        <Setter Property="Background" Value="{DynamicResource AccentSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+    </Style>
+
+    <Style x:Key="InfoBarSuccess" TargetType="Border" BasedOn="{StaticResource InfoBarBase}">
+        <Setter Property="Background" Value="{DynamicResource SuccessSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}" />
+    </Style>
+
+    <Style x:Key="InfoBarWarning" TargetType="Border" BasedOn="{StaticResource InfoBarBase}">
+        <Setter Property="Background" Value="{DynamicResource WarningSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource WarningBrush}" />
+    </Style>
+
+    <Style x:Key="InfoBarDanger" TargetType="Border" BasedOn="{StaticResource InfoBarBase}">
+        <Setter Property="Background" Value="{DynamicResource DangerSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" />
+    </Style>
+
+    <!-- Stepper (pasos del tutorial) -->
+    <Style x:Key="StepperItem" TargetType="Border">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0,0,8,0" />
+    </Style>
+
+    <Style x:Key="StepperItemCurrent" TargetType="Border" BasedOn="{StaticResource StepperItem}">
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+    </Style>
+
+    <Style x:Key="StepperItemCompleted" TargetType="Border" BasedOn="{StaticResource StepperItem}">
+        <Setter Property="Background" Value="{DynamicResource SuccessBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}" />
+    </Style>
+
+    <!-- Estado vacío -->
+    <Style x:Key="EmptyState" TargetType="StackPanel">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="24" />
+    </Style>
+
+    <!-- DataGrid (tablas) -->
+    <Style x:Key="SokDataGrid" TargetType="DataGrid">
+        <Setter Property="Background" Value="{DynamicResource CardBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="RowHeight" Value="52" />
+        <Setter Property="ColumnHeaderHeight" Value="40" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="FontFamily" Value="Segoe UI Variable Text, Segoe UI" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+    </Style>
+
 </ResourceDictionary>
