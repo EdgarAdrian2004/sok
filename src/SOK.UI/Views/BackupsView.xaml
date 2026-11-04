@@ -62,7 +62,7 @@
                                                 Margin="10,0,0,0"
                                                 VerticalAlignment="Center">
                                             <TextBlock Text="{Binding TypeText}"
-                                                       FontFamily="Segoe UI"
+                                                       FontFamily="Segoe UI Variable Text, Segoe UI"
                                                        FontSize="10"
                                                        FontWeight="SemiBold"
                                                        Foreground="{DynamicResource AccentBrush}" />

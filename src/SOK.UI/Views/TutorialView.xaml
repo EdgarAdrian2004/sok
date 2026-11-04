@@ -72,7 +72,7 @@
                                         Background="{DynamicResource SurfaceSubtleBrush}"
                                         VerticalAlignment="Top">
                                     <TextBlock Text="{Binding Order, StringFormat='{}{0:00}'}"
-                                               FontFamily="Segoe UI"
+                                               FontFamily="Segoe UI Variable Text, Segoe UI"
                                                FontSize="10"
                                                FontWeight="SemiBold"
                                                Foreground="{DynamicResource TextSecondaryBrush}"
@@ -80,7 +80,7 @@
                                                VerticalAlignment="Center" />
                                 </Border>
                                 <TextBlock Text="{Binding Title}"
-                                           FontFamily="Segoe UI"
+                                           FontFamily="Segoe UI Variable Text, Segoe UI"
                                            FontSize="12"
                                            Foreground="{DynamicResource TextPrimaryBrush}"
                                            TextWrapping="Wrap"
