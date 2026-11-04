@@ -3,9 +3,9 @@
 ## System Optimization Key — Trabajo de Aplicación Profesional
 
 > **Documento de referencia única** para el desarrollo del TAP de Edgar Adrian Flores Herrera.
-> Generado el: 29 de septiembre de 2026 — Actualizado: 2 de noviembre de 2026
-> Versión: 1.12 (Sprint 5 completo: perfiles, restauración y tutorial)
-> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1 a 5 completados; siguiente: Bloque D)
+> Generado el: 29 de septiembre de 2026 — Actualizado: 3 de noviembre de 2026
+> Versión: 1.13 (fase de diseño visual: tokens, prototipo navegable y tema oscuro)
+> Estado: En desarrollo (Bloque A 5/6; Bloque B 8/8 ✅; Bloque C — Sprints 1 a 5 completados; Bloque C.5 — diseño visual en curso; siguiente: Bloque D)
 
 ---
 
@@ -23,6 +23,7 @@
    - [Bloque A — Fundamentación](#bloque-a--fundamentación)
    - [Bloque B — Diseño](#bloque-b--diseño)
    - [Bloque C — Implementación por Sprints](#bloque-c--implementación-por-sprints)
+   - [Bloque C.5 — Diseño Visual y Tema Oscuro](#bloque-c5--diseño-visual-y-tema-oscuro)
    - [Bloque D — Validación y Cierre](#bloque-d--validación-y-cierre)
 10. [Mapa de Entregables](#10-mapa-de-entregables)
 11. [Brechas de Conocimiento a Cubrir](#11-brechas-de-conocimiento-a-cubrir)
@@ -506,6 +507,14 @@ SOK/ ← solución Visual Studio
 
 │ ├── api-interna.md ← contratos entre capas
 
+│ ├── design/ ← sistema de diseño
+
+│ │ ├── design-tokens.json ← 451 tokens (179 globales, 72 por tema y 128 de componentes)
+
+│ │ ├── README.md ← importación a Figma, nomenclatura y reglas de accesibilidad
+
+│ │ └── prototype/ ← prototipo navegable HTML/CSS/JS (6 pantallas)
+
 │ └── bitacora-tareas.md ← Scrum backlog
 
 │
@@ -975,6 +984,90 @@ Ambos diagramas usan los nombres reales de clases y métodos del Sprint 1. El de
 
 **Commits principales:** `a89b512` (gestor de perfiles), `3e092ea` (UI de perfiles), `15ad677` (pruebas de perfiles), `8e5f274` (restauración), `7088d4e` (UI de respaldos), `aa9a57d` (pruebas de restauración), `e16a5a8` (servicio de tutorial), `bab6a5b` (UI del tutorial) y `8d48a95` (pruebas del tutorial).
 
+### BLOQUE C.5 — DISEÑO VISUAL Y TEMA OSCURO
+
+**Objetivo:** Definir y validar la interfaz antes de traducirla a WPF, e incorporar el tema
+oscuro que el alcance v1.12 no contemplaba.
+**Duración estimada:** 5 días de prototipo (cerrado) + 4-6 días de traducción a WPF.
+**Salida esperada:** sistema de tokens, prototipo navegable, `Theme.xaml` actualizado y las
+vistas de la interfaz adaptadas, sin cambios en la lógica de negocio.
+
+| Paso | Acción | Entregable | Estado |
+| --- | --- | --- | --- |
+| C.5.1 | Auditar la interfaz actual contra el archivo de Figma | Diagnóstico de brechas visuales | ✅ Hecho |
+| C.5.2 | Definir tokens semánticos para tema claro y oscuro | `docs/design/design-tokens.json` | ✅ Hecho |
+| C.5.3 | Construir el prototipo navegable | `docs/design/prototype/` | ✅ Hecho |
+| C.5.4 | Verificar contraste, foco y navegación por teclado | Lista de accesibilidad del prototipo | ✅ Hecho |
+| C.5.5 | Traducir tokens y componentes a XAML | `src/SOK.UI/Styles/Theme.xaml` | ⏳ Pendiente |
+| C.5.6 | Adaptar `MainWindow` y las vistas al nuevo tema | `src/SOK.UI/Views/` | ⏳ Pendiente |
+| C.5.7 | Agregar selector de tema persistente | `Settings.Theme` + preferencia de usuario | ⏳ Pendiente |
+| C.5.8 | Verificar compilación, 167 pruebas y capturas | `docs/capturas/` | ⏳ Pendiente |
+
+#### Por qué un prototipo HTML y no Figma
+
+El archivo de Figma (`6vNaxrG0ToILbdADADKp5f`) se conserva como referencia, pero la cuenta
+gratuita limita la cantidad de páginas y de prototipos interactivos. El prototipo en HTML, CSS
+y JavaScript sin dependencias cubre lo que faltaba: estados reales de hover, foco y deshabilitado,
+navegación entre pantallas, tema claro/oscuro con un solo juego de tokens y verificación de
+contraste en el propio navegador. Se abre con doble clic desde `index.html`; no requiere
+compilación ni servidor.
+
+#### Inventario de tokens
+
+`design-tokens.json` contiene **451 tokens**: 179 globales (paletas, tipografía, espacio, radios,
+sombras, movimiento), 72 semánticos por tema (claro y oscuro) y 128 de componentes. Los nombres
+se conservan entre CSS y XAML para que la traducción sea una correspondencia directa:
+
+| Grupo | Ejemplo de token | Destino en `Theme.xaml` |
+| --- | --- | --- |
+| Superficies | `color.bg.canvas`, `color.surface.default` | `BackgroundBrush`, `CardBrush` |
+| Texto | `color.text.primary`, `color.text.secondary` | `TextPrimaryBrush`, `TextSecondaryBrush` |
+| Bordes | `color.border.subtle` | `BorderBrush` |
+| Acento | `color.accent.default`, `color.accent.hover` | `AccentBrush`, `AccentHoverBrush` |
+| Estado | `color.success.fg`, `color.warning.fg`, `color.danger.fg` | `SuccessBrush`, `WarningBrush`, `DangerBrush` (nueva) |
+| Navegación | `color.sidebar.bg`, `color.sidebar.hover` | `SidebarBrush`, `SidebarHoverBrush` |
+| Tipografía | `typography.h1`, `typography.body`, `typography.caption` | `PageTitle`, `BodyText`, `SmallText` |
+| Geometría | `radius.xl`, `shadow.elevation1` | `CardBorder.CornerRadius`, `DropShadowEffect` |
+
+#### Decisiones visuales cerradas
+
+- **Tema oscuro por defecto**, igual que el archivo de Figma; el tema claro queda a un clic y la
+  elección se persiste.
+- **Segoe UI Variable / Segoe UI** reemplaza a Inter: es la tipografía nativa de Windows 11 y
+  evita cargar fuentes externas en WPF.
+- **Iconografía de trazo 24 × 24** con `stroke-width` 1,75, coherente con Fluent System Icons y
+  traducible a `Path` de WPF.
+- **Geometría Fluent**: radios de 6, 8, 12, 16 y 24 px; tres niveles de elevación.
+- **Foco visible** de 2 px con separación de 2 px, requisito WCAG 2.4.11.
+- **La barra lateral permanece oscura en ambos temas**, decisión que mantiene continuidad con
+  Figma y con el patrón de navegación de Windows 11.
+
+#### Alcance del prototipo
+
+Seis pantallas: panel de control, tutorial (bienvenida, panel de control y cierre), perfiles y
+respaldos. Telemetría, servicios y memoria aparecen deshabilitados en la navegación con la
+etiqueta «WPF»: se rediseñarán durante la traducción, cuando se trabaje con los ViewModels y los
+datos reales. El prototipo no ejecuta acciones sobre Windows; los resultados se simulan con
+avisos y diálogos de confirmación.
+
+**Rediseño del paso «Panel de control».** Era el punto más débil del tutorial anterior. El nuevo
+paso usa estados accesibles (`aria-current="step"` y texto «(completado)» oculto visualmente), un
+mapa numerado que asocia cada zona de la interfaz con su descripción, progreso explícito
+(«Paso 2 de 3» con `role="progressbar"`) y una barra de acciones fija con «Anterior» a la
+izquierda y «Siguiente» a la derecha.
+
+#### Restricciones de la traducción a WPF
+
+- No se modifica la lógica de negocio: las **167 pruebas** deben seguir en verde.
+- Los recursos existentes de `Theme.xaml` se conservan y se amplían; no se renombran claves en uso.
+- La traducción se hace en commits atómicos (`style:` y `refactor(ui):`).
+- Cada pantalla traducida se valida con captura en `docs/capturas/` y con `dotnet build` en Debug
+  y Release.
+- La regla de oro se mantiene intacta: ningún cambio visual toca la ruta de respaldo.
+
+**Commits del prototipo:** `6bfbceb` (sistema de estilos), `15152b8` (navegación e
+interacciones), `127e840` (seis pantallas) y `4d15c16` (documentación).
+
 ### BLOQUE D — VALIDACIÓN Y CIERRE
 
 **Objetivo:** Validar el programa en campo, generar instalador y cerrar el informe TAP.
@@ -1160,9 +1253,15 @@ Después del Referente Teórico, se redacta la Introducción como cierre del Blo
 
 **Hecho:** Sprint 1 (núcleo, Dashboard, bitácora y respaldos), Sprint 2 (telemetría y privacidad), Sprint 3 (gestión de servicios), Sprint 4 (liberación de memoria) y Sprint 5 (perfiles, restauración y tutorial) completados y validados en Windows 10 22H2.
 
-**Siguiente:** Bloque D (validación en campo, instalador y cierre del informe) sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
+**Siguiente:** Bloque C.5 (diseño visual y tema oscuro) y luego Bloque D (validación en campo, instalador y cierre del informe), sobre las mismas reglas de trabajo: respaldo previo, commits atómicos y verificación con `dotnet build` + `dotnet test`.
 
-### Paso inmediato 5: Bloque D — Validación y cierre
+### Paso inmediato 5: Bloque C.5 — Diseño visual y tema oscuro
+
+**Hecho:** sistema de 451 tokens (`docs/design/design-tokens.json`), prototipo navegable de seis pantallas (`docs/design/prototype/`) y verificación de accesibilidad (contraste WCAG AA, foco visible, navegación por teclado, `prefers-reduced-motion`). El prototipo se abre desde `index.html` sin compilación ni servidor.
+
+**Pendiente:** traducir los tokens y componentes a `Theme.xaml`, adaptar `MainWindow` y las vistas, agregar el selector de tema persistente y verificar las 167 pruebas con capturas nuevas. Estimación: 4-6 días.
+
+### Paso inmediato 6: Bloque D — Validación y cierre
 
 Pruebas en campo (I.E. San Marcos), conclusiones, recomendaciones, informe final.
 
@@ -1303,6 +1402,7 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 | 1.10 | 01/11/2026 | **Sprint 3 completado (Gestión de Servicios, 13 SP).** Se implementan las tres historias: catálogo estático de **30 servicios en 10 categorías** con estado leído del SCM, cambio individual con interruptor y perfiles Gamer/Ofimático. La lectura usa **WMI** (`Win32_Service`) y la escritura **`ServiceController`** más **`ChangeServiceConfig`** (`advapi32.dll`, P/Invoke), descartando `sc.exe`. `IServicesBackupService` se amplía con `CreateBackupForServicesAsync`, que exporta solo los servicios afectados y aborta si ninguno existe. La UI incorpora `ServicesViewModel`, `ServiceItemViewModel`, `ServiceCategoryGroup`, la vista con tarjetas por categoría, filtro, resumen, badges de riesgo y los estilos `DangerBadge`/`DangerBadgeText`. **Criterio de perfiles conservador en usabilidad:** ningún perfil deshabilita Bluetooth, Windows Search, Windows Hello, impresión, soporte remoto ni las apps nativas de Windows; los servicios de alto riesgo se listan para cambio manual, nunca automático. Verificación: 0 errores y 0 advertencias en Debug y Release, **96/96 pruebas correctas** (41 nuevas), validación real de deshabilitar y habilitar `PrintNotify` con dos respaldos y dos entradas en `Logs`, y captura en `docs/capturas/sprint-3-servicios.png`. |
 | 1.11 | 01/11/2026 | **Sprint 4 completado (Liberación de Memoria, 18 SP).** Se implementan las tres historias: medidor de RAM en tiempo real con `GlobalMemoryStatusEx`, liberación manual con `EmptyWorkingSet` sobre todos los procesos accesibles y liberación automática por umbral configurable (70 %–95 %, valor por defecto 80 %, intervalo mínimo de un minuto). La infraestructura usa P/Invoke (`EnumProcesses`, `OpenProcess`, `EmptyWorkingSet`, `CloseHandle`) con `EntryPoint` explícito; `MemoryManager` persiste la preferencia en `Settings` (`Memory.AutoReleaseEnabled` y `Memory.AutoReleaseThreshold`) con lectura de respaldo de la clave heredada `MemoryReleaseThreshold` y audita en `Logs` con el módulo `Memoria`. **Sin respaldo previo:** la liberación no modifica configuración persistente. **Desviación justificada:** se omiten `CachedBytes` y `ModifiedBytes` porque `GlobalMemoryStatusEx` no los expone. La UI incorpora `MemoryViewModel` (medición cada tres segundos, comandos, guardado del umbral) y `MemoryView`. Verificación: 0 errores y 0 advertencias en Debug y Release, **127/127 pruebas correctas** (31 nuevas), liberación real de 207 de 222 procesos con 399,1 MB estimados, liberación automática simulada registrada en `Logs` y captura en `docs/capturas/sprint-4-memoria.png`. |
 | 1.12 | 02/11/2026 | **Sprint 5 completado (Perfiles + Restauración + Tutorial, 21 SP).** Se implementan las cuatro historias: perfiles base Gamer y Ofimático generados desde los catálogos (`ProfileCatalog`), activación persistente en `Settings.ActiveProfileId`, aplicación con respaldo por módulo, exportación e importación JSON versionada, restauración con verificación SHA-256 del manifiesto y de cada `.reg`, importación con `reg.exe` y devolución de servicios a su tipo de inicio anterior, y tutorial de ocho pasos en Markdown incrustado y renderizado a `FlowDocument` con Markdig. `ITelemetryManager` y `IServiceManager` incorporan `ApplyDisabledAsync` para aplicar un conjunto explícito con un único respaldo. La UI suma `ProfilesView`, `BackupsView` y `TutorialView` con sus ViewModels, insignias de perfil activo e integridad, confirmaciones y navegación desde el tutorial. El tutorial se abre en la primera ejecución y `TutorialCompleted` evita repetirlo. Verificación: 0 errores y 0 advertencias en Debug y Release, **167/167 pruebas correctas** (40 nuevas) y grafo de Graphify regenerado con 1503 nodos, 4116 aristas y 74 comunidades sobre el commit `8d48a95`. |
+| 1.13 | 03/11/2026 | **Fase de diseño visual y tema oscuro (Bloque C.5).** Se define el sistema de diseño en `docs/design/design-tokens.json`: **451 tokens** (179 globales, 72 semánticos por tema y 128 de componentes) para tema claro, oscuro, alto contraste y contraste forzado. Se construye un **prototipo navegable de seis pantallas** en HTML, CSS y JavaScript sin dependencias (`docs/design/prototype/`), que se abre desde `index.html` sin compilación ni servidor y sirve de referencia para la traducción a WPF. El prototipo reemplaza Inter por Segoe UI, adopta iconografía de trazo de 24 × 24 y geometría Fluent, y **rediseña el paso «Panel de control» del tutorial** con estados de paso accesibles, mapa numerado de la interfaz y barra de acciones fija. Se documentan las decisiones, la lista de accesibilidad verificada y la correspondencia entre tokens CSS y `Theme.xaml` en `docs/design/prototype/README.md`. **Alcance nuevo:** el tema oscuro, que la v1.12 no contemplaba, pasa a formar parte del producto. La lógica de negocio no se modifica y las 167 pruebas siguen siendo el criterio de no regresión. |
 
 ---
 
@@ -1310,6 +1410,6 @@ Lee primero el PLAN\_MAESTRO\_SOK.md completo y luego ayúdame con:
 
 Este documento es la fuente única de verdad del proyecto SOK. Cualquier cambio en el alcance, stack, arquitectura o plan debe quedar reflejado aquí en una nueva versión.
 
-**Próxima actualización sugerida:** al cerrar el Bloque D (validación en campo, instalador y cierre del informe TAP).
+**Próxima actualización sugerida:** al cerrar el Bloque C.5 (traducción del prototipo a WPF y tema oscuro) y, después, al cerrar el Bloque D (validación en campo, instalador y cierre del informe TAP).
 
 **Contacto del autor:** Edgar Adrian Flores Herrera (egresado IESTP Trujillo).

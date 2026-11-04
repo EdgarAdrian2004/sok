@@ -1,6 +1,7 @@
 # Sistema de diseño visual de SOK
 
 **Archivo de tokens:** [`design-tokens.json`](design-tokens.json)
+**Prototipo navegable:** [`prototype/index.html`](prototype/index.html) · [guía](prototype/README.md)
 
 - **Versión:** 1.0
 - **Fecha:** 03/11/2026
