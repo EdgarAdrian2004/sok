@@ -3,20 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:SOK.UI.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="600"
-             d:DesignWidth="900">
-
+             d:DesignHeight="700"
+             d:DesignWidth="960">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <converters:ProfileTypeToGeometryConverter x:Key="ProfileTypeToGeometryConverter" />
     </UserControl.Resources>
 
     <ScrollViewer x:Name="ContentScroll" VerticalScrollBarVisibility="Auto">
         <StackPanel>
 
-            <!-- Encabezado y acciones -->
+            <!-- Encabezado -->
             <Border Style="{StaticResource CardBorder}">
                 <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Path Data="{StaticResource IconUsers}" Width="20" Height="20"
+                              Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.75"
+                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              Fill="Transparent" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Perfiles de optimización" Style="{StaticResource SectionTitle}" />
+                    </StackPanel>
                     <TextBlock Text="Un perfil agrupa los ajustes de telemetría, servicios y memoria que SOK aplica de una sola vez. Al aplicar un perfil se crea un respaldo previo de todo lo que se modifica."
                                Style="{StaticResource BodyText}" />
 
@@ -63,6 +71,11 @@
 
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
+                                        <Path Data="{Binding Type, Converter={StaticResource ProfileTypeToGeometryConverter}}"
+                                              Width="20" Height="20"
+                                              Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.75"
+                                              StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              Fill="Transparent" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
                                         <TextBlock Text="{Binding Name}"
                                                    Style="{StaticResource SectionTitle}" />
                                         <Border Background="{DynamicResource AccentSubtleBrush}"
@@ -82,11 +95,17 @@
                                                 Margin="6,0,0,0"
                                                 VerticalAlignment="Center"
                                                 Visibility="{Binding IsActive, Converter={StaticResource BoolToVisibility}}">
-                                            <TextBlock Text="Perfil activo"
-                                                       FontFamily="Segoe UI Variable Text, Segoe UI"
-                                                       FontSize="10"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{DynamicResource SuccessBrush}" />
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="{StaticResource IconCheckCircle}" Width="12" Height="12"
+                                                      Stroke="{DynamicResource SuccessBrush}" StrokeThickness="2"
+                                                      StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                      Fill="Transparent" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="Perfil activo"
+                                                           FontFamily="Segoe UI Variable Text, Segoe UI"
+                                                           FontSize="10"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource SuccessBrush}" />
+                                            </StackPanel>
                                         </Border>
                                     </StackPanel>
 
