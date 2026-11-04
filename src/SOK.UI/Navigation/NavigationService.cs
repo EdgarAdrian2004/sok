@@ -17,13 +17,13 @@ public sealed class NavigationService : INavigationService
 
     public IReadOnlyList<NavigationItem> MenuItems { get; } = new List<NavigationItem>
     {
-        new("Dashboard", "Panel de control", "Estado del sistema en tiempo real"),
-        new("Telemetry", "Telemetría y privacidad", "Control de telemetrías de Windows"),
-        new("Services", "Servicios", "Servicios no esenciales y perfiles"),
-        new("Memory", "Memoria RAM", "Medición y liberación de memoria"),
-        new("Backups", "Respaldos", "Respaldos y restauración"),
-        new("Profiles", "Perfiles", "Perfiles de optimización"),
-        new("Tutorial", "Tutorial", "Guía paso a paso")
+        new("Dashboard", "Panel de control", "Estado del sistema en tiempo real", "IconDashboard"),
+        new("Telemetry", "Telemetría y privacidad", "Control de telemetrías de Windows", "IconGauge"),
+        new("Services", "Servicios", "Servicios no esenciales y perfiles", "IconGear"),
+        new("Memory", "Memoria RAM", "Medición y liberación de memoria", "IconCpu"),
+        new("Backups", "Respaldos", "Respaldos y restauración", "IconDatabase"),
+        new("Profiles", "Perfiles", "Perfiles de optimización", "IconUsers"),
+        new("Tutorial", "Tutorial", "Guía paso a paso", "IconBook")
     };
 
     public FrameworkElement GetView(string key)

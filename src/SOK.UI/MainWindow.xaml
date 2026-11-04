@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:SOK.UI.Converters"
         mc:Ignorable="d"
         Title="SOK — System Optimization Key"
         Height="720"
@@ -12,9 +13,13 @@
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundBrush}">
 
+    <Window.Resources>
+        <converters:IconKeyToGeometryConverter x:Key="IconKeyToGeometryConverter" />
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240" />
+            <ColumnDefinition Width="248" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -23,10 +28,10 @@
             <DockPanel Margin="0,24,0,16">
                 <StackPanel DockPanel.Dock="Top" Margin="24,0,24,28">
                     <TextBlock Text="SOK"
-                               FontFamily="Segoe UI"
+                               FontFamily="Segoe UI Variable Text, Segoe UI"
                                FontSize="30"
                                FontWeight="Bold"
-                               Foreground="White" />
+                               Foreground="{DynamicResource SidebarTextBrush}" />
                     <TextBlock Text="System Optimization Key"
                                FontFamily="Segoe UI Variable Text, Segoe UI"
                                FontSize="11"
@@ -36,16 +41,38 @@
 
                 <TextBlock DockPanel.Dock="Bottom"
                            Text="v0.1 · Sprint 5"
-                           FontFamily="Segoe UI"
+                           FontFamily="Segoe UI Variable Text, Segoe UI"
                            FontSize="11"
                            Foreground="{DynamicResource SidebarTextMutedBrush}"
                            Margin="24,16,24,0" />
 
                 <ListBox ItemsSource="{Binding MenuItems}"
-                         SelectedItem="{Binding SelectedNavigationItem, Mode=TwoWay}"
-                         DisplayMemberPath="Label"
-                         Style="{StaticResource NavListBox}"
-                         ItemContainerStyle="{StaticResource NavListBoxItem}" />
+                          SelectedItem="{Binding SelectedNavigationItem, Mode=TwoWay}"
+                          Style="{StaticResource NavListBox}"
+                          ItemContainerStyle="{StaticResource NavListBoxItem}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{Binding IconKey, Converter={StaticResource IconKeyToGeometryConverter}}"
+                                      Width="18" Height="18"
+                                      Stroke="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=Foreground}"
+                                      StrokeThickness="1.75"
+                                      StrokeLineJoin="Round"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"
+                                      Fill="Transparent"
+                                      Stretch="Uniform"
+                                      Margin="0,0,12,0"
+                                      VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Label}"
+                                           Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=Foreground}"
+                                           FontFamily="Segoe UI Variable Text, Segoe UI"
+                                           FontSize="13"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </DockPanel>
         </Border>
 
@@ -77,8 +104,8 @@
             </Border>
 
             <ContentControl Grid.Row="1"
-                            Content="{Binding CurrentView}"
-                            Margin="32" />
+                             Content="{Binding CurrentView}"
+                             Margin="32" />
         </Grid>
     </Grid>
 </Window>
