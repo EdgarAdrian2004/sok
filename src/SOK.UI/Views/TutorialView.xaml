@@ -26,10 +26,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#F1F5F9" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource SurfaceSubtleBrush}" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#DBEAFE" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource AccentSubtleBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -69,20 +69,20 @@
                                 <Border Width="24"
                                         Height="24"
                                         CornerRadius="12"
-                                        Background="#E2E8F0"
+                                        Background="{DynamicResource SurfaceSubtleBrush}"
                                         VerticalAlignment="Top">
                                     <TextBlock Text="{Binding Order, StringFormat='{}{0:00}'}"
                                                FontFamily="Segoe UI"
                                                FontSize="10"
                                                FontWeight="SemiBold"
-                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center" />
                                 </Border>
                                 <TextBlock Text="{Binding Title}"
                                            FontFamily="Segoe UI"
                                            FontSize="12"
-                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"
                                            TextWrapping="Wrap"
                                            Margin="8,3,0,0" />
                             </StackPanel>
@@ -119,7 +119,7 @@
                                           Background="Transparent" />
 
                 <Border Grid.Row="2"
-                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="0,1,0,0"
                         Padding="24,14">
                     <Grid>

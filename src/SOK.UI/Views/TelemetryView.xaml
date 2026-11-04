@@ -80,7 +80,7 @@
                                 <ItemsControl ItemsSource="{Binding Items}" Margin="0,8,0,0">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="{StaticResource BorderBrush}"
+                                            <Border BorderBrush="{DynamicResource BorderBrush}"
                                                     BorderThickness="0,1,0,0"
                                                     Padding="0,12">
                                                 <Grid>
@@ -93,7 +93,7 @@
                                                         <TextBlock Text="{Binding DisplayName}"
                                                                    Style="{StaticResource BodyText}"
                                                                    FontWeight="SemiBold"
-                                                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                                                                   Foreground="{DynamicResource TextPrimaryBrush}" />
                                                         <TextBlock Text="{Binding Description}"
                                                                    Style="{StaticResource SmallText}"
                                                                    Margin="0,2,0,0" />
@@ -105,12 +105,12 @@
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding Status}"
                                                                                          Value="{x:Static enums:TelemetryStatus.Habilitado}">
-                                                                                <Setter Property="Foreground" Value="{StaticResource WarningBrush}" />
+                                                                                <Setter Property="Foreground" Value="{DynamicResource WarningBrush}" />
                                                                                 <Setter Property="FontWeight" Value="SemiBold" />
                                                                             </DataTrigger>
                                                                             <DataTrigger Binding="{Binding Status}"
                                                                                          Value="{x:Static enums:TelemetryStatus.Deshabilitado}">
-                                                                                <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                                                                                <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
                                                                                 <Setter Property="FontWeight" Value="SemiBold" />
                                                                             </DataTrigger>
                                                                         </Style.Triggers>

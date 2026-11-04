@@ -65,7 +65,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Name}"
                                                    Style="{StaticResource SectionTitle}" />
-                                        <Border Background="#DBEAFE"
+                                        <Border Background="{DynamicResource AccentSubtleBrush}"
                                                 CornerRadius="4"
                                                 Padding="6,2"
                                                 Margin="10,0,0,0"
@@ -74,9 +74,9 @@
                                                        FontFamily="Segoe UI"
                                                        FontSize="10"
                                                        FontWeight="SemiBold"
-                                                       Foreground="{StaticResource AccentBrush}" />
+                                                       Foreground="{DynamicResource AccentBrush}" />
                                         </Border>
-                                        <Border Background="#DCFCE7"
+                                        <Border Background="{DynamicResource SuccessSubtleBrush}"
                                                 CornerRadius="4"
                                                 Padding="6,2"
                                                 Margin="6,0,0,0"
@@ -86,7 +86,7 @@
                                                        FontFamily="Segoe UI"
                                                        FontSize="10"
                                                        FontWeight="SemiBold"
-                                                       Foreground="{StaticResource SuccessBrush}" />
+                                                       Foreground="{DynamicResource SuccessBrush}" />
                                         </Border>
                                     </StackPanel>
 

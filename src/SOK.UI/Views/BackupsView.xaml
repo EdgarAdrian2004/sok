@@ -56,7 +56,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Name}"
                                                    Style="{StaticResource SectionTitle}" />
-                                        <Border Background="#DBEAFE"
+                                        <Border Background="{DynamicResource AccentSubtleBrush}"
                                                 CornerRadius="4"
                                                 Padding="6,2"
                                                 Margin="10,0,0,0"
@@ -65,7 +65,7 @@
                                                        FontFamily="Segoe UI"
                                                        FontSize="10"
                                                        FontWeight="SemiBold"
-                                                       Foreground="{StaticResource AccentBrush}" />
+                                                       Foreground="{DynamicResource AccentBrush}" />
                                         </Border>
                                     </StackPanel>
 
@@ -81,11 +81,11 @@
                                                Margin="0,6,0,0">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock" BasedOn="{StaticResource SmallText}">
-                                                <Setter Property="Foreground" Value="#B91C1C" />
+                                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
                                                 <Setter Property="FontWeight" Value="SemiBold" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsIntegrityOk}" Value="True">
-                                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
