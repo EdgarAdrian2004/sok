@@ -9,6 +9,9 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <converters:StepStateToBrushConverter x:Key="StepStateToBrushConverter" xmlns:converters="clr-namespace:SOK.UI.Converters" />
+        <converters:StepStateToTextConverter x:Key="StepStateToTextConverter" xmlns:converters="clr-namespace:SOK.UI.Converters" />
+        <converters:IndexToProgressConverter x:Key="IndexToProgressConverter" xmlns:converters="clr-namespace:SOK.UI.Converters" />
 
         <Style x:Key="StepListBoxItem" TargetType="ListBoxItem">
             <Setter Property="Padding" Value="10,8" />
@@ -69,15 +72,26 @@
                                 <Border Width="24"
                                         Height="24"
                                         CornerRadius="12"
-                                        Background="{DynamicResource SurfaceSubtleBrush}"
                                         VerticalAlignment="Top">
-                                    <TextBlock Text="{Binding Order, StringFormat='{}{0:00}'}"
-                                               FontFamily="Segoe UI Variable Text, Segoe UI"
+                                    <Border.Background>
+                                        <MultiBinding Converter="{StaticResource StepStateToBrushConverter}">
+                                            <Binding Path="Order" />
+                                            <Binding Path="DataContext.CurrentIndex" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        </MultiBinding>
+                                    </Border.Background>
+                                    <TextBlock FontFamily="Segoe UI Variable Text, Segoe UI"
                                                FontSize="10"
                                                FontWeight="SemiBold"
-                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                               Foreground="White"
                                                HorizontalAlignment="Center"
-                                               VerticalAlignment="Center" />
+                                               VerticalAlignment="Center">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource StepStateToTextConverter}">
+                                                <Binding Path="Order" />
+                                                <Binding Path="DataContext.CurrentIndex" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </Border>
                                 <TextBlock Text="{Binding Title}"
                                            FontFamily="Segoe UI Variable Text, Segoe UI"
@@ -107,7 +121,11 @@
                                FontSize="20" />
                     <TextBlock Text="{Binding ProgressText}"
                                Style="{StaticResource SmallText}"
-                               Margin="0,4,0,0" />
+                               Margin="0,4,0,12" />
+                    <ProgressBar Value="{Binding CurrentIndex, Converter={StaticResource IndexToProgressConverter}}"
+                                 Maximum="{Binding Steps.Count}"
+                                 Style="{StaticResource SokProgressBar}"
+                                 Height="6" />
                 </StackPanel>
 
                 <FlowDocumentScrollViewer x:Name="StepViewer"
