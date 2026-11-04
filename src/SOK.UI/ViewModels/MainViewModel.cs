@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SOK.UI.Navigation;
-
-namespace SOK.UI.ViewModels;
+using SOK.UI.Services;
 
 /// <summary>
 /// ViewModel de la ventana principal: expone el menú y la vista activa.
@@ -9,18 +9,25 @@ namespace SOK.UI.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;
+    private readonly ThemeService _themeService;
     private NavigationItem? _selectedNavigationItem;
     private object? _currentView;
     private string _currentTitle = string.Empty;
     private string _currentSubtitle = string.Empty;
 
-    public MainViewModel(INavigationService navigationService)
+    public MainViewModel(INavigationService navigationService, ThemeService themeService)
     {
         _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+        _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
         _navigationService.NavigationRequested += OnNavigationRequested;
         MenuItems = navigationService.MenuItems;
         SelectedNavigationItem = MenuItems.FirstOrDefault();
     }
+
+    public ThemeService Theme => _themeService;
+
+    [RelayCommand]
+    private void ToggleTheme() => _themeService.Toggle();
 
     public IReadOnlyList<NavigationItem> MenuItems { get; }
 

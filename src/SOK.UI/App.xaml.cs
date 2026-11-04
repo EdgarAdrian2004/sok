@@ -61,6 +61,7 @@ public partial class App : System.Windows.Application
 
             services.AddSingleton<IFileDialogService, FileDialogService>();
             services.AddSingleton<IUserDialogService, UserDialogService>();
+            services.AddSingleton<ThemeService>();
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<MainViewModel>();
@@ -73,6 +74,8 @@ public partial class App : System.Windows.Application
             services.AddSingleton<TutorialViewModel>();
 
             Ioc.Default.ConfigureServices(services.BuildServiceProvider());
+
+            Ioc.Default.GetRequiredService<ThemeService>().ApplySaved();
 
             var window = new MainWindow
             {
